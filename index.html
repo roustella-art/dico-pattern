@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Dico Pattern">
+<link rel="manifest" href="manifest.json">
+<title>Dico Pattern</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  :root{
+    --blue:#2F5597;--blue-light:#D9E1F2;--green:#70AD47;--green-light:#E2EFDA;
+    --red:#C00000;--orange:#ED7D31;--bg:#f5f4f0;--card:#fff;
+    --text:#1a1a1a;--text2:#595959;--border:#e0ddd8;--radius:12px;
+    --nav-h:64px;--header-h:56px;
+  }
+  html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text)}
+  #app{display:flex;flex-direction:column;height:100dvh;max-width:640px;margin:0 auto}
+
+  /* HEADER */
+  header{background:var(--blue);color:#fff;padding:0 16px;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+  header h1{font-size:20px;font-weight:700;letter-spacing:.5px}
+  header span{font-size:12px;opacity:.75;font-style:italic}
+
+  /* MAIN CONTENT */
+  main{flex:1;overflow-y:auto;padding:12px}
+
+  /* BOTTOM NAV */
+  nav{flex-shrink:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+  nav button{flex:1;border:none;background:none;font-size:10px;color:var(--text2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:color .15s}
+  nav button .ico{font-size:22px;line-height:1}
+  nav button.active{color:var(--blue);font-weight:600}
+
+  /* CARDS */
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:12px;overflow:hidden}
+  .card-head{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+  .card-head h2{font-size:15px;font-weight:700}
+  .card-head .badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--blue-light);color:var(--blue)}
+  .card-body{padding:0 14px 14px;display:none}
+  .card-body.open{display:block}
+
+  /* FILTER BAR */
+  .filter-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;margin-bottom:12px;scrollbar-width:none}
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-bar button{flex-shrink:0;border:2px solid var(--border);background:#fff;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+  .filter-bar button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  /* TAB DISPLAY */
+  .tab-wrap{overflow-x:auto;margin:10px 0;background:#1a1a2e;border-radius:8px;padding:10px 12px}
+  .tab-wrap pre{font-family:'Courier New',Courier,monospace;font-size:13px;color:#a8d8a8;line-height:1.6;white-space:pre}
+  .tag-row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .tag{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600}
+  .tag.diff-deb{background:#E2EFDA;color:#375623}
+  .tag.diff-int{background:#FFF2CC;color:#7F6000}
+  .tag.diff-adv{background:#FCE4D6;color:#833C00}
+  .desc{font-size:13px;color:var(--text2);margin:6px 0}
+  .tip{font-size:12px;background:#FFF9E6;border-left:3px solid var(--orange);padding:7px 10px;border-radius:0 6px 6px 0;margin-top:8px;color:#5a4000}
+
+  /* PROGRAMME */
+  .day-card{background:var(--card);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:10px;overflow:hidden}
+  .day-head{padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+  .day-num{width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .day-num.done{background:var(--green)}
+  .day-info{flex:1}
+  .day-info strong{font-size:15px;display:block}
+  .day-info span{font-size:12px;color:var(--text2)}
+  .day-body{padding:0 14px 14px;display:none}
+  .day-body.open{display:block}
+  .session{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+  .session:last-child{border-bottom:none}
+  .session input[type=checkbox]{width:20px;height:20px;margin-top:2px;flex-shrink:0;accent-color:var(--green);cursor:pointer}
+  .session-info strong{font-size:14px}
+  .session-info p{font-size:12px;color:var(--text2);margin-top:2px}
+  .bpm-badge{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;background:#D9E1F2;color:var(--blue);margin-left:6px}
+  .progress-bar-wrap{background:var(--border);border-radius:4px;height:6px;margin-top:10px}
+  .progress-bar{background:var(--green);border-radius:4px;height:100%;transition:width .3s}
+
+  /* PROGRESSION */
+  .pat-selector{width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:8px;font-size:14px;background:#fff;margin-bottom:12px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23595959' fill='none' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+  .fing-row{display:flex;gap:8px;margin-bottom:14px}
+  .fing-row button{flex:1;padding:8px;border:2px solid var(--border);border-radius:8px;background:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s}
+  .fing-row button.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .grid-label{font-size:12px;font-weight:700;color:var(--text2);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px}
+  .prog-grid{border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+  .prog-grid table{width:100%;border-collapse:collapse}
+  .prog-grid th{background:var(--blue);color:#fff;font-size:12px;padding:8px 4px;text-align:center}
+  .prog-grid th.mode-head{background:var(--blue);font-size:13px;text-align:left;padding-left:12px}
+  .prog-grid td{border:1px solid var(--border);text-align:center;padding:6px 2px}
+  .prog-grid td.tempo{font-size:11px;font-weight:700;color:var(--text2);background:#fafafa;white-space:nowrap;padding:0 8px}
+  .prog-grid tr:hover td{background:#f9f8f5}
+  .cell-btn{width:32px;height:32px;border:none;background:none;cursor:pointer;font-size:18px;border-radius:6px;transition:background .1s;display:flex;align-items:center;justify-content:center;margin:0 auto}
+  .cell-btn.checked{color:var(--green)}
+  .cell-btn:not(.checked){color:var(--border)}
+  .pct-card{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .pct-card h3{font-size:13px;color:var(--text2);margin-bottom:8px}
+  .pct-big{font-size:36px;font-weight:800;color:var(--blue)}
+  .pct-sub{font-size:12px;color:var(--text2);margin-top:2px}
+
+  /* SECTION TITLE */
+  .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin:16px 0 8px 2px}
+
+  /* TOGGLE ARROW */
+  .arrow{transition:transform .2s;font-size:12px;color:var(--text2)}
+  .arrow.open{transform:rotate(90deg)}
+
+  /* METRONOME */
+  .metro-wrap{display:flex;align-items:center;gap:6px;margin-top:10px;padding:8px 10px;background:#f8f7f4;border-radius:8px;border:1px solid var(--border);flex-wrap:wrap}
+  .metro-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .05s;flex-shrink:0}
+  .metro-dot.flash{background:var(--green)}
+  .metro-adj{width:30px;height:30px;border:1px solid var(--border);background:#fff;border-radius:6px;font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;flex-shrink:0}
+  .metro-bpm{width:52px;text-align:center;font-size:16px;font-weight:700;border:1px solid var(--border);border-radius:6px;padding:4px 2px;background:#fff;-moz-appearance:textfield}
+  .metro-bpm::-webkit-inner-spin-button,.metro-bpm::-webkit-outer-spin-button{-webkit-appearance:none}
+  .metro-target{font-size:11px;color:var(--text2);flex:1;white-space:nowrap}
+  .metro-btn{font-size:12px;font-weight:700;padding:6px 12px;border:none;border-radius:8px;cursor:pointer;color:#fff;flex-shrink:0}
+
+  /* CHRONO */
+  .chrono-wrap{display:flex;align-items:center;gap:6px}
+  .chrono-time{font-size:18px;font-weight:800;font-family:'Courier New',monospace;letter-spacing:1px;color:#fff;min-width:52px;text-align:center}
+  .chrono-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;padding:3px 7px;font-size:13px;cursor:pointer;line-height:1.4}
+  .chrono-btn:active{background:rgba(255,255,255,.35)}
+
+  /* TUNER */
+  .tuner-note{font-size:88px;font-weight:900;font-family:'Courier New',monospace;min-height:110px;display:flex;align-items:center;justify-content:center;transition:color .15s}
+  .tuner-bar-wrap{position:relative;height:8px;background:var(--border);border-radius:4px;margin:16px 0 4px}
+  .tuner-cursor{position:absolute;top:-5px;width:18px;height:18px;border-radius:50%;transform:translateX(-50%);transition:left .08s,background .15s}
+  .tuner-center{position:absolute;left:50%;top:-8px;transform:translateX(-50%);width:2px;height:24px;background:var(--blue);border-radius:1px}
+  .tuner-string-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
+  .tuner-string{background:var(--blue-light);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
+  .tuner-string:hover{border-color:var(--blue)}
+  .tuner-string .sname{font-size:20px;font-weight:800;color:var(--blue)}
+  .tuner-string .sfreq{font-size:11px;color:var(--text2);margin-top:2px}
+
+  /* NAV 4 tabs */
+  nav button{font-size:9px}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>🎸 Dico Pattern <span style="font-size:11px;opacity:.65;font-weight:400;font-style:italic">· À la Loop !</span></h1>
+    <div class="chrono-wrap">
+      <span class="chrono-time" id="chrono-time">00:00</span>
+      <button class="chrono-btn" id="chrono-play" onclick="chronoToggle()">▶</button>
+      <button class="chrono-btn" onclick="chronoReset()">↺</button>
+    </div>
+  </header>
+  <main id="content"></main>
+  <nav>
+    <button class="active" onclick="showTab('patterns')" id="nav-patterns">
+      <span class="ico">📚</span>Patterns
+    </button>
+    <button onclick="showTab('program')" id="nav-program">
+      <span class="ico">📅</span>Programme
+    </button>
+    <button onclick="showTab('progress')" id="nav-progress">
+      <span class="ico">📊</span>Progression
+    </button>
+    <button onclick="showTab('tuner')" id="nav-tuner">
+      <span class="ico">🎵</span>Accordeur
+    </button>
+  </nav>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+
+const PATTERNS = [
+  {
+    id:"A4P1U", cat:"A4", dir:"U", num:1, notes:4, difficulty:"Débutant",
+    name:"Chromatique", bpm:60, bpmTarget:130,
+    tab:`e|--------------------------5-6-7-8-|
+B|------------------5-6-7-8---------|
+G|----------5-6-7-8-----------------|
+D|--5-6-7-8-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour même position
+--5-6-7-8-------------------------|||
+----------5-6-7-8-----------------|||
+------------------5-6-7-8--------o|||
+--------------------------5-6-7-8o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Pattern fondamental : 4 cases consécutives, un doigt par case.",
+    tip:"Garde les doigts proches des cordes. Commence ultra lentement.",
+  },
+  {
+    id:"A4P1D", cat:"A4", dir:"D", num:1, notes:4, difficulty:"Débutant",
+    name:"Chromatique", bpm:60, bpmTarget:130,
+    tab:`e|--------------------------8-7-6-5-|
+B|------------------8-7-6-5---------|
+G|----------8-7-6-5-----------------|
+D|--8-7-6-5-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour +1 case
+--9-8-7-6-------------------------|||
+----------9-8-7-6-----------------|||
+------------------9-8-7-6--------o|||
+--------------------------9-8-7-6o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Pattern fondamental : 4 cases consécutives, un doigt par case. Version descendante.",
+    tip:"Garde les doigts proches des cordes. Commence ultra lentement. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A4P1M", cat:"A4", dir:"M", num:1, notes:4, difficulty:"Débutant",
+    name:"Chromatique", bpm:60, bpmTarget:119,
+    tab:`e|--------------------------5-6-7-8-|
+B|------------------5-6-7-8---------|
+G|----------5-6-7-8-----------------|
+D|--5-6-7-8-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour descendant +1
+--9-8-7-6-------------------------|||
+----------9-8-7-6-----------------|||
+------------------9-8-7-6--------o|||
+--------------------------9-8-7-6o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Pattern fondamental : 4 cases consécutives, un doigt par case. Montée puis retour décalé d\'une case.",
+    tip:"Garde les doigts proches des cordes. Commence ultra lentement. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A4P2U", cat:"A4", dir:"U", num:2, notes:4, difficulty:"Intermédiaire",
+    name:"Croisé 1-3-2-4", bpm:60, bpmTarget:120,
+    tab:`e|--------------------------5-7-6-8-|
+B|------------------5-7-6-8---------|
+G|----------5-7-6-8-----------------|
+D|--5-7-6-8-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour même position
+--5-7-6-8-------------------------|||
+----------5-7-6-8-----------------|||
+------------------5-7-6-8--------o|||
+--------------------------5-7-6-8o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Saut d'une case, retour, saut : 1-3-2-4. Exercice d'extension et de coordination.",
+    tip:"Le croisement doigts 2 sur doigt 3 est le point difficile. Ralentis sur cette transition.",
+  },
+  {
+    id:"A4P2D", cat:"A4", dir:"D", num:2, notes:4, difficulty:"Intermédiaire",
+    name:"Croisé 1-3-2-4", bpm:60, bpmTarget:120,
+    tab:`e|--------------------------8-6-7-5-|
+B|------------------8-6-7-5---------|
+G|----------8-6-7-5-----------------|
+D|--8-6-7-5-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour +1 case
+--9-7-8-6-------------------------|||
+----------9-7-8-6-----------------|||
+------------------9-7-8-6--------o|||
+--------------------------9-7-8-6o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Saut d'une case, retour, saut : 1-3-2-4. Exercice d'extension et de coordination. Version descendante.",
+    tip:"Le croisement doigts 2 sur doigt 3 est le point difficile. Ralentis sur cette transition. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A4P2M", cat:"A4", dir:"M", num:2, notes:4, difficulty:"Intermédiaire",
+    name:"Croisé 1-3-2-4", bpm:60, bpmTarget:110,
+    tab:`e|--------------------------5-7-6-8-|
+B|------------------5-7-6-8---------|
+G|----------5-7-6-8-----------------|
+D|--5-7-6-8-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour descendant +1
+--9-7-8-6-------------------------|||
+----------9-7-8-6-----------------|||
+------------------9-7-8-6--------o|||
+--------------------------9-7-8-6o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Saut d'une case, retour, saut : 1-3-2-4. Exercice d'extension et de coordination. Montée puis retour décalé d\'une case.",
+    tip:"Le croisement doigts 2 sur doigt 3 est le point difficile. Ralentis sur cette transition. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A4P3U", cat:"A4", dir:"U", num:3, notes:4, difficulty:"Intermédiaire",
+    name:"Croisé 1-4-2-3", bpm:60, bpmTarget:110,
+    tab:`e|--------------------------5-8-6-7-|
+B|------------------5-8-6-7---------|
+G|----------5-8-6-7-----------------|
+D|--5-8-6-7-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour même position
+--5-8-6-7-------------------------|||
+----------5-8-6-7-----------------|||
+------------------5-8-6-7--------o|||
+--------------------------5-8-6-7o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Extension maximale sur le premier saut : 1-4-2-3.",
+    tip:"L\'extension 1→4 au départ fatigue l\'auriculaire. Prends des pauses régulières.",
+  },
+  {
+    id:"A4P3D", cat:"A4", dir:"D", num:3, notes:4, difficulty:"Intermédiaire",
+    name:"Croisé 1-4-2-3", bpm:60, bpmTarget:110,
+    tab:`e|--------------------------7-6-8-5-|
+B|------------------7-6-8-5---------|
+G|----------7-6-8-5-----------------|
+D|--7-6-8-5-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour +1 case
+--8-7-9-6-------------------------|||
+----------8-7-9-6-----------------|||
+------------------8-7-9-6--------o|||
+--------------------------8-7-9-6o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Extension maximale sur le premier saut : 1-4-2-3. Version descendante.",
+    tip:"L\'extension 1→4 au départ fatigue l\'auriculaire. Prends des pauses régulières. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A4P3M", cat:"A4", dir:"M", num:3, notes:4, difficulty:"Intermédiaire",
+    name:"Croisé 1-4-2-3", bpm:60, bpmTarget:101,
+    tab:`e|--------------------------5-8-6-7-|
+B|------------------5-8-6-7---------|
+G|----------5-8-6-7-----------------|
+D|--5-8-6-7-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour descendant +1
+--8-7-9-6-------------------------|||
+----------8-7-9-6-----------------|||
+------------------8-7-9-6--------o|||
+--------------------------8-7-9-6o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Extension maximale sur le premier saut : 1-4-2-3. Montée puis retour décalé d\'une case.",
+    tip:"L\'extension 1→4 au départ fatigue l\'auriculaire. Prends des pauses régulières. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A4P4U", cat:"A4", dir:"U", num:4, notes:4, difficulty:"Avancé",
+    name:"Croisé 1-4-3-2", bpm:60, bpmTarget:110,
+    tab:`e|--------------------------5-8-7-6-|
+B|------------------5-8-7-6---------|
+G|----------5-8-7-6-----------------|
+D|--5-8-7-6-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour même position
+--5-8-7-6-------------------------|||
+----------5-8-7-6-----------------|||
+------------------5-8-7-6--------o|||
+--------------------------5-8-7-6o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Combinaison d\'extension et de croisement arrière : 1-4-3-2.",
+    tip:"Le retour 4→3→2 après l\'extension est tricky. Décompose en deux cellules.",
+  },
+  {
+    id:"A4P4D", cat:"A4", dir:"D", num:4, notes:4, difficulty:"Avancé",
+    name:"Croisé 1-4-3-2", bpm:60, bpmTarget:110,
+    tab:`e|--------------------------6-7-8-5-|
+B|------------------6-7-8-5---------|
+G|----------6-7-8-5-----------------|
+D|--6-7-8-5-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour +1 case
+--7-8-9-6-------------------------|||
+----------7-8-9-6-----------------|||
+------------------7-8-9-6--------o|||
+--------------------------7-8-9-6o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Combinaison d\'extension et de croisement arrière : 1-4-3-2. Version descendante.",
+    tip:"Le retour 4→3→2 après l\'extension est tricky. Décompose en deux cellules. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A4P4M", cat:"A4", dir:"M", num:4, notes:4, difficulty:"Avancé",
+    name:"Croisé 1-4-3-2", bpm:60, bpmTarget:101,
+    tab:`e|--------------------------5-8-7-6-|
+B|------------------5-8-7-6---------|
+G|----------5-8-7-6-----------------|
+D|--5-8-7-6-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour descendant +1
+--7-8-9-6-------------------------|||
+----------7-8-9-6-----------------|||
+------------------7-8-9-6--------o|||
+--------------------------7-8-9-6o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Combinaison d\'extension et de croisement arrière : 1-4-3-2. Montée puis retour décalé d\'une case.",
+    tip:"Le retour 4→3→2 après l\'extension est tricky. Décompose en deux cellules. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A4P5U", cat:"A4", dir:"U", num:5, notes:4, difficulty:"Avancé",
+    name:"Croisé 1-2-3-5", bpm:60, bpmTarget:100,
+    tab:`e|--------------------------5-6-7-9-|
+B|------------------5-6-7-9---------|
+G|----------5-6-7-9-----------------|
+D|--5-6-7-9-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour même position
+--5-6-7-9-------------------------|||
+----------5-6-7-9-----------------|||
+------------------5-6-7-9--------o|||
+--------------------------5-6-7-9o|||
+----------------------------------|||
+----------------------------------|||`,
+    desc:"Extension vers la case 9 : 1-2-3-5. Dépasse l\'octave.",
+    tip:"La case 9 est loin. Glisse la main plutôt que de tirer les doigts.",
+  },
+  {
+    id:"A4P5D", cat:"A4", dir:"D", num:5, notes:4, difficulty:"Avancé",
+    name:"Croisé 1-2-3-5", bpm:60, bpmTarget:100,
+    tab:`e|--------------------------9-7-6-5-|
+B|------------------9-7-6-5---------|
+G|----------9-7-6-5-----------------|
+D|--9-7-6-5-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour +1 case
+--10-8-7-6----------------------------|||
+-----------10-8-7-6-------------------|||
+--------------------10-8-7-6---------o|||
+-----------------------------10-8-7-6o|||
+--------------------------------------|||
+--------------------------------------|||`,
+    desc:"Extension vers la case 9 : 1-2-3-5. Dépasse l\'octave. Version descendante.",
+    tip:"La case 9 est loin. Glisse la main plutôt que de tirer les doigts. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A4P5M", cat:"A4", dir:"M", num:5, notes:4, difficulty:"Avancé",
+    name:"Croisé 1-2-3-5", bpm:60, bpmTarget:92,
+    tab:`e|--------------------------5-6-7-9-|
+B|------------------5-6-7-9---------|
+G|----------5-6-7-9-----------------|
+D|--5-6-7-9-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour descendant +1
+--10-8-7-6----------------------------|||
+-----------10-8-7-6-------------------|||
+--------------------10-8-7-6---------o|||
+-----------------------------10-8-7-6o|||
+--------------------------------------|||
+--------------------------------------|||`,
+    desc:"Extension vers la case 9 : 1-2-3-5. Dépasse l\'octave. Montée puis retour décalé d\'une case.",
+    tip:"La case 9 est loin. Glisse la main plutôt que de tirer les doigts. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A4P6U", cat:"A4", dir:"U", num:6, notes:4, difficulty:"Avancé",
+    name:"Seconde augmentée (Yngwie)", bpm:55, bpmTarget:110,
+    tab:`e|-----------------------------5-6-9-10-|
+B|--------------------5-6-9-10----------|
+G|-----------5-6-9-10-------------------|
+D|--5-6-9-10----------------------------|
+A|--------------------------------------|
+E|--------------------------------------|
+↩ retour même position
+--5-6-9-10----------------------------|||
+-----------5-6-9-10-------------------|||
+--------------------5-6-9-10---------o|||
+-----------------------------5-6-9-10o|||
+--------------------------------------|||
+--------------------------------------|||`,
+    desc:"Demi-ton / saut de 3 cases / demi-ton. L\'intervalle de seconde augmentée de la gamme mineure harmonique.",
+    tip:"Le saut index-auriculaire sur 3 cases est le cœur du pattern. Ancre bien l\'index avant de sauter.",
+  },
+  {
+    id:"A4P6D", cat:"A4", dir:"D", num:6, notes:4, difficulty:"Avancé",
+    name:"Seconde augmentée (Yngwie)", bpm:55, bpmTarget:110,
+    tab:`e|-----------------------------10-9-6-5-|
+B|--------------------10-9-6-5----------|
+G|-----------10-9-6-5-------------------|
+D|--10-9-6-5----------------------------|
+A|--------------------------------------|
+E|--------------------------------------|
+↩ retour +1 case
+--11-10-7-6-------------------------------|||
+------------11-10-7-6---------------------|||
+----------------------11-10-7-6----------o|||
+--------------------------------11-10-7-6o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Version descendante de la seconde augmentée. Le doigté inversé 4-3-2-1 avec le grand saut au centre.",
+    tip:"Le saut auriculaire-index en descente est souvent le sens le plus difficile. Isole ce mouvement.",
+  },
+  {
+    id:"A4P6M", cat:"A4", dir:"M", num:6, notes:4, difficulty:"Avancé",
+    name:"Seconde augmentée (Yngwie)", bpm:55, bpmTarget:100,
+    tab:`e|-----------------------------5-6-9-10-|
+B|--------------------5-6-9-10----------|
+G|-----------5-6-9-10-------------------|
+D|--5-6-9-10----------------------------|
+A|--------------------------------------|
+E|--------------------------------------|
+↩ retour descendant +1
+--11-10-7-6-------------------------------|||
+------------11-10-7-6---------------------|||
+----------------------11-10-7-6----------o|||
+--------------------------------11-10-7-6o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Montée avec la seconde augmentée, retour décalé d\'une case. Prépare directement les runs Yngwie / mineur harmonique.",
+    tip:"Ce mix est le plus proche du son Yngwie. La montée 5-6-9-10 suivie du retour 11-10-7-6 est un réflexe à graver.",
+  },
+  {
+    id:"A3P1U", cat:"A3", dir:"U", num:1, notes:3, difficulty:"Débutant",
+    name:"Triade 1-2-3", bpm:70, bpmTarget:140,
+    tab:`e|--------------------5-6-8-|
+B|--------------5-6-8-------|
+G|--------5-6-8-------------|
+D|--5-6-8-------------------|
+A|--------------------------|
+E|--------------------------|
+↩ retour même position
+--5-6-8-------------------|||
+--------5-6-8-------------|||
+--------------5-6-8------o|||
+--------------------5-6-8o|||
+--------------------------|||
+--------------------------|||`,
+    desc:"Trois doigts consécutifs : 1-2-3. Base de tous les exercices à 3 notes.",
+    tip:"Plus facile que 4 notes, idéal pour chauffer la main avant de passer à A4.",
+  },
+  {
+    id:"A3P1D", cat:"A3", dir:"D", num:1, notes:3, difficulty:"Débutant",
+    name:"Triade 1-2-3", bpm:70, bpmTarget:140,
+    tab:`e|--------------------8-6-5-|
+B|--------------8-6-5-------|
+G|--------8-6-5-------------|
+D|--8-6-5-------------------|
+A|--------------------------|
+E|--------------------------|
+↩ retour +1 case
+--9-7-6-------------------|||
+--------9-7-6-------------|||
+--------------9-7-6------o|||
+--------------------9-7-6o|||
+--------------------------|||
+--------------------------|||`,
+    desc:"Trois doigts consécutifs : 1-2-3. Base de tous les exercices à 3 notes. Version descendante.",
+    tip:"Plus facile que 4 notes, idéal pour chauffer la main avant de passer à A4. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A3P1M", cat:"A3", dir:"M", num:1, notes:3, difficulty:"Débutant",
+    name:"Triade 1-2-3", bpm:70, bpmTarget:128,
+    tab:`e|--------------------5-6-8-|
+B|--------------5-6-8-------|
+G|--------5-6-8-------------|
+D|--5-6-8-------------------|
+A|--------------------------|
+E|--------------------------|
+↩ retour descendant +1
+--9-7-6-------------------|||
+--------9-7-6-------------|||
+--------------9-7-6------o|||
+--------------------9-7-6o|||
+--------------------------|||
+--------------------------|||`,
+    desc:"Trois doigts consécutifs : 1-2-3. Base de tous les exercices à 3 notes. Montée puis retour décalé d\'une case.",
+    tip:"Plus facile que 4 notes, idéal pour chauffer la main avant de passer à A4. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A3P2U", cat:"A3", dir:"U", num:2, notes:3, difficulty:"Débutant",
+    name:"Triade 1-3-4", bpm:70, bpmTarget:140,
+    tab:`e|--------------------5-7-8-|
+B|--------------5-7-8-------|
+G|--------5-7-8-------------|
+D|--5-7-8-------------------|
+A|--------------------------|
+E|--------------------------|
+↩ retour même position
+--5-7-8-------------------|||
+--------5-7-8-------------|||
+--------------5-7-8------o|||
+--------------------5-7-8o|||
+--------------------------|||
+--------------------------|||`,
+    desc:"Saute la case 2 : 1-3-4. Travaille l\'extension médius-annulaire.",
+    tip:"Le saut 1→3 en début de cellule est l\'écueil principal. Ancre bien l\'index.",
+  },
+  {
+    id:"A3P2D", cat:"A3", dir:"D", num:2, notes:3, difficulty:"Débutant",
+    name:"Triade 1-3-4", bpm:70, bpmTarget:140,
+    tab:`e|--------------------8-7-5-|
+B|--------------8-7-5-------|
+G|--------8-7-5-------------|
+D|--8-7-5-------------------|
+A|--------------------------|
+E|--------------------------|
+↩ retour +1 case
+--9-8-6-------------------|||
+--------9-8-6-------------|||
+--------------9-8-6------o|||
+--------------------9-8-6o|||
+--------------------------|||
+--------------------------|||`,
+    desc:"Saute la case 2 : 1-3-4. Travaille l\'extension médius-annulaire. Version descendante.",
+    tip:"Le saut 1→3 en début de cellule est l\'écueil principal. Ancre bien l\'index. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A3P2M", cat:"A3", dir:"M", num:2, notes:3, difficulty:"Débutant",
+    name:"Triade 1-3-4", bpm:70, bpmTarget:128,
+    tab:`e|--------------------5-7-8-|
+B|--------------5-7-8-------|
+G|--------5-7-8-------------|
+D|--5-7-8-------------------|
+A|--------------------------|
+E|--------------------------|
+↩ retour descendant +1
+--9-8-6-------------------|||
+--------9-8-6-------------|||
+--------------9-8-6------o|||
+--------------------9-8-6o|||
+--------------------------|||
+--------------------------|||`,
+    desc:"Saute la case 2 : 1-3-4. Travaille l\'extension médius-annulaire. Montée puis retour décalé d\'une case.",
+    tip:"Le saut 1→3 en début de cellule est l\'écueil principal. Ancre bien l\'index. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A3P3U", cat:"A3", dir:"U", num:3, notes:3, difficulty:"Intermédiaire",
+    name:"Triade 1-3-5", bpm:60, bpmTarget:120,
+    tab:`e|--------------------5-7-9-|
+B|--------------5-7-9-------|
+G|--------5-7-9-------------|
+D|--5-7-9-------------------|
+A|--------------------------|
+E|--------------------------|
+↩ retour même position
+--5-7-9-------------------|||
+--------5-7-9-------------|||
+--------------5-7-9------o|||
+--------------------5-7-9o|||
+--------------------------|||
+--------------------------|||`,
+    desc:"Deux sauts d\'une case : 1-3-5. Grande extension sur 3 doigts.",
+    tip:"Attention à ne pas déplacer la main. Les 3 doigts doivent rester ancrés.",
+  },
+  {
+    id:"A3P3D", cat:"A3", dir:"D", num:3, notes:3, difficulty:"Intermédiaire",
+    name:"Triade 1-3-5", bpm:60, bpmTarget:120,
+    tab:`e|--------------------9-7-5-|
+B|--------------9-7-5-------|
+G|--------9-7-5-------------|
+D|--9-7-5-------------------|
+A|--------------------------|
+E|--------------------------|
+↩ retour +1 case
+--10-8-6----------------------|||
+---------10-8-6---------------|||
+----------------10-8-6-------o|||
+-----------------------10-8-6o|||
+------------------------------|||
+------------------------------|||`,
+    desc:"Deux sauts d\'une case : 1-3-5. Grande extension sur 3 doigts. Version descendante.",
+    tip:"Attention à ne pas déplacer la main. Les 3 doigts doivent rester ancrés. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A3P3M", cat:"A3", dir:"M", num:3, notes:3, difficulty:"Intermédiaire",
+    name:"Triade 1-3-5", bpm:60, bpmTarget:110,
+    tab:`e|--------------------5-7-9-|
+B|--------------5-7-9-------|
+G|--------5-7-9-------------|
+D|--5-7-9-------------------|
+A|--------------------------|
+E|--------------------------|
+↩ retour descendant +1
+--10-8-6----------------------|||
+---------10-8-6---------------|||
+----------------10-8-6-------o|||
+-----------------------10-8-6o|||
+------------------------------|||
+------------------------------|||`,
+    desc:"Deux sauts d\'une case : 1-3-5. Grande extension sur 3 doigts. Montée puis retour décalé d\'une case.",
+    tip:"Attention à ne pas déplacer la main. Les 3 doigts doivent rester ancrés. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A2P1U", cat:"A2", dir:"U", num:1, notes:2, difficulty:"Débutant",
+    name:"Demi-ton", bpm:80, bpmTarget:160,
+    tab:`e|--------------6-7-|
+B|----------6-7-----|
+G|------5-6---------|
+D|--5-6-------------|
+A|------------------|
+E|------------------|
+↩ retour même position
+--6-7-------------|||
+------6-7---------|||
+----------5-6----o|||
+--------------5-6o|||
+------------------|||
+------------------|||`,
+    desc:"Deux notes adjacentes. Le plus simple — mais essentiel pour la fluidité.",
+    tip:"Focus sur la synchronisation main gauche / main droite. Zéro tension.",
+  },
+  {
+    id:"A2P1D", cat:"A2", dir:"D", num:1, notes:2, difficulty:"Débutant",
+    name:"Demi-ton", bpm:80, bpmTarget:160,
+    tab:`e|--------------7-6-|
+B|----------7-6-----|
+G|------6-5---------|
+D|--6-5-------------|
+A|------------------|
+E|------------------|
+↩ retour +1 case
+--8-7-------------|||
+------8-7---------|||
+----------7-6----o|||
+--------------7-6o|||
+------------------|||
+------------------|||`,
+    desc:"Deux notes adjacentes. Le plus simple — mais essentiel pour la fluidité. Version descendante.",
+    tip:"Focus sur la synchronisation main gauche / main droite. Zéro tension. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A2P1M", cat:"A2", dir:"M", num:1, notes:2, difficulty:"Débutant",
+    name:"Demi-ton", bpm:80, bpmTarget:147,
+    tab:`e|--------------6-7-|
+B|----------6-7-----|
+G|------5-6---------|
+D|--5-6-------------|
+A|------------------|
+E|------------------|
+↩ retour descendant +1
+--8-7-------------|||
+------8-7---------|||
+----------7-6----o|||
+--------------7-6o|||
+------------------|||
+------------------|||`,
+    desc:"Deux notes adjacentes. Le plus simple — mais essentiel pour la fluidité. Montée puis retour décalé d\'une case.",
+    tip:"Focus sur la synchronisation main gauche / main droite. Zéro tension. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A2P2U", cat:"A2", dir:"U", num:2, notes:2, difficulty:"Débutant",
+    name:"Ton entier", bpm:80, bpmTarget:160,
+    tab:`e|--------------5-7-|
+B|----------5-7-----|
+G|------5-7---------|
+D|--5-7-------------|
+A|------------------|
+E|------------------|
+↩ retour même position
+--5-7-------------|||
+------5-7---------|||
+----------5-7----o|||
+--------------5-7o|||
+------------------|||
+------------------|||`,
+    desc:"Deux notes séparées d\'un ton entier : 1-3.",
+    tip:"Extension index-majeur ou index-annulaire. Garde la main décontractée.",
+  },
+  {
+    id:"A2P2D", cat:"A2", dir:"D", num:2, notes:2, difficulty:"Débutant",
+    name:"Ton entier", bpm:80, bpmTarget:160,
+    tab:`e|--------------7-5-|
+B|----------7-5-----|
+G|------7-5---------|
+D|--7-5-------------|
+A|------------------|
+E|------------------|
+↩ retour +1 case
+--8-6-------------|||
+------8-6---------|||
+----------8-6----o|||
+--------------8-6o|||
+------------------|||
+------------------|||`,
+    desc:"Deux notes séparées d\'un ton entier : 1-3. Version descendante.",
+    tip:"Extension index-majeur ou index-annulaire. Garde la main décontractée. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A2P2M", cat:"A2", dir:"M", num:2, notes:2, difficulty:"Débutant",
+    name:"Ton entier", bpm:80, bpmTarget:147,
+    tab:`e|--------------5-7-|
+B|----------5-7-----|
+G|------5-7---------|
+D|--5-7-------------|
+A|------------------|
+E|------------------|
+↩ retour descendant +1
+--8-6-------------|||
+------8-6---------|||
+----------8-6----o|||
+--------------8-6o|||
+------------------|||
+------------------|||`,
+    desc:"Deux notes séparées d\'un ton entier : 1-3. Montée puis retour décalé d\'une case.",
+    tip:"Extension index-majeur ou index-annulaire. Garde la main décontractée. Le changement de sens au sommet doit être fluide, sans pause.",
+  },
+  {
+    id:"A2P3U", cat:"A2", dir:"U", num:3, notes:2, difficulty:"Intermédiaire",
+    name:"Tierce mineure", bpm:70, bpmTarget:140,
+    tab:`e|--------------5-8-|
+B|----------5-8-----|
+G|------5-8---------|
+D|--5-8-------------|
+A|------------------|
+E|------------------|
+↩ retour même position
+--5-8-------------|||
+------5-8---------|||
+----------5-8----o|||
+--------------5-8o|||
+------------------|||
+------------------|||`,
+    desc:"Extension sur 3 cases : 1-4. Préparation aux grands écarts.",
+    tip:"Extension index-auriculaire sur 3 cases. Prudence et pauses fréquentes.",
+  },
+  {
+    id:"A2P3D", cat:"A2", dir:"D", num:3, notes:2, difficulty:"Intermédiaire",
+    name:"Tierce mineure", bpm:70, bpmTarget:140,
+    tab:`e|--------------8-5-|
+B|----------8-5-----|
+G|------8-5---------|
+D|--8-5-------------|
+A|------------------|
+E|------------------|
+↩ retour +1 case
+--9-6-------------|||
+------9-6---------|||
+----------9-6----o|||
+--------------9-6o|||
+------------------|||
+------------------|||`,
+    desc:"Extension sur 3 cases : 1-4. Préparation aux grands écarts. Version descendante.",
+    tip:"Extension index-auriculaire sur 3 cases. Prudence et pauses fréquentes. Le doigté inversé est souvent plus difficile.",
+  },
+  {
+    id:"A2P3M", cat:"A2", dir:"M", num:3, notes:2, difficulty:"Intermédiaire",
+    name:"Tierce mineure", bpm:70, bpmTarget:128,
+    tab:`e|--------------5-8-|
+B|----------5-8-----|
+G|------5-8---------|
+D|--5-8-------------|
+A|------------------|
+E|------------------|
+↩ retour descendant +1
+--9-6-------------|||
+------9-6---------|||
+----------9-6----o|||
+--------------9-6o|||
+------------------|||
+------------------|||`,
+    desc:"Extension sur 3 cases : 1-4. Préparation aux grands écarts. Montée puis retour décalé d\'une case.",
+    tip:"Extension index-auriculaire sur 3 cases. Prudence et pauses fréquentes. Le changement de sens au sommet doit être fluide, sans pause.",
+  }
+];
+
+// ─── PROGRAMME SEMAINE ────────────────────────────────────────────────────────
+const PROGRAM = [
+  {
+    day:"Lundi", theme:"Découverte du système",
+    sessions:[
+      {id:"s0_0", patId:"A4P1U", bpm:60, interp:"Legato", focus:"Précision totale, pas de vitesse. Écoute chaque note."},
+      {id:"s0_1", patId:"A4P1U", bpm:60, interp:"Alternate Up", focus:"Synchronisation médiator/main gauche. Même tempo."},
+    ]
+  },
+  {
+    day:"Mardi", theme:"Ascendant + Descendant",
+    sessions:[
+      {id:"s1_0", patId:"A4P1U", bpm:110, interp:"Legato", focus:"Monte le tempo sur P1U. Reste propre."},
+      {id:"s1_1", patId:"A4P1D", bpm:60, interp:"Legato", focus:"Découverte de la direction descendante. Retour à 60 BPM."},
+    ]
+  },
+  {
+    day:"Mercredi", theme:"Patterns croisés",
+    sessions:[
+      {id:"s2_0", patId:"A4P2U", bpm:60, interp:"Legato", focus:"Nouveau pattern : le croisement 1-3-2-4. Patience !"},
+      {id:"s2_1", patId:"A4P2D", bpm:60, interp:"Legato", focus:"Version descendante. Même soin."},
+    ]
+  },
+  {
+    day:"Jeudi", theme:"Extensions",
+    sessions:[
+      {id:"s3_0", patId:"A4P3U", bpm:60, interp:"Legato", focus:"Étire-toi avant. Extension 1-4 : prends ton temps."},
+      {id:"s3_1", patId:"A4P4U", bpm:60, interp:"Legato", focus:"Extension + descente. Compare avec P3U."},
+    ]
+  },
+  {
+    day:"Vendredi", theme:"3 notes — vitesse",
+    sessions:[
+      {id:"s4_0", patId:"A3P1U", bpm:60, interp:"Legato", focus:"Moins de notes = plus de vitesse. Monte jusqu'à 110 si propre."},
+      {id:"s4_1", patId:"A3P2U", bpm:60, interp:"Legato", focus:"Compare la couleur avec A3P1U. Deux sons différents."},
+      {id:"s4_2", patId:"A3P3U", bpm:60, interp:"Legato", focus:"Extension 1-3-5. Cible 110 BPM propre."},
+    ]
+  },
+  {
+    day:"Samedi", theme:"2 notes — endurance",
+    sessions:[
+      {id:"s5_0", patId:"A2P1U", bpm:60, interp:"Legato", focus:"Attention au décalage corde de Si. Écoute la continuité."},
+      {id:"s5_1", patId:"A2P2U", bpm:60, interp:"Alternate Up", focus:"2 notes, alternate picking. Monte jusqu'à 130 si propre."},
+      {id:"s5_2", patId:"A2P3U", bpm:60, interp:"Legato", focus:"Extension index-auriculaire. Poignet souple."},
+    ]
+  },
+  {
+    day:"Dimanche", theme:"Bilan & Push",
+    sessions:[
+      {id:"s6_0", patId:"A4P1U", bpm:130, interp:"Alternate Up", focus:"Challenge vitesse. Tu as travaillé toute la semaine — pousse !"},
+      {id:"s6_1", patId:"A4P1M", bpm:60, interp:"Legato", focus:"Mix montée + descente. Fluidité de la boucle complète."},
+    ]
+  },
+];
+
+const MODES = ["U","D","M"];
+const MODE_LABELS = {U:"Ascendant",D:"Descendant",M:"Mix"};
+const INTERPS = ["Leg","Up","Down"];
+const INTERP_LABELS = {Leg:"Legato",Up:"Alt Up",Down:"Alt Down"};
+const TEMPOS = [60,110,130];
+const FINGERINGS = [1,2,3,4];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let state = {
+  tab: 'patterns',
+  filter: 'all',
+  openCards: {},
+  openDays: {},
+  progPattern: PATTERNS[0].id,
+  progFingering: 1,
+  progTabOpen: false,
+  progress: {},
+  sessions: {},
+};
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('dicoPattern') || '{}');
+    state.progress = saved.progress || {};
+    state.sessions = saved.sessions || {};
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('dicoPattern', JSON.stringify({
+      progress: state.progress,
+      sessions: state.sessions,
+    }));
+  } catch(e) {}
+}
+
+function getProgressKey(patId, fing, mode, interp, tempo) {
+  return `${patId}__${fing}__${mode}__${interp}__${tempo}`;
+}
+
+function getPatternPct(patId) {
+  let total = 0, done = 0;
+  FINGERINGS.forEach(f => MODES.forEach(m => INTERPS.forEach(i => TEMPOS.forEach(t => {
+    total++;
+    if (state.progress[getProgressKey(patId, f, m, i, t)]) done++;
+  }))));
+  return total > 0 ? Math.round(done / total * 100) : 0;
+}
+
+// ─── CHRONO ───────────────────────────────────────────────────────────────────
+const CHRONO = { running:false, elapsed:0, startAt:0, timer:null };
+
+function chronoTick() {
+  const total = CHRONO.elapsed + (Date.now() - CHRONO.startAt);
+  const s = Math.floor(total / 1000);
+  const mm = String(Math.floor(s / 60)).padStart(2,'0');
+  const ss = String(s % 60).padStart(2,'0');
+  const el = document.getElementById('chrono-time');
+  if (el) el.textContent = mm + ':' + ss;
+}
+
+function chronoToggle() {
+  if (CHRONO.running) {
+    clearInterval(CHRONO.timer);
+    CHRONO.elapsed += Date.now() - CHRONO.startAt;
+    CHRONO.running = false;
+    const btn = document.getElementById('chrono-play');
+    if (btn) btn.textContent = '▶';
+  } else {
+    CHRONO.startAt = Date.now();
+    CHRONO.running = true;
+    CHRONO.timer = setInterval(chronoTick, 500);
+    const btn = document.getElementById('chrono-play');
+    if (btn) btn.textContent = '⏸';
+  }
+}
+
+function chronoReset() {
+  clearInterval(CHRONO.timer);
+  CHRONO.running = false;
+  CHRONO.elapsed = 0;
+  const el = document.getElementById('chrono-time');
+  if (el) el.textContent = '00:00';
+  const btn = document.getElementById('chrono-play');
+  if (btn) btn.textContent = '▶';
+}
+
+// ─── TUNER ────────────────────────────────────────────────────────────────────
+const TUNER = { running:false, stream:null, actx:null, analyser:null, rafId:null };
+const NOTE_NAMES = ['Do','Do#','Ré','Ré#','Mi','Fa','Fa#','Sol','Sol#','La','La#','Si'];
+const GUITAR_STRINGS = [
+  {name:'E',  note:'Mi grave', freq:82.41},
+  {name:'A',  note:'La',       freq:110.00},
+  {name:'D',  note:'Ré',       freq:146.83},
+  {name:'G',  note:'Sol',      freq:196.00},
+  {name:'B',  note:'Si',       freq:246.94},
+  {name:'e',  note:'Mi aigu',  freq:329.63},
+];
+
+function autoCorrelate(buf, sampleRate) {
+  const SIZE = buf.length;
+  let rms = 0;
+  for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
+  if (Math.sqrt(rms / SIZE) < 0.015) return -1;
+
+  const MIN_OFF = Math.floor(sampleRate / 1100); // ~1100 Hz max
+  const MAX_OFF = Math.floor(sampleRate / 55);   // ~55 Hz min
+  let bestOff = -1, bestCorr = 0, lastCorr = 1, found = false;
+
+  for (let off = MIN_OFF; off < Math.min(MAX_OFF, SIZE / 2); off++) {
+    let corr = 0, n = 0;
+    for (let i = 0; i + off < SIZE; i++) { corr += Math.abs(buf[i] - buf[i + off]); n++; }
+    corr = 1 - corr / n;
+    if (corr > 0.9 && corr > lastCorr) {
+      found = true;
+      if (corr > bestCorr) { bestCorr = corr; bestOff = off; }
+    } else if (found) break;
+    lastCorr = corr;
+  }
+  return bestOff === -1 ? -1 : sampleRate / bestOff;
+}
+
+function freqToNote(freq) {
+  const semi = Math.round(12 * Math.log2(freq / 440)) + 69;
+  const name = NOTE_NAMES[semi % 12];
+  const octave = Math.floor(semi / 12) - 1;
+  const refFreq = 440 * Math.pow(2, (semi - 69) / 12);
+  const cents = Math.round(1200 * Math.log2(freq / refFreq));
+  return { name, octave, cents };
+}
+
+function tunerFrame() {
+  if (!TUNER.running) return;
+  const buf = new Float32Array(TUNER.analyser.fftSize);
+  TUNER.analyser.getFloatTimeDomainData(buf);
+  const freq = autoCorrelate(buf, TUNER.actx.sampleRate);
+
+  const noteEl  = document.getElementById('tuner-note');
+  const freqEl  = document.getElementById('tuner-freq');
+  const centsEl = document.getElementById('tuner-cents');
+  const cursor  = document.getElementById('tuner-cursor');
+
+  if (!noteEl) { TUNER.rafId = requestAnimationFrame(tunerFrame); return; }
+
+  if (freq === -1) {
+    noteEl.textContent = '—'; noteEl.style.color = 'var(--text2)';
+    if (freqEl) freqEl.textContent = '';
+    if (centsEl) centsEl.textContent = 'En attente...';
+    if (cursor) { cursor.style.left = '50%'; cursor.style.background = 'var(--border)'; }
+  } else {
+    const { name, octave, cents } = freqToNote(freq);
+    const color = Math.abs(cents) <= 5 ? 'var(--green)' : Math.abs(cents) <= 20 ? 'var(--orange)' : 'var(--red)';
+    noteEl.textContent = name + octave;
+    noteEl.style.color = color;
+    if (freqEl) freqEl.textContent = freq.toFixed(1) + ' Hz';
+    if (centsEl) centsEl.textContent = (cents >= 0 ? '+' : '') + cents + ' cents';
+    if (cursor) {
+      const pct = Math.max(2, Math.min(98, 50 + (cents / 50) * 48));
+      cursor.style.left = pct + '%';
+      cursor.style.background = color;
+    }
+  }
+  TUNER.rafId = requestAnimationFrame(tunerFrame);
+}
+
+async function tunerToggle() {
+  if (TUNER.running) {
+    cancelAnimationFrame(TUNER.rafId);
+    if (TUNER.stream) TUNER.stream.getTracks().forEach(t => t.stop());
+    TUNER.running = false;
+    TUNER.stream = null;
+    const btn = document.getElementById('tuner-btn');
+    if (btn) { btn.textContent = '🎤 Activer'; btn.style.background = 'var(--blue)'; }
+    const noteEl = document.getElementById('tuner-note');
+    if (noteEl) { noteEl.textContent = '—'; noteEl.style.color = 'var(--text2)'; }
+  } else {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio:true, video:false });
+      TUNER.stream = stream;
+      if (!TUNER.actx) TUNER.actx = new (window.AudioContext || window.webkitAudioContext)();
+      if (TUNER.actx.state === 'suspended') await TUNER.actx.resume();
+      TUNER.analyser = TUNER.actx.createAnalyser();
+      TUNER.analyser.fftSize = 2048;
+      TUNER.actx.createMediaStreamSource(stream).connect(TUNER.analyser);
+      TUNER.running = true;
+      const btn = document.getElementById('tuner-btn');
+      if (btn) { btn.textContent = '⏹ Arrêter'; btn.style.background = 'var(--red)'; }
+      tunerFrame();
+    } catch(e) {
+      alert('Micro non accessible — vérifie les permissions du navigateur.');
+    }
+  }
+}
+
+function tunerStop() {
+  if (!TUNER.running) return;
+  cancelAnimationFrame(TUNER.rafId);
+  if (TUNER.stream) TUNER.stream.getTracks().forEach(t => t.stop());
+  TUNER.running = false; TUNER.stream = null;
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(tab) {
+  if (tab !== 'tuner') tunerStop();
+  state.tab = tab;
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-'+tab).classList.add('active');
+  render();
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function render() {
+  const el = document.getElementById('content');
+  if (state.tab === 'patterns') el.innerHTML = renderPatterns();
+  else if (state.tab === 'program') el.innerHTML = renderProgram();
+  else if (state.tab === 'tuner') el.innerHTML = renderTuner();
+  else el.innerHTML = renderProgress();
+  metroPostRender();
+}
+
+// ── TUNER TAB ──
+function renderTuner() {
+  const stringsHtml = GUITAR_STRINGS.map(s => `
+    <div class="tuner-string" onclick="document.getElementById('tuner-freq-hint').textContent='${s.note} · ${s.freq} Hz (corde ${s.name})'">
+      <div class="sname">${s.name}</div>
+      <div class="sfreq">${s.freq} Hz</div>
+    </div>`).join('');
+
+  return `
+  <div style="text-align:center;padding:16px">
+
+    <div class="tuner-note" id="tuner-note" style="color:var(--text2)">—</div>
+    <div style="font-size:15px;font-weight:700;min-height:22px;margin-bottom:2px" id="tuner-freq"></div>
+    <div style="font-size:13px;color:var(--text2);min-height:20px" id="tuner-cents">Appuie sur Activer pour commencer</div>
+
+    <div class="tuner-bar-wrap" style="margin:14px 16px 2px">
+      <div class="tuner-center"></div>
+      <div class="tuner-cursor" id="tuner-cursor" style="left:50%;background:var(--border)"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);padding:0 16px;margin-bottom:20px">
+      <span>♭ −50</span><span style="color:var(--green);font-weight:700">● Juste</span><span>+50 ♯</span>
+    </div>
+
+    <button id="tuner-btn" onclick="tunerToggle()"
+      style="padding:13px 32px;border:none;border-radius:14px;background:var(--blue);color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15)">
+      🎤 Activer
+    </button>
+
+    <div style="font-size:12px;color:var(--text2);margin-top:10px;min-height:18px" id="tuner-freq-hint">
+      Touche une corde ci-dessous pour voir sa fréquence de référence
+    </div>
+
+    <div style="margin-top:20px;text-align:left">
+      <div class="section-title" style="margin-top:0">Cordes à vide — référence</div>
+      <div class="tuner-string-grid">${stringsHtml}</div>
+    </div>
+
+    <div style="margin-top:20px;padding:10px 14px;background:#FFF9E6;border-left:3px solid var(--orange);border-radius:0 8px 8px 0;text-align:left">
+      <div style="font-size:12px;color:#5a4000">💡 Pour un résultat précis, joue fort et tiens la note. L'accordeur fonctionne mieux corde par corde, sans bruit ambiant.</div>
+    </div>
+  </div>`;
+}
+
+// ── PATTERNS TAB ──
+function diffTag(d) {
+  if (d === 'Débutant') return `<span class="tag diff-deb">${d}</span>`;
+  if (d === 'Intermédiaire') return `<span class="tag diff-int">${d}</span>`;
+  return `<span class="tag diff-adv">${d}</span>`;
+}
+
+function dirLabel(d) {
+  return {U:'⬆ Ascendant',D:'⬇ Descendant',M:'↕ Mix'}[d] || d;
+}
+
+function renderPatterns() {
+  const filters = ['all','A2','A3','A4'];
+  const filterLabels = {all:'Tous',A2:'A2 — 2 notes',A3:'A3 — 3 notes',A4:'A4 — 4 notes'};
+  let html = `<div class="filter-bar">`;
+  filters.forEach(f => {
+    html += `<button class="${state.filter===f?'active':''}" onclick="setFilter('${f}')">${filterLabels[f]}</button>`;
+  });
+  html += `</div>`;
+
+  const visible = PATTERNS.filter(p => state.filter === 'all' || p.cat === state.filter);
+
+  // Group by cat+num
+  const groups = {};
+  visible.forEach(p => {
+    const key = p.cat + 'P' + p.num;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(p);
+  });
+
+  Object.entries(groups).forEach(([key, pats]) => {
+    const base = pats[0];
+    const isOpen = state.openCards[key];
+    const pct = getPatternPct(base.id); // use first id for group indicator
+    const allIds = pats.map(p=>p.id).join(',');
+
+    html += `
+    <div class="card">
+      <div class="card-head" onclick="toggleCard('${key}')">
+        <div>
+          <h2>${key} — ${base.name}</h2>
+          <div class="tag-row">
+            ${diffTag(base.difficulty)}
+            <span class="tag" style="background:#f0f0f0;color:#333">${base.notes} notes · 4 cordes DGBE</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:12px;font-weight:700;color:var(--blue)">${pct}%</span>
+          <span class="arrow ${isOpen?'open':''}">▶</span>
+        </div>
+      </div>
+      <div class="card-body ${isOpen?'open':''}">`;
+
+    pats.forEach(p => {
+      html += `
+        <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+          <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:6px">${dirLabel(p.dir)} — <code style="font-size:12px;background:var(--blue-light);padding:1px 6px;border-radius:4px">${p.id}</code></div>
+          <div class="tab-wrap"><pre>${p.tab}</pre></div>
+          <p class="desc">${p.desc}</p>
+          <div class="tip">💡 ${p.tip}</div>
+          <div class="metro-wrap">
+            <div class="metro-dot" id="metro-dot-${p.id}"></div>
+            <button class="metro-adj" onclick="metroBpmChange('${p.id}',-5)">−</button>
+            <input class="metro-bpm" id="metro-bpm-${p.id}" type="number" value="${p.bpm}" min="30" max="300"
+              oninput="if(METRO.running&&METRO.patId==='${p.id}')METRO.bpm=Math.max(30,Math.min(300,parseInt(this.value)||60))">
+            <button class="metro-adj" onclick="metroBpmChange('${p.id}',+5)">+</button>
+            <span class="metro-target">BPM · cible ${p.bpmTarget}</span>
+            <button class="metro-btn" id="metro-btn-${p.id}" style="background:var(--green)" onclick="metroToggle('${p.id}')">▶ Start</button>
+            <button onclick="goToProgress('${p.id}')" style="font-size:12px;padding:5px 10px;border:none;background:var(--blue);color:#fff;border-radius:8px;cursor:pointer">📊</button>
+          </div>
+        </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  return html;
+}
+
+function setFilter(f) {
+  state.filter = f;
+  render();
+}
+
+function toggleCard(key) {
+  state.openCards[key] = !state.openCards[key];
+  render();
+}
+
+// ── PROGRAMME TAB ──
+function renderProgram() {
+  const totalSessions = PROGRAM.reduce((acc, d) => acc + d.sessions.length, 0);
+  const doneSessions = PROGRAM.reduce((acc, d) =>
+    acc + d.sessions.filter(s => state.sessions[s.id]).length, 0);
+  const pct = Math.round(doneSessions / totalSessions * 100);
+
+  let html = `
+  <div class="card" style="padding:14px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div>
+        <div style="font-size:13px;color:var(--text2)">Semaine Test — Programme 1</div>
+        <div style="font-size:22px;font-weight:800;color:var(--blue)">${doneSessions}/${totalSessions} sessions</div>
+      </div>
+      <div style="font-size:32px;font-weight:800;color:var(--blue)">${pct}%</div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+  </div>`;
+
+  PROGRAM.forEach((day, di) => {
+    const dayDone = day.sessions.every(s => state.sessions[s.id]);
+    const isOpen = state.openDays[di] !== false;
+
+    html += `
+    <div class="day-card">
+      <div class="day-head" onclick="toggleDay(${di})">
+        <div class="day-num ${dayDone?'done':''}">${di+1}</div>
+        <div class="day-info">
+          <strong>${day.day}</strong>
+          <span>${day.theme} · ${day.sessions.length} session${day.sessions.length>1?'s':''}</span>
+        </div>
+        <span class="arrow ${isOpen?'open':''}">▶</span>
+      </div>
+      <div class="day-body ${isOpen?'open':''}">`;
+
+    day.sessions.forEach(s => {
+      const pat = PATTERNS.find(p => p.id === s.patId);
+      const checked = !!state.sessions[s.id];
+      html += `
+      <div class="session">
+        <input type="checkbox" ${checked?'checked':''} onchange="toggleSession('${s.id}')">
+        <div class="session-info">
+          <strong>${s.patId} — ${pat ? pat.name : ''}</strong>
+          <span class="bpm-badge">${s.bpm} BPM</span>
+          <span class="bpm-badge" style="background:#E2EFDA;color:#375623">${s.interp}</span>
+          <p>${s.focus}</p>
+        </div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  return html;
+}
+
+function toggleDay(di) {
+  state.openDays[di] = state.openDays[di] === false ? true : false;
+  render();
+}
+
+function toggleSession(sid) {
+  state.sessions[sid] = !state.sessions[sid];
+  saveState();
+  render();
+}
+
+// ── PROGRESSION TAB ──
+function renderProgress() {
+  const patId = state.progPattern;
+  const fing = state.progFingering;
+  const pct = getPatternPct(patId);
+  const pat = PATTERNS.find(p => p.id === patId) || PATTERNS[0];
+
+  let html = `
+  <div class="pct-card">
+    <h3>Progression — ${patId}</h3>
+    <div class="pct-big">${pct}%</div>
+    <div class="pct-sub">sur 108 combinaisons (3 modes × 3 interprétations × 4 doigtés × 3 tempos)</div>
+    <div class="progress-bar-wrap" style="margin-top:8px"><div class="progress-bar" style="width:${pct}%"></div></div>
+  </div>
+
+  <select class="pat-selector" onchange="selectPat(this.value)">`;
+
+  PATTERNS.forEach(p => {
+    html += `<option value="${p.id}" ${p.id===patId?'selected':''}>${p.id} — ${p.name} (${dirLabel(p.dir)})</option>`;
+  });
+
+  html += `</select>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-head" onclick="toggleProgTab()">
+      <div><h2 style="font-size:14px">📋 Tablature — ${pat.id}</h2></div>
+      <span class="arrow ${state.progTabOpen?'open':''}">▶</span>
+    </div>
+    <div class="card-body ${state.progTabOpen?'open':''}">
+      <div class="tab-wrap"><pre>${pat.tab}</pre></div>
+      <p class="desc" style="margin-top:6px">${pat.desc}</p>
+    </div>
+  </div>
+
+  <div class="metro-wrap" style="margin-bottom:12px">
+    <div class="metro-dot" id="metro-dot-__prog__"></div>
+    <button class="metro-adj" onclick="metroBpmChange('__prog__',-5)">−</button>
+    <input class="metro-bpm" id="metro-bpm-__prog__" type="number" value="${pat.bpm}" min="30" max="300"
+      oninput="if(METRO.running&&METRO.patId==='__prog__')METRO.bpm=Math.max(30,Math.min(300,parseInt(this.value)||60))">
+    <button class="metro-adj" onclick="metroBpmChange('__prog__',+5)">+</button>
+    <span class="metro-target">BPM · cible ${pat.bpmTarget}</span>
+    <button class="metro-btn" id="metro-btn-__prog__" style="background:var(--green)" onclick="metroToggle('__prog__')">▶ Start</button>
+  </div>
+
+  <div class="grid-label">Doigté de départ</div>
+  <div class="fing-row">`;
+
+  FINGERINGS.forEach(f => {
+    html += `<button class="${fing===f?'active':''}" onclick="selectFing(${f})">${f}<br><span style="font-size:9px;font-weight:400">${['Index','Majeur','Annul.','Auricu.'][f-1]}</span></button>`;
+  });
+  html += `</div>`;
+
+  MODES.forEach(mode => {
+    html += `
+    <div class="grid-label">${MODE_LABELS[mode]}</div>
+    <div class="prog-grid">
+      <table>
+        <thead><tr>
+          <th style="width:70px">Tempo</th>
+          ${INTERPS.map(i=>`<th>${INTERP_LABELS[i]}</th>`).join('')}
+        </tr></thead>
+        <tbody>`;
+
+    TEMPOS.forEach(tempo => {
+      html += `<tr><td class="tempo">${tempo} BPM</td>`;
+      INTERPS.forEach(interp => {
+        const key = getProgressKey(patId, fing, mode, interp, tempo);
+        const done = !!state.progress[key];
+        html += `<td><button class="cell-btn ${done?'checked':''}" onclick="toggleCell('${key}')">
+          ${done?'✓':'○'}
+        </button></td>`;
+      });
+      html += `</tr>`;
+    });
+
+    html += `</tbody></table></div>`;
+  });
+
+  return html;
+}
+
+function selectPat(id) {
+  if (METRO.running && METRO.patId === '__prog__') metroStop(false);
+  state.progPattern = id;
+  render();
+}
+
+function toggleProgTab() {
+  state.progTabOpen = !state.progTabOpen;
+  render();
+}
+
+function selectFing(f) {
+  state.progFingering = f;
+  render();
+}
+
+function toggleCell(key) {
+  state.progress[key] = !state.progress[key];
+  saveState();
+  render();
+}
+
+function goToProgress(patId) {
+  state.progPattern = patId;
+  showTab('progress');
+}
+
+// ─── METRONOME ────────────────────────────────────────────────────────────────
+const METRO = { ctx:null, running:false, bpm:60, nextBeat:0, timer:null, patId:null };
+
+function metroCtx() {
+  if (!METRO.ctx) METRO.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (METRO.ctx.state === 'suspended') METRO.ctx.resume();
+  return METRO.ctx;
+}
+
+function metroClick(time) {
+  const ctx = METRO.ctx;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.frequency.value = 880;
+  gain.gain.setValueAtTime(0.35, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.045);
+  osc.start(time); osc.stop(time + 0.05);
+  // flash visuel
+  const ahead = Math.max(0, (time - ctx.currentTime) * 1000);
+  setTimeout(() => {
+    const dot = document.getElementById('metro-dot-' + METRO.patId);
+    if (!dot) return;
+    dot.classList.add('flash');
+    setTimeout(() => dot.classList.remove('flash'), 90);
+  }, ahead);
+}
+
+function metroSchedule() {
+  const ctx = METRO.ctx;
+  while (METRO.nextBeat < ctx.currentTime + 0.15) {
+    metroClick(METRO.nextBeat);
+    METRO.nextBeat += 60.0 / METRO.bpm;
+  }
+}
+
+function metroStart(patId) {
+  metroStop(false);
+  const ctx = metroCtx();
+  const inp = document.getElementById('metro-bpm-' + patId);
+  METRO.bpm = inp ? Math.max(30, Math.min(300, parseInt(inp.value) || 60)) : 60;
+  METRO.patId = patId;
+  METRO.running = true;
+  METRO.nextBeat = ctx.currentTime + 0.1;
+  METRO.timer = setInterval(metroSchedule, 50);
+  metroRefreshBtn(patId, true);
+}
+
+function metroStop(refresh=true) {
+  if (METRO.timer) { clearInterval(METRO.timer); METRO.timer = null; }
+  const old = METRO.patId;
+  METRO.running = false;
+  if (refresh && old) metroRefreshBtn(old, false);
+}
+
+function metroToggle(patId) {
+  if (METRO.running && METRO.patId === patId) metroStop();
+  else metroStart(patId);
+}
+
+function metroBpmChange(patId, delta) {
+  const inp = document.getElementById('metro-bpm-' + patId);
+  if (!inp) return;
+  const v = Math.max(30, Math.min(300, (parseInt(inp.value) || 60) + delta));
+  inp.value = v;
+  if (METRO.running && METRO.patId === patId) METRO.bpm = v;
+}
+
+function metroRefreshBtn(patId, running) {
+  const btn = document.getElementById('metro-btn-' + patId);
+  if (!btn) return;
+  btn.textContent = running ? '⏹ Stop' : '▶ Start';
+  btn.style.background = running ? 'var(--red)' : 'var(--green)';
+}
+
+function metroPostRender() {
+  if (METRO.running && METRO.patId) metroRefreshBtn(METRO.patId, true);
+}
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
+loadState();
+// Default: open all days in program
+PROGRAM.forEach((_, i) => { if (state.openDays[i] === undefined) state.openDays[i] = true; });
+render();
+
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
