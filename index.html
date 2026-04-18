@@ -1008,29 +1008,48 @@ const GUITAR_STRINGS = [
   {name:'e',  note:'Mi aigu',  freq:329.63},
 ];
 
-function autoCorrelate(buf, sampleRate) {
+// Algorithme YIN — bien plus fiable que l'autocorrélation simple
+// Standard utilisé par les vrais accordeurs (GuitarTuna, etc.)
+function yin(buf, sampleRate) {
+  const THRESHOLD = 0.10;  // seuil standard YIN
   const SIZE = buf.length;
-  // RMS check
-  let rms = 0;
-  for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
-  if (Math.sqrt(rms / SIZE) < 0.018) return -1;
+  const HALF = Math.floor(SIZE / 2);
+  const d = new Float32Array(HALF);
 
-  // Plage guitare : Mi grave (82 Hz) à environ 1100 Hz
-  const MIN_OFF = Math.floor(sampleRate / 1100);
-  const MAX_OFF = Math.floor(sampleRate / 55);  // couvre E2 à 82 Hz
-  let bestOff = -1, bestCorr = 0, lastCorr = 1, found = false;
-
-  for (let off = MIN_OFF; off < Math.min(MAX_OFF, SIZE / 2); off++) {
-    let corr = 0, n = 0;
-    for (let i = 0; i + off < SIZE; i++) { corr += Math.abs(buf[i] - buf[i + off]); n++; }
-    corr = 1 - corr / n;
-    if (corr > 0.88 && corr > lastCorr) {  // seuil plus souple pour toutes les cordes
-      found = true;
-      if (corr > bestCorr) { bestCorr = corr; bestOff = off; }
-    } else if (found) break;
-    lastCorr = corr;
+  // Étape 1 : fonction de différence au carré
+  d[0] = 1;
+  let runningSum = 0;
+  for (let tau = 1; tau < HALF; tau++) {
+    d[tau] = 0;
+    for (let i = 0; i < HALF; i++) {
+      const diff = buf[i] - buf[i + tau];
+      d[tau] += diff * diff;
+    }
+    runningSum += d[tau];
+    // Étape 2 : normalisation par la moyenne cumulée
+    d[tau] = runningSum === 0 ? 1 : d[tau] * tau / runningSum;
   }
-  return bestOff === -1 ? -1 : sampleRate / bestOff;
+
+  // Étape 3 : seuil absolu + interpolation parabolique
+  let tau = 2;
+  while (tau < HALF) {
+    if (d[tau] < THRESHOLD) {
+      while (tau + 1 < HALF && d[tau + 1] < d[tau]) tau++;
+      // Interpolation parabolique pour précision sub-sample
+      const x0 = tau > 1 ? tau - 1 : tau;
+      const x2 = tau + 1 < HALF ? tau + 1 : tau;
+      let best;
+      if (x0 === tau)      best = d[tau] <= d[x2] ? tau : x2;
+      else if (x2 === tau) best = d[tau] <= d[x0] ? tau : x0;
+      else {
+        const s0 = d[x0], s1 = d[tau], s2 = d[x2];
+        best = tau + (s2 - s0) / (2 * (2 * s1 - s2 - s0));
+      }
+      return sampleRate / best;
+    }
+    tau++;
+  }
+  return -1;
 }
 
 function medianFreq(arr) {
@@ -1052,7 +1071,11 @@ function tunerFrame() {
   if (!TUNER.running) return;
   const buf = new Float32Array(TUNER.analyser.fftSize);
   TUNER.analyser.getFloatTimeDomainData(buf);
-  const freq = autoCorrelate(buf, TUNER.actx.sampleRate);
+
+  // RMS check : signal suffisant ?
+  let rms = 0;
+  for (let i = 0; i < buf.length; i++) rms += buf[i] * buf[i];
+  const freq = Math.sqrt(rms / buf.length) < 0.01 ? -1 : yin(buf, TUNER.actx.sampleRate);
 
   const noteEl  = document.getElementById('tuner-note');
   const freqEl  = document.getElementById('tuner-freq');
@@ -1106,7 +1129,13 @@ async function tunerToggle() {
     if (noteEl) { noteEl.textContent = '—'; noteEl.style.color = 'var(--text2)'; }
   } else {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio:true, video:false });
+      // Désactiver TOUT le traitement audio du navigateur — crucial pour la détection de pitch
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: {
+        echoCancellation: false,
+        autoGainControl: false,
+        noiseSuppression: false,
+        latency: 0
+      }, video:false });
       TUNER.stream = stream;
       if (!TUNER.actx) TUNER.actx = new (window.AudioContext || window.webkitAudioContext)();
       if (TUNER.actx.state === 'suspended') await TUNER.actx.resume();
