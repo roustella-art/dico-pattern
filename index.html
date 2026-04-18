@@ -1010,21 +1010,21 @@ const GUITAR_STRINGS = [
 
 function autoCorrelate(buf, sampleRate) {
   const SIZE = buf.length;
-  // RMS check — seuil plus élevé pour ignorer le bruit ambiant
+  // RMS check
   let rms = 0;
   for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
-  if (Math.sqrt(rms / SIZE) < 0.03) return -1;
+  if (Math.sqrt(rms / SIZE) < 0.018) return -1;
 
-  // Plage guitare : Mi grave (82 Hz) à environ 1000 Hz
-  const MIN_OFF = Math.floor(sampleRate / 1000);
-  const MAX_OFF = Math.floor(sampleRate / 60);
+  // Plage guitare : Mi grave (82 Hz) à environ 1100 Hz
+  const MIN_OFF = Math.floor(sampleRate / 1100);
+  const MAX_OFF = Math.floor(sampleRate / 55);  // couvre E2 à 82 Hz
   let bestOff = -1, bestCorr = 0, lastCorr = 1, found = false;
 
   for (let off = MIN_OFF; off < Math.min(MAX_OFF, SIZE / 2); off++) {
     let corr = 0, n = 0;
     for (let i = 0; i + off < SIZE; i++) { corr += Math.abs(buf[i] - buf[i + off]); n++; }
     corr = 1 - corr / n;
-    if (corr > 0.93 && corr > lastCorr) {  // seuil de confiance plus strict
+    if (corr > 0.88 && corr > lastCorr) {  // seuil plus souple pour toutes les cordes
       found = true;
       if (corr > bestCorr) { bestCorr = corr; bestOff = off; }
     } else if (found) break;
