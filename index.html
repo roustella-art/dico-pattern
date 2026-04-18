@@ -997,7 +997,7 @@ function chronoReset() {
 }
 
 // ─── TUNER ────────────────────────────────────────────────────────────────────
-const TUNER = { running:false, stream:null, actx:null, analyser:null, rafId:null };
+const TUNER = { running:false, stream:null, actx:null, analyser:null, rafId:null, freqHistory:[], silenceCount:0 };
 const NOTE_NAMES = ['Do','Do#','Ré','Ré#','Mi','Fa','Fa#','Sol','Sol#','La','La#','Si'];
 const GUITAR_STRINGS = [
   {name:'E',  note:'Mi grave', freq:82.41},
@@ -1010,19 +1010,21 @@ const GUITAR_STRINGS = [
 
 function autoCorrelate(buf, sampleRate) {
   const SIZE = buf.length;
+  // RMS check — seuil plus élevé pour ignorer le bruit ambiant
   let rms = 0;
   for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
-  if (Math.sqrt(rms / SIZE) < 0.015) return -1;
+  if (Math.sqrt(rms / SIZE) < 0.03) return -1;
 
-  const MIN_OFF = Math.floor(sampleRate / 1100); // ~1100 Hz max
-  const MAX_OFF = Math.floor(sampleRate / 55);   // ~55 Hz min
+  // Plage guitare : Mi grave (82 Hz) à environ 1000 Hz
+  const MIN_OFF = Math.floor(sampleRate / 1000);
+  const MAX_OFF = Math.floor(sampleRate / 60);
   let bestOff = -1, bestCorr = 0, lastCorr = 1, found = false;
 
   for (let off = MIN_OFF; off < Math.min(MAX_OFF, SIZE / 2); off++) {
     let corr = 0, n = 0;
     for (let i = 0; i + off < SIZE; i++) { corr += Math.abs(buf[i] - buf[i + off]); n++; }
     corr = 1 - corr / n;
-    if (corr > 0.9 && corr > lastCorr) {
+    if (corr > 0.93 && corr > lastCorr) {  // seuil de confiance plus strict
       found = true;
       if (corr > bestCorr) { bestCorr = corr; bestOff = off; }
     } else if (found) break;
@@ -1031,9 +1033,15 @@ function autoCorrelate(buf, sampleRate) {
   return bestOff === -1 ? -1 : sampleRate / bestOff;
 }
 
+function medianFreq(arr) {
+  if (!arr.length) return -1;
+  const s = [...arr].sort((a,b) => a-b);
+  return s[Math.floor(s.length / 2)];
+}
+
 function freqToNote(freq) {
   const semi = Math.round(12 * Math.log2(freq / 440)) + 69;
-  const name = NOTE_NAMES[semi % 12];
+  const name = NOTE_NAMES[((semi % 12) + 12) % 12];
   const octave = Math.floor(semi / 12) - 1;
   const refFreq = 440 * Math.pow(2, (semi - 69) / 12);
   const cents = Math.round(1200 * Math.log2(freq / refFreq));
@@ -1050,20 +1058,32 @@ function tunerFrame() {
   const freqEl  = document.getElementById('tuner-freq');
   const centsEl = document.getElementById('tuner-cents');
   const cursor  = document.getElementById('tuner-cursor');
-
   if (!noteEl) { TUNER.rafId = requestAnimationFrame(tunerFrame); return; }
 
   if (freq === -1) {
-    noteEl.textContent = '—'; noteEl.style.color = 'var(--text2)';
-    if (freqEl) freqEl.textContent = '';
-    if (centsEl) centsEl.textContent = 'En attente...';
-    if (cursor) { cursor.style.left = '50%'; cursor.style.background = 'var(--border)'; }
+    // Silence — on garde l'affichage quelques frames avant de réinitialiser
+    TUNER.silenceCount++;
+    if (TUNER.silenceCount > 20) {
+      TUNER.freqHistory = [];
+      noteEl.textContent = '—'; noteEl.style.color = 'var(--text2)';
+      if (freqEl) freqEl.textContent = '';
+      if (centsEl) centsEl.textContent = 'Joue une corde...';
+      if (cursor) { cursor.style.left = '50%'; cursor.style.background = 'var(--border)'; }
+    }
   } else {
-    const { name, octave, cents } = freqToNote(freq);
+    TUNER.silenceCount = 0;
+    // Filtre médian sur les 6 dernières fréquences valides
+    TUNER.freqHistory.push(freq);
+    if (TUNER.freqHistory.length > 6) TUNER.freqHistory.shift();
+    // N'afficher que si on a au moins 3 lectures
+    if (TUNER.freqHistory.length < 3) { TUNER.rafId = requestAnimationFrame(tunerFrame); return; }
+
+    const stable = medianFreq(TUNER.freqHistory);
+    const { name, octave, cents } = freqToNote(stable);
     const color = Math.abs(cents) <= 5 ? 'var(--green)' : Math.abs(cents) <= 20 ? 'var(--orange)' : 'var(--red)';
     noteEl.textContent = name + octave;
     noteEl.style.color = color;
-    if (freqEl) freqEl.textContent = freq.toFixed(1) + ' Hz';
+    if (freqEl) freqEl.textContent = stable.toFixed(1) + ' Hz';
     if (centsEl) centsEl.textContent = (cents >= 0 ? '+' : '') + cents + ' cents';
     if (cursor) {
       const pct = Math.max(2, Math.min(98, 50 + (cents / 50) * 48));
@@ -1078,8 +1098,8 @@ async function tunerToggle() {
   if (TUNER.running) {
     cancelAnimationFrame(TUNER.rafId);
     if (TUNER.stream) TUNER.stream.getTracks().forEach(t => t.stop());
-    TUNER.running = false;
-    TUNER.stream = null;
+    TUNER.running = false; TUNER.stream = null;
+    TUNER.freqHistory = []; TUNER.silenceCount = 0;
     const btn = document.getElementById('tuner-btn');
     if (btn) { btn.textContent = '🎤 Activer'; btn.style.background = 'var(--blue)'; }
     const noteEl = document.getElementById('tuner-note');
@@ -1091,9 +1111,11 @@ async function tunerToggle() {
       if (!TUNER.actx) TUNER.actx = new (window.AudioContext || window.webkitAudioContext)();
       if (TUNER.actx.state === 'suspended') await TUNER.actx.resume();
       TUNER.analyser = TUNER.actx.createAnalyser();
-      TUNER.analyser.fftSize = 2048;
+      TUNER.analyser.fftSize = 4096;  // buffer 2x plus grand = meilleure résolution basses fréquences
+      TUNER.analyser.smoothingTimeConstant = 0;
       TUNER.actx.createMediaStreamSource(stream).connect(TUNER.analyser);
       TUNER.running = true;
+      TUNER.freqHistory = []; TUNER.silenceCount = 0;
       const btn = document.getElementById('tuner-btn');
       if (btn) { btn.textContent = '⏹ Arrêter'; btn.style.background = 'var(--red)'; }
       tunerFrame();
