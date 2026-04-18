@@ -121,19 +121,6 @@
   .chrono-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;padding:3px 7px;font-size:13px;cursor:pointer;line-height:1.4}
   .chrono-btn:active{background:rgba(255,255,255,.35)}
 
-  /* TUNER */
-  .tuner-note{font-size:88px;font-weight:900;font-family:'Courier New',monospace;min-height:110px;display:flex;align-items:center;justify-content:center;transition:color .15s}
-  .tuner-bar-wrap{position:relative;height:8px;background:var(--border);border-radius:4px;margin:16px 0 4px}
-  .tuner-cursor{position:absolute;top:-5px;width:18px;height:18px;border-radius:50%;transform:translateX(-50%);transition:left .08s,background .15s}
-  .tuner-center{position:absolute;left:50%;top:-8px;transform:translateX(-50%);width:2px;height:24px;background:var(--blue);border-radius:1px}
-  .tuner-string-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
-  .tuner-string{background:var(--blue-light);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;border:2px solid transparent;transition:border-color .15s}
-  .tuner-string:hover{border-color:var(--blue)}
-  .tuner-string .sname{font-size:20px;font-weight:800;color:var(--blue)}
-  .tuner-string .sfreq{font-size:11px;color:var(--text2);margin-top:2px}
-
-  /* NAV 4 tabs */
-  nav button{font-size:9px}
 </style>
 </head>
 <body>
@@ -156,9 +143,6 @@
     </button>
     <button onclick="showTab('progress')" id="nav-progress">
       <span class="ico">📊</span>Progression
-    </button>
-    <button onclick="showTab('tuner')" id="nav-tuner">
-      <span class="ico">🎵</span>Accordeur
     </button>
   </nav>
 </div>
@@ -996,174 +980,9 @@ function chronoReset() {
   if (btn) btn.textContent = '▶';
 }
 
-// ─── TUNER ────────────────────────────────────────────────────────────────────
-const TUNER = { running:false, stream:null, actx:null, analyser:null, rafId:null, freqHistory:[], silenceCount:0 };
-const NOTE_NAMES = ['Do','Do#','Ré','Ré#','Mi','Fa','Fa#','Sol','Sol#','La','La#','Si'];
-const GUITAR_STRINGS = [
-  {name:'E',  note:'Mi grave', freq:82.41},
-  {name:'A',  note:'La',       freq:110.00},
-  {name:'D',  note:'Ré',       freq:146.83},
-  {name:'G',  note:'Sol',      freq:196.00},
-  {name:'B',  note:'Si',       freq:246.94},
-  {name:'e',  note:'Mi aigu',  freq:329.63},
-];
-
-// Algorithme YIN — bien plus fiable que l'autocorrélation simple
-// Standard utilisé par les vrais accordeurs (GuitarTuna, etc.)
-function yin(buf, sampleRate) {
-  const THRESHOLD = 0.10;  // seuil standard YIN
-  const SIZE = buf.length;
-  const HALF = Math.floor(SIZE / 2);
-  const d = new Float32Array(HALF);
-
-  // Étape 1 : fonction de différence au carré
-  d[0] = 1;
-  let runningSum = 0;
-  for (let tau = 1; tau < HALF; tau++) {
-    d[tau] = 0;
-    for (let i = 0; i < HALF; i++) {
-      const diff = buf[i] - buf[i + tau];
-      d[tau] += diff * diff;
-    }
-    runningSum += d[tau];
-    // Étape 2 : normalisation par la moyenne cumulée
-    d[tau] = runningSum === 0 ? 1 : d[tau] * tau / runningSum;
-  }
-
-  // Étape 3 : seuil absolu + interpolation parabolique
-  let tau = 2;
-  while (tau < HALF) {
-    if (d[tau] < THRESHOLD) {
-      while (tau + 1 < HALF && d[tau + 1] < d[tau]) tau++;
-      // Interpolation parabolique pour précision sub-sample
-      const x0 = tau > 1 ? tau - 1 : tau;
-      const x2 = tau + 1 < HALF ? tau + 1 : tau;
-      let best;
-      if (x0 === tau)      best = d[tau] <= d[x2] ? tau : x2;
-      else if (x2 === tau) best = d[tau] <= d[x0] ? tau : x0;
-      else {
-        const s0 = d[x0], s1 = d[tau], s2 = d[x2];
-        best = tau + (s2 - s0) / (2 * (2 * s1 - s2 - s0));
-      }
-      return sampleRate / best;
-    }
-    tau++;
-  }
-  return -1;
-}
-
-function medianFreq(arr) {
-  if (!arr.length) return -1;
-  const s = [...arr].sort((a,b) => a-b);
-  return s[Math.floor(s.length / 2)];
-}
-
-function freqToNote(freq) {
-  const semi = Math.round(12 * Math.log2(freq / 440)) + 69;
-  const name = NOTE_NAMES[((semi % 12) + 12) % 12];
-  const octave = Math.floor(semi / 12) - 1;
-  const refFreq = 440 * Math.pow(2, (semi - 69) / 12);
-  const cents = Math.round(1200 * Math.log2(freq / refFreq));
-  return { name, octave, cents };
-}
-
-function tunerFrame() {
-  if (!TUNER.running) return;
-  const buf = new Float32Array(TUNER.analyser.fftSize);
-  TUNER.analyser.getFloatTimeDomainData(buf);
-
-  // RMS check : signal suffisant ?
-  let rms = 0;
-  for (let i = 0; i < buf.length; i++) rms += buf[i] * buf[i];
-  const freq = Math.sqrt(rms / buf.length) < 0.01 ? -1 : yin(buf, TUNER.actx.sampleRate);
-
-  const noteEl  = document.getElementById('tuner-note');
-  const freqEl  = document.getElementById('tuner-freq');
-  const centsEl = document.getElementById('tuner-cents');
-  const cursor  = document.getElementById('tuner-cursor');
-  if (!noteEl) { TUNER.rafId = requestAnimationFrame(tunerFrame); return; }
-
-  if (freq === -1) {
-    // Silence — on garde l'affichage quelques frames avant de réinitialiser
-    TUNER.silenceCount++;
-    if (TUNER.silenceCount > 20) {
-      TUNER.freqHistory = [];
-      noteEl.textContent = '—'; noteEl.style.color = 'var(--text2)';
-      if (freqEl) freqEl.textContent = '';
-      if (centsEl) centsEl.textContent = 'Joue une corde...';
-      if (cursor) { cursor.style.left = '50%'; cursor.style.background = 'var(--border)'; }
-    }
-  } else {
-    TUNER.silenceCount = 0;
-    // Filtre médian sur les 6 dernières fréquences valides
-    TUNER.freqHistory.push(freq);
-    if (TUNER.freqHistory.length > 6) TUNER.freqHistory.shift();
-    // N'afficher que si on a au moins 3 lectures
-    if (TUNER.freqHistory.length < 3) { TUNER.rafId = requestAnimationFrame(tunerFrame); return; }
-
-    const stable = medianFreq(TUNER.freqHistory);
-    const { name, octave, cents } = freqToNote(stable);
-    const color = Math.abs(cents) <= 5 ? 'var(--green)' : Math.abs(cents) <= 20 ? 'var(--orange)' : 'var(--red)';
-    noteEl.textContent = name + octave;
-    noteEl.style.color = color;
-    if (freqEl) freqEl.textContent = stable.toFixed(1) + ' Hz';
-    if (centsEl) centsEl.textContent = (cents >= 0 ? '+' : '') + cents + ' cents';
-    if (cursor) {
-      const pct = Math.max(2, Math.min(98, 50 + (cents / 50) * 48));
-      cursor.style.left = pct + '%';
-      cursor.style.background = color;
-    }
-  }
-  TUNER.rafId = requestAnimationFrame(tunerFrame);
-}
-
-async function tunerToggle() {
-  if (TUNER.running) {
-    cancelAnimationFrame(TUNER.rafId);
-    if (TUNER.stream) TUNER.stream.getTracks().forEach(t => t.stop());
-    TUNER.running = false; TUNER.stream = null;
-    TUNER.freqHistory = []; TUNER.silenceCount = 0;
-    const btn = document.getElementById('tuner-btn');
-    if (btn) { btn.textContent = '🎤 Activer'; btn.style.background = 'var(--blue)'; }
-    const noteEl = document.getElementById('tuner-note');
-    if (noteEl) { noteEl.textContent = '—'; noteEl.style.color = 'var(--text2)'; }
-  } else {
-    try {
-      // Désactiver TOUT le traitement audio du navigateur — crucial pour la détection de pitch
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: {
-        echoCancellation: false,
-        autoGainControl: false,
-        noiseSuppression: false,
-        latency: 0
-      }, video:false });
-      TUNER.stream = stream;
-      if (!TUNER.actx) TUNER.actx = new (window.AudioContext || window.webkitAudioContext)();
-      if (TUNER.actx.state === 'suspended') await TUNER.actx.resume();
-      TUNER.analyser = TUNER.actx.createAnalyser();
-      TUNER.analyser.fftSize = 4096;  // buffer 2x plus grand = meilleure résolution basses fréquences
-      TUNER.analyser.smoothingTimeConstant = 0;
-      TUNER.actx.createMediaStreamSource(stream).connect(TUNER.analyser);
-      TUNER.running = true;
-      TUNER.freqHistory = []; TUNER.silenceCount = 0;
-      const btn = document.getElementById('tuner-btn');
-      if (btn) { btn.textContent = '⏹ Arrêter'; btn.style.background = 'var(--red)'; }
-      tunerFrame();
-    } catch(e) {
-      alert('Micro non accessible — vérifie les permissions du navigateur.');
-    }
-  }
-}
-
-function tunerStop() {
-  if (!TUNER.running) return;
-  cancelAnimationFrame(TUNER.rafId);
-  if (TUNER.stream) TUNER.stream.getTracks().forEach(t => t.stop());
-  TUNER.running = false; TUNER.stream = null;
-}
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 function showTab(tab) {
-  if (tab !== 'tuner') tunerStop();
   state.tab = tab;
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-'+tab).classList.add('active');
@@ -1175,53 +994,10 @@ function render() {
   const el = document.getElementById('content');
   if (state.tab === 'patterns') el.innerHTML = renderPatterns();
   else if (state.tab === 'program') el.innerHTML = renderProgram();
-  else if (state.tab === 'tuner') el.innerHTML = renderTuner();
   else el.innerHTML = renderProgress();
   metroPostRender();
 }
 
-// ── TUNER TAB ──
-function renderTuner() {
-  const stringsHtml = GUITAR_STRINGS.map(s => `
-    <div class="tuner-string" onclick="document.getElementById('tuner-freq-hint').textContent='${s.note} · ${s.freq} Hz (corde ${s.name})'">
-      <div class="sname">${s.name}</div>
-      <div class="sfreq">${s.freq} Hz</div>
-    </div>`).join('');
-
-  return `
-  <div style="text-align:center;padding:16px">
-
-    <div class="tuner-note" id="tuner-note" style="color:var(--text2)">—</div>
-    <div style="font-size:15px;font-weight:700;min-height:22px;margin-bottom:2px" id="tuner-freq"></div>
-    <div style="font-size:13px;color:var(--text2);min-height:20px" id="tuner-cents">Appuie sur Activer pour commencer</div>
-
-    <div class="tuner-bar-wrap" style="margin:14px 16px 2px">
-      <div class="tuner-center"></div>
-      <div class="tuner-cursor" id="tuner-cursor" style="left:50%;background:var(--border)"></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);padding:0 16px;margin-bottom:20px">
-      <span>♭ −50</span><span style="color:var(--green);font-weight:700">● Juste</span><span>+50 ♯</span>
-    </div>
-
-    <button id="tuner-btn" onclick="tunerToggle()"
-      style="padding:13px 32px;border:none;border-radius:14px;background:var(--blue);color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15)">
-      🎤 Activer
-    </button>
-
-    <div style="font-size:12px;color:var(--text2);margin-top:10px;min-height:18px" id="tuner-freq-hint">
-      Touche une corde ci-dessous pour voir sa fréquence de référence
-    </div>
-
-    <div style="margin-top:20px;text-align:left">
-      <div class="section-title" style="margin-top:0">Cordes à vide — référence</div>
-      <div class="tuner-string-grid">${stringsHtml}</div>
-    </div>
-
-    <div style="margin-top:20px;padding:10px 14px;background:#FFF9E6;border-left:3px solid var(--orange);border-radius:0 8px 8px 0;text-align:left">
-      <div style="font-size:12px;color:#5a4000">💡 Pour un résultat précis, joue fort et tiens la note. L'accordeur fonctionne mieux corde par corde, sans bruit ambiant.</div>
-    </div>
-  </div>`;
-}
 
 // ── PATTERNS TAB ──
 function diffTag(d) {
