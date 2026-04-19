@@ -20,7 +20,7 @@
   #app{display:flex;flex-direction:column;height:100dvh;max-width:640px;margin:0 auto}
 
   /* HEADER */
-  header{background:var(--blue);color:#fff;padding:0 16px;height:var(--header-h);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+  header{background:var(--blue);color:#fff;padding:6px 16px;display:flex;flex-direction:column;justify-content:center;gap:6px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2)}
   header h1{font-size:20px;font-weight:700;letter-spacing:.5px}
   header span{font-size:12px;opacity:.75;font-style:italic}
 
@@ -58,22 +58,6 @@
   .desc{font-size:13px;color:var(--text2);margin:6px 0}
   .tip{font-size:12px;background:#FFF9E6;border-left:3px solid var(--orange);padding:7px 10px;border-radius:0 6px 6px 0;margin-top:8px;color:#5a4000}
 
-  /* PROGRAMME */
-  .day-card{background:var(--card);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:10px;overflow:hidden}
-  .day-head{padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
-  .day-num{width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-  .day-num.done{background:var(--green)}
-  .day-info{flex:1}
-  .day-info strong{font-size:15px;display:block}
-  .day-info span{font-size:12px;color:var(--text2)}
-  .day-body{padding:0 14px 14px;display:none}
-  .day-body.open{display:block}
-  .session{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
-  .session:last-child{border-bottom:none}
-  .session input[type=checkbox]{width:20px;height:20px;margin-top:2px;flex-shrink:0;accent-color:var(--green);cursor:pointer}
-  .session-info strong{font-size:14px}
-  .session-info p{font-size:12px;color:var(--text2);margin-top:2px}
-  .bpm-badge{display:inline-block;font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;background:#D9E1F2;color:var(--blue);margin-left:6px}
   .progress-bar-wrap{background:var(--border);border-radius:4px;height:6px;margin-top:10px}
   .progress-bar{background:var(--green);border-radius:4px;height:100%;transition:width .3s}
 
@@ -126,11 +110,23 @@
 <body>
 <div id="app">
   <header>
-    <h1>🎸 Dico Pattern <span style="font-size:11px;opacity:.65;font-weight:400;font-style:italic">· À la Loop !</span></h1>
-    <div class="chrono-wrap">
-      <span class="chrono-time" id="chrono-time">00:00</span>
-      <button class="chrono-btn" id="chrono-play" onclick="chronoToggle()">▶</button>
-      <button class="chrono-btn" onclick="chronoReset()">↺</button>
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <h1>🎸 Dico Pattern <span style="font-size:11px;opacity:.65;font-weight:400;font-style:italic">· À la Loop !</span></h1>
+      <div class="chrono-wrap">
+        <span class="chrono-time" id="chrono-time">00:00</span>
+        <button class="chrono-btn" id="chrono-play" onclick="chronoToggle()">▶</button>
+        <button class="chrono-btn" onclick="chronoReset()">↺</button>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="metro-dot" id="metro-dot-global" style="width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.3);flex-shrink:0;transition:background .05s"></div>
+      <button class="chrono-btn" onclick="metroBpmChange('global',-5)">−</button>
+      <input id="metro-bpm-global" type="number" value="60" min="30" max="300"
+        style="width:44px;text-align:center;font-size:14px;font-weight:700;border:none;border-radius:5px;padding:2px;background:rgba(255,255,255,.15);color:#fff;-moz-appearance:textfield"
+        oninput="if(METRO.running&&METRO.patId==='global')METRO.bpm=Math.max(30,Math.min(300,parseInt(this.value)||60))">
+      <button class="chrono-btn" onclick="metroBpmChange('global',+5)">+</button>
+      <span style="font-size:10px;opacity:.7">BPM</span>
+      <button class="chrono-btn" id="metro-btn-global" onclick="metroToggle('global')">▶ Métro</button>
     </div>
   </header>
   <main id="content"></main>
@@ -138,11 +134,11 @@
     <button class="active" onclick="showTab('patterns')" id="nav-patterns">
       <span class="ico">📚</span>Patterns
     </button>
-    <button onclick="showTab('program')" id="nav-program">
-      <span class="ico">📅</span>Programme
-    </button>
     <button onclick="showTab('progress')" id="nav-progress">
       <span class="ico">📊</span>Progression
+    </button>
+    <button onclick="showTab('guide')" id="nav-guide">
+      <span class="ico">📖</span>Guide
     </button>
   </nav>
 </div>
@@ -837,60 +833,6 @@ E|------------------|
   }
 ];
 
-// ─── PROGRAMME SEMAINE ────────────────────────────────────────────────────────
-const PROGRAM = [
-  {
-    day:"Lundi", theme:"Découverte du système",
-    sessions:[
-      {id:"s0_0", patId:"A4P1U", bpm:60, interp:"Legato", focus:"Précision totale, pas de vitesse. Écoute chaque note."},
-      {id:"s0_1", patId:"A4P1U", bpm:60, interp:"Alternate Up", focus:"Synchronisation médiator/main gauche. Même tempo."},
-    ]
-  },
-  {
-    day:"Mardi", theme:"Ascendant + Descendant",
-    sessions:[
-      {id:"s1_0", patId:"A4P1U", bpm:110, interp:"Legato", focus:"Monte le tempo sur P1U. Reste propre."},
-      {id:"s1_1", patId:"A4P1D", bpm:60, interp:"Legato", focus:"Découverte de la direction descendante. Retour à 60 BPM."},
-    ]
-  },
-  {
-    day:"Mercredi", theme:"Patterns croisés",
-    sessions:[
-      {id:"s2_0", patId:"A4P2U", bpm:60, interp:"Legato", focus:"Nouveau pattern : le croisement 1-3-2-4. Patience !"},
-      {id:"s2_1", patId:"A4P2D", bpm:60, interp:"Legato", focus:"Version descendante. Même soin."},
-    ]
-  },
-  {
-    day:"Jeudi", theme:"Extensions",
-    sessions:[
-      {id:"s3_0", patId:"A4P3U", bpm:60, interp:"Legato", focus:"Étire-toi avant. Extension 1-4 : prends ton temps."},
-      {id:"s3_1", patId:"A4P4U", bpm:60, interp:"Legato", focus:"Extension + descente. Compare avec P3U."},
-    ]
-  },
-  {
-    day:"Vendredi", theme:"3 notes — vitesse",
-    sessions:[
-      {id:"s4_0", patId:"A3P1U", bpm:60, interp:"Legato", focus:"Moins de notes = plus de vitesse. Monte jusqu'à 110 si propre."},
-      {id:"s4_1", patId:"A3P2U", bpm:60, interp:"Legato", focus:"Compare la couleur avec A3P1U. Deux sons différents."},
-      {id:"s4_2", patId:"A3P3U", bpm:60, interp:"Legato", focus:"Extension 1-3-5. Cible 110 BPM propre."},
-    ]
-  },
-  {
-    day:"Samedi", theme:"2 notes — endurance",
-    sessions:[
-      {id:"s5_0", patId:"A2P1U", bpm:60, interp:"Legato", focus:"Attention au décalage corde de Si. Écoute la continuité."},
-      {id:"s5_1", patId:"A2P2U", bpm:60, interp:"Alternate Up", focus:"2 notes, alternate picking. Monte jusqu'à 130 si propre."},
-      {id:"s5_2", patId:"A2P3U", bpm:60, interp:"Legato", focus:"Extension index-auriculaire. Poignet souple."},
-    ]
-  },
-  {
-    day:"Dimanche", theme:"Bilan & Push",
-    sessions:[
-      {id:"s6_0", patId:"A4P1U", bpm:130, interp:"Alternate Up", focus:"Challenge vitesse. Tu as travaillé toute la semaine — pousse !"},
-      {id:"s6_1", patId:"A4P1M", bpm:60, interp:"Legato", focus:"Mix montée + descente. Fluidité de la boucle complète."},
-    ]
-  },
-];
 
 const MODES = ["U","D","M"];
 const MODE_LABELS = {U:"Ascendant",D:"Descendant",M:"Mix"};
@@ -904,19 +846,16 @@ let state = {
   tab: 'patterns',
   filter: 'all',
   openCards: {},
-  openDays: {},
   progPattern: PATTERNS[0].id,
   progFingering: 1,
   progTabOpen: false,
   progress: {},
-  sessions: {},
 };
 
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem('dicoPattern') || '{}');
     state.progress = saved.progress || {};
-    state.sessions = saved.sessions || {};
   } catch(e) {}
 }
 
@@ -924,7 +863,6 @@ function saveState() {
   try {
     localStorage.setItem('dicoPattern', JSON.stringify({
       progress: state.progress,
-      sessions: state.sessions,
     }));
   } catch(e) {}
 }
@@ -934,16 +872,35 @@ function getProgressKey(patId, fing, mode, interp, tempo) {
 }
 
 function getPatternPct(patId) {
+  const pat = PATTERNS.find(p => p.id === patId);
+  const mode = pat ? pat.dir : 'U';
   let total = 0, done = 0;
-  FINGERINGS.forEach(f => MODES.forEach(m => INTERPS.forEach(i => TEMPOS.forEach(t => {
+  FINGERINGS.forEach(f => INTERPS.forEach(i => TEMPOS.forEach(t => {
     total++;
-    if (state.progress[getProgressKey(patId, f, m, i, t)]) done++;
-  }))));
+    if (state.progress[getProgressKey(patId, f, mode, i, t)]) done++;
+  })));
   return total > 0 ? Math.round(done / total * 100) : 0;
 }
 
 // ─── CHRONO ───────────────────────────────────────────────────────────────────
-const CHRONO = { running:false, elapsed:0, startAt:0, timer:null };
+const CHRONO = { running:false, elapsed:0, startAt:0, timer:null, lastBeep:-1 };
+
+function chronoBeep() {
+  try {
+    const ctx = metroCtx();
+    // Deux bips courts pour signaler 5 min
+    [0, 0.18].forEach(offset => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 660;
+      const t = ctx.currentTime + offset;
+      gain.gain.setValueAtTime(0.4, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+      osc.start(t); osc.stop(t + 0.13);
+    });
+  } catch(e) {}
+}
 
 function chronoTick() {
   const total = CHRONO.elapsed + (Date.now() - CHRONO.startAt);
@@ -952,6 +909,12 @@ function chronoTick() {
   const ss = String(s % 60).padStart(2,'0');
   const el = document.getElementById('chrono-time');
   if (el) el.textContent = mm + ':' + ss;
+  // Bip toutes les 5 minutes
+  const beepAt = Math.floor(s / 300); // tranche de 5 min
+  if (beepAt > 0 && beepAt !== CHRONO.lastBeep) {
+    CHRONO.lastBeep = beepAt;
+    chronoBeep();
+  }
 }
 
 function chronoToggle() {
@@ -974,6 +937,7 @@ function chronoReset() {
   clearInterval(CHRONO.timer);
   CHRONO.running = false;
   CHRONO.elapsed = 0;
+  CHRONO.lastBeep = -1;
   const el = document.getElementById('chrono-time');
   if (el) el.textContent = '00:00';
   const btn = document.getElementById('chrono-play');
@@ -983,6 +947,7 @@ function chronoReset() {
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 function showTab(tab) {
+  if (METRO.running && tab !== state.tab) { metroStop(false); }
   state.tab = tab;
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-'+tab).classList.add('active');
@@ -993,7 +958,7 @@ function showTab(tab) {
 function render() {
   const el = document.getElementById('content');
   if (state.tab === 'patterns') el.innerHTML = renderPatterns();
-  else if (state.tab === 'program') el.innerHTML = renderProgram();
+  else if (state.tab === 'guide') el.innerHTML = renderGuide();
   else el.innerHTML = renderProgress();
   metroPostRender();
 }
@@ -1059,15 +1024,9 @@ function renderPatterns() {
           <div class="tab-wrap"><pre>${p.tab}</pre></div>
           <p class="desc">${p.desc}</p>
           <div class="tip">💡 ${p.tip}</div>
-          <div class="metro-wrap">
-            <div class="metro-dot" id="metro-dot-${p.id}"></div>
-            <button class="metro-adj" onclick="metroBpmChange('${p.id}',-5)">−</button>
-            <input class="metro-bpm" id="metro-bpm-${p.id}" type="number" value="${p.bpm}" min="30" max="300"
-              oninput="if(METRO.running&&METRO.patId==='${p.id}')METRO.bpm=Math.max(30,Math.min(300,parseInt(this.value)||60))">
-            <button class="metro-adj" onclick="metroBpmChange('${p.id}',+5)">+</button>
-            <span class="metro-target">BPM · cible ${p.bpmTarget}</span>
-            <button class="metro-btn" id="metro-btn-${p.id}" style="background:var(--green)" onclick="metroToggle('${p.id}')">▶ Start</button>
-            <button onclick="goToProgress('${p.id}')" style="font-size:12px;padding:5px 10px;border:none;background:var(--blue);color:#fff;border-radius:8px;cursor:pointer">📊</button>
+          <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+            <span style="font-size:12px;color:var(--text2)">Tempo : ${p.bpm} → ${p.bpmTarget} BPM</span>
+            <button onclick="goToProgress('${p.id}')" style="margin-left:auto;font-size:12px;padding:5px 12px;border:none;background:var(--blue);color:#fff;border-radius:8px;cursor:pointer">Suivi 📊</button>
           </div>
         </div>`;
     });
@@ -1088,72 +1047,6 @@ function toggleCard(key) {
   render();
 }
 
-// ── PROGRAMME TAB ──
-function renderProgram() {
-  const totalSessions = PROGRAM.reduce((acc, d) => acc + d.sessions.length, 0);
-  const doneSessions = PROGRAM.reduce((acc, d) =>
-    acc + d.sessions.filter(s => state.sessions[s.id]).length, 0);
-  const pct = Math.round(doneSessions / totalSessions * 100);
-
-  let html = `
-  <div class="card" style="padding:14px;margin-bottom:12px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div>
-        <div style="font-size:13px;color:var(--text2)">Semaine Test — Programme 1</div>
-        <div style="font-size:22px;font-weight:800;color:var(--blue)">${doneSessions}/${totalSessions} sessions</div>
-      </div>
-      <div style="font-size:32px;font-weight:800;color:var(--blue)">${pct}%</div>
-    </div>
-    <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
-  </div>`;
-
-  PROGRAM.forEach((day, di) => {
-    const dayDone = day.sessions.every(s => state.sessions[s.id]);
-    const isOpen = state.openDays[di] !== false;
-
-    html += `
-    <div class="day-card">
-      <div class="day-head" onclick="toggleDay(${di})">
-        <div class="day-num ${dayDone?'done':''}">${di+1}</div>
-        <div class="day-info">
-          <strong>${day.day}</strong>
-          <span>${day.theme} · ${day.sessions.length} session${day.sessions.length>1?'s':''}</span>
-        </div>
-        <span class="arrow ${isOpen?'open':''}">▶</span>
-      </div>
-      <div class="day-body ${isOpen?'open':''}">`;
-
-    day.sessions.forEach(s => {
-      const pat = PATTERNS.find(p => p.id === s.patId);
-      const checked = !!state.sessions[s.id];
-      html += `
-      <div class="session">
-        <input type="checkbox" ${checked?'checked':''} onchange="toggleSession('${s.id}')">
-        <div class="session-info">
-          <strong>${s.patId} — ${pat ? pat.name : ''}</strong>
-          <span class="bpm-badge">${s.bpm} BPM</span>
-          <span class="bpm-badge" style="background:#E2EFDA;color:#375623">${s.interp}</span>
-          <p>${s.focus}</p>
-        </div>
-      </div>`;
-    });
-
-    html += `</div></div>`;
-  });
-
-  return html;
-}
-
-function toggleDay(di) {
-  state.openDays[di] = state.openDays[di] === false ? true : false;
-  render();
-}
-
-function toggleSession(sid) {
-  state.sessions[sid] = !state.sessions[sid];
-  saveState();
-  render();
-}
 
 // ── PROGRESSION TAB ──
 function renderProgress() {
@@ -1166,7 +1059,7 @@ function renderProgress() {
   <div class="pct-card">
     <h3>Progression — ${patId}</h3>
     <div class="pct-big">${pct}%</div>
-    <div class="pct-sub">sur 108 combinaisons (3 modes × 3 interprétations × 4 doigtés × 3 tempos)</div>
+    <div class="pct-sub">sur 36 combinaisons (3 interprétations × 4 doigtés × 3 tempos)</div>
     <div class="progress-bar-wrap" style="margin-top:8px"><div class="progress-bar" style="width:${pct}%"></div></div>
   </div>
 
@@ -1189,15 +1082,7 @@ function renderProgress() {
     </div>
   </div>
 
-  <div class="metro-wrap" style="margin-bottom:12px">
-    <div class="metro-dot" id="metro-dot-__prog__"></div>
-    <button class="metro-adj" onclick="metroBpmChange('__prog__',-5)">−</button>
-    <input class="metro-bpm" id="metro-bpm-__prog__" type="number" value="${pat.bpm}" min="30" max="300"
-      oninput="if(METRO.running&&METRO.patId==='__prog__')METRO.bpm=Math.max(30,Math.min(300,parseInt(this.value)||60))">
-    <button class="metro-adj" onclick="metroBpmChange('__prog__',+5)">+</button>
-    <span class="metro-target">BPM · cible ${pat.bpmTarget}</span>
-    <button class="metro-btn" id="metro-btn-__prog__" style="background:var(--green)" onclick="metroToggle('__prog__')">▶ Start</button>
-  </div>
+
 
   <div class="grid-label">Doigté de départ</div>
   <div class="fing-row">`;
@@ -1207,37 +1092,33 @@ function renderProgress() {
   });
   html += `</div>`;
 
-  MODES.forEach(mode => {
-    html += `
-    <div class="grid-label">${MODE_LABELS[mode]}</div>
-    <div class="prog-grid">
-      <table>
-        <thead><tr>
-          <th style="width:70px">Tempo</th>
-          ${INTERPS.map(i=>`<th>${INTERP_LABELS[i]}</th>`).join('')}
-        </tr></thead>
-        <tbody>`;
-
-    TEMPOS.forEach(tempo => {
-      html += `<tr><td class="tempo">${tempo} BPM</td>`;
-      INTERPS.forEach(interp => {
-        const key = getProgressKey(patId, fing, mode, interp, tempo);
-        const done = !!state.progress[key];
-        html += `<td><button class="cell-btn ${done?'checked':''}" onclick="toggleCell('${key}')">
-          ${done?'✓':'○'}
-        </button></td>`;
-      });
-      html += `</tr>`;
+  const mode = pat.dir;
+  html += `
+  <div class="grid-label">${MODE_LABELS[mode]}</div>
+  <div class="prog-grid">
+    <table>
+      <thead><tr>
+        <th style="width:70px">Tempo</th>
+        ${INTERPS.map(i=>`<th>${INTERP_LABELS[i]}</th>`).join('')}
+      </tr></thead>
+      <tbody>`;
+  TEMPOS.forEach(tempo => {
+    html += `<tr><td class="tempo">${tempo} BPM</td>`;
+    INTERPS.forEach(interp => {
+      const key = getProgressKey(patId, fing, mode, interp, tempo);
+      const done = !!state.progress[key];
+      html += `<td><button class="cell-btn ${done?'checked':''}" onclick="toggleCell('${key}')">
+        ${done?'✓':'○'}
+      </button></td>`;
     });
-
-    html += `</tbody></table></div>`;
+    html += `</tr>`;
   });
+  html += `</tbody></table></div>`;
 
   return html;
 }
 
 function selectPat(id) {
-  if (METRO.running && METRO.patId === '__prog__') metroStop(false);
   state.progPattern = id;
   render();
 }
@@ -1261,6 +1142,77 @@ function toggleCell(key) {
 function goToProgress(patId) {
   state.progPattern = patId;
   showTab('progress');
+}
+
+// ── GUIDE TAB ──
+function renderGuide() {
+  return `
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-head" style="cursor:default">
+      <div><h2>📖 Le Dico Pattern — Guide</h2></div>
+    </div>
+    <div class="card-body open" style="padding:0 14px 18px">
+      <p class="desc" style="font-size:14px;line-height:1.65;margin-bottom:10px">
+        Le Dico Pattern est un système de travail pensé pour les guitaristes qui veulent progresser <strong>régulièrement</strong>, sans dépendre d'un morceau ou d'une méthode figée. L'idée est simple : isoler les mouvements de la main gauche dans leur forme la plus pure, les travailler comme des athlètes travaillent leurs gestes — avec précision, lenteur, et patience.
+      </p>
+      <div class="tip" style="margin-bottom:14px">
+        💡 <strong>Principe fondateur :</strong> la technique, c'est de la mémoire musculaire. Elle s'installe dans la répétition calme — pas dans la vitesse forcée.
+      </div>
+
+      <div class="section-title">La nomenclature</div>
+      <p class="desc" style="line-height:1.65;margin-bottom:10px">
+        Chaque pattern a un nom précis : <code style="background:var(--blue-light);padding:1px 6px;border-radius:4px;font-size:12px">A4P2U</code>
+      </p>
+      <div style="background:#f8f7f4;border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:13px;line-height:1.8">
+        <div><strong>A</strong> — 1 corde (catégorie A : patterns sur une seule corde)</div>
+        <div><strong>4</strong> — 4 notes par cellule</div>
+        <div><strong>P2</strong> — Pattern n°2 (le croisé 1-3-2-4)</div>
+        <div><strong>U</strong> — Direction Ascendante (<em>Up</em>) · D = Descendant · M = Mix</div>
+      </div>
+
+      <div class="section-title">Les 3 directions</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+        <div style="background:#E2EFDA;border-radius:8px;padding:10px 12px;font-size:13px">
+          <strong>⬆ Ascendant (U)</strong> — Tu montes de la corde grave vers l'aiguë, et tu répètes la même position.
+        </div>
+        <div style="background:#FFF2CC;border-radius:8px;padding:10px 12px;font-size:13px">
+          <strong>⬇ Descendant (D)</strong> — Tu descends de l'aiguë vers la grave, avec un décalage d'une case au retour.
+        </div>
+        <div style="background:#FCE4D6;border-radius:8px;padding:10px 12px;font-size:13px">
+          <strong>↕ Mix (M)</strong> — Montée ascendante puis retour descendant décalé. Le plus proche du jeu réel.
+        </div>
+      </div>
+
+      <div class="section-title">Comment travailler un pattern</div>
+      <div style="font-size:13px;line-height:1.75;color:var(--text2);margin-bottom:14px">
+        <div style="margin-bottom:6px">① <strong>Choisis un pattern</strong> adapté à ton niveau (commence par les Débutants).</div>
+        <div style="margin-bottom:6px">② <strong>Règle le métronome</strong> à 60 BPM — ou encore plus lentement si besoin.</div>
+        <div style="margin-bottom:6px">③ <strong>Choisis ton doigté de départ</strong> (index, majeur, annulaire ou auriculaire).</div>
+        <div style="margin-bottom:6px">④ <strong>Joue legato d'abord</strong> — sans médiator. Écoute chaque note, ressens chaque doigt.</div>
+        <div style="margin-bottom:6px">⑤ <strong>Monte progressivement</strong> jusqu'à la cible BPM. Ne force jamais — la douleur est un signal stop.</div>
+        <div>⑥ <strong>Coche les cases dans l'onglet Progression</strong> quand tu maîtrises une combinaison.</div>
+      </div>
+
+      <div class="section-title">Les 3 interprétations</div>
+      <div style="font-size:13px;line-height:1.7;color:var(--text2);margin-bottom:14px">
+        <div style="margin-bottom:4px"><strong>Legato</strong> — Main gauche seule, pas de médiator. Focus total sur la précision des doigts.</div>
+        <div style="margin-bottom:4px"><strong>Alternate Up</strong> — Médiator alterné en commençant par le bas (vers le bas = down stroke).</div>
+        <div><strong>Alternate Down</strong> — Médiator alterné en commençant par le haut (vers le haut = up stroke). Souvent le sens le plus difficile.</div>
+      </div>
+
+      <div class="section-title">Le chronomètre & le métronome</div>
+      <p class="desc" style="line-height:1.65;margin-bottom:10px">
+        Le <strong>chronomètre</strong> en haut à droite te permet de minuter ta session. Un <strong>double bip</strong> sonore se déclenche automatiquement toutes les 5 minutes — utile pour rester conscient du temps sans regarder l'écran.
+      </p>
+      <p class="desc" style="line-height:1.65">
+        Le <strong>métronome global</strong> (en-tête) est disponible en permanence, quel que soit l'onglet. Règle le BPM, lance-le, et joue. Il reste actif même si tu navigues entre les onglets.
+      </p>
+
+      <div class="tip" style="margin-top:16px">
+        🎸 <strong>À la Loop !</strong> — Ce dictionnaire accompagne le podcast. Retrouve des exercices complémentaires et des démonstrations vidéo sur <em>À la Loop !</em>
+      </div>
+    </div>
+  </div>`;
 }
 
 // ─── METRONOME ────────────────────────────────────────────────────────────────
@@ -1344,8 +1296,6 @@ function metroPostRender() {
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 loadState();
-// Default: open all days in program
-PROGRAM.forEach((_, i) => { if (state.openDays[i] === undefined) state.openDays[i] = true; });
 render();
 
 // PWA Service Worker
