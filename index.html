@@ -2464,6 +2464,8 @@ function pluckNote(ctx, masterGain, freq, time) {
 
   osc.start(time);  osc.stop(time + dur);
   osc2.start(time); osc2.stop(time + dur);
+  // Nettoyage dès la fin — évite l'accumulation de nœuds dans le graphe audio
+  osc.onended = () => { try { osc.disconnect(); osc2.disconnect(); filt.disconnect(); env.disconnect(); } catch(e){} };
 }
 
 function previewStop() {
@@ -2472,7 +2474,12 @@ function previewStop() {
     PREVIEW.masterGain.gain.cancelScheduledValues(t);
     PREVIEW.masterGain.gain.setValueAtTime(PREVIEW.masterGain.gain.value, t);
     PREVIEW.masterGain.gain.linearRampToValueAtTime(0, t + 0.04);
+    // Débranchement retardé pour laisser le fade se terminer
+    const mg = PREVIEW.masterGain;
+    setTimeout(() => { try { mg.disconnect(); } catch(e){} }, 200);
   }
+  // Nullifier immédiatement — empêche scheduleCycle de continuer à utiliser l'ancien nœud
+  PREVIEW.masterGain = null;
   if (PREVIEW.timer) { clearTimeout(PREVIEW.timer); PREVIEW.timer = null; }
   if (PREVIEW.patId) {
     document.querySelectorAll('[id^="prev-btn-"]').forEach(b => {
@@ -2542,7 +2549,8 @@ function spdButtons() {
       background:${isCustom?'var(--blue)':'transparent'};color:${isCustom?'#fff':'var(--text2)'};border-color:${isCustom?'var(--blue)':'var(--border)'}"
     onkeydown="if(event.key==='Enter'){const v=Math.max(30,Math.min(220,parseInt(this.value)||80));setPreviewBpm(v);this.blur()}"
     onblur="const v=Math.max(30,Math.min(220,parseInt(this.value)||80));if(v!==PREVIEW.bpm)setPreviewBpm(v)">`;
-  return presets + custom;
+  const sep = `<span style="color:var(--border);font-size:11px;margin:0 1px;line-height:1;align-self:center">·</span>`;
+  return presets + sep + custom;
 }
 
 function setPreviewBpm(bpm) {
@@ -2571,17 +2579,20 @@ function setPreviewBpm(bpm) {
 }
 
 function scheduleCycle(ctx, cycle, t0, patId) {
+  if (!PREVIEW.masterGain) return; // déjà stoppé
   const sixteenth = 60 / PREVIEW.bpm / 4;
+  // Recaler t0 si le setTimeout a tardé (évite la dérive de tempo)
+  const safeT0 = Math.max(t0, ctx.currentTime + 0.01);
   cycle.forEach((chord, i) => {
     chord.forEach(midi => {
-      pluckNote(ctx, PREVIEW.masterGain, freq440(midi), t0 + i * sixteenth);
+      pluckNote(ctx, PREVIEW.masterGain, freq440(midi), safeT0 + i * sixteenth);
     });
   });
-  const cycleDur = cycle.length * sixteenth;
-  // Reschedule le prochain cycle 80ms avant la fin
+  const nextT0 = safeT0 + cycle.length * sixteenth;
+  const delay  = Math.max(0, (nextT0 - ctx.currentTime - 0.08) * 1000);
   PREVIEW.timer = setTimeout(() => {
-    if (PREVIEW.patId === patId) scheduleCycle(ctx, cycle, t0 + cycleDur, patId);
-  }, Math.max(0, (cycleDur - 0.08) * 1000));
+    if (PREVIEW.patId === patId && PREVIEW.masterGain) scheduleCycle(ctx, cycle, nextT0, patId);
+  }, delay);
 }
 
 function freq440(midi) { return 440 * Math.pow(2, (midi - 69) / 12); }
@@ -2606,7 +2617,24 @@ function previewPlay(patId) {
   const btn = document.getElementById('prev-btn-' + patId);
   if (btn) { btn.innerHTML = previewBtnInner('stop'); btn.style.color = 'var(--red)'; }
 
-  scheduleCycle(ctx, cycle, ctx.currentTime + 0.06, patId);
+  // ─ Décompte 4 temps avant le pattern ─
+  const quarter = 60 / PREVIEW.bpm;
+  const t0 = ctx.currentTime + 0.08;
+  for (let i = 0; i < 4; i++) {
+    const t   = t0 + i * quarter;
+    const osc = ctx.createOscillator();
+    const env = ctx.createGain();
+    osc.connect(env); env.connect(PREVIEW.masterGain);
+    osc.type = 'square';
+    osc.frequency.value = i === 0 ? 1200 : 900; // 1er temps plus aigu
+    env.gain.setValueAtTime(0.14, t);
+    env.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+    osc.start(t); osc.stop(t + 0.05);
+    osc.onended = () => { try { osc.disconnect(); env.disconnect(); } catch(e){} };
+  }
+
+  // Pattern démarre après le décompte
+  scheduleCycle(ctx, cycle, t0 + 4 * quarter, patId);
 }
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
