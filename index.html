@@ -157,17 +157,17 @@
   </header>
   <main id="content"></main>
   <nav>
-    <button class="active" onclick="showTab('guide')" id="nav-guide">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7c0-1.1.9-2 2-2h6a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V7z"/><path d="M22 7c0-1.1-.9-2-2-2h-6a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V7z"/></svg></span>Guide
-    </button>
-    <button onclick="showTab('parcours')" id="nav-parcours">
+    <button class="active" onclick="showTab('parcours')" id="nav-parcours">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="5" cy="18" r="2.2" fill="currentColor" stroke="none"/><circle cx="19" cy="6" r="2.2" fill="currentColor" stroke="none"/><path d="M7.2 17C10 17 14 7 16.8 7"/></svg></span>Parcours
+    </button>
+    <button onclick="showTab('patterns')" id="nav-patterns">
+      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Patterns
     </button>
     <button onclick="showTab('progress')" id="nav-progress">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="18" y1="20" x2="18" y2="10"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span>Progression
     </button>
-    <button onclick="showTab('patterns')" id="nav-patterns">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Patterns
+    <button onclick="showTab('guide')" id="nav-guide">
+      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7c0-1.1.9-2 2-2h6a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V7z"/><path d="M22 7c0-1.1-.9-2-2-2h-6a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V7z"/></svg></span>Guide
     </button>
   </nav>
 </div>
@@ -299,7 +299,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P3U", cat:"A4", dir:"U", num:3, notes:4, etape:1, etapeOrder:1, difficulty:"Débutant", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A4P3U", cat:"A4", dir:"U", num:3, notes:4, etape:1, etapeOrder:1, difficulty:"Débutant", related:"A2P2", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Alternance ton entier", bpm:60, bpmTarget:140,
     tab:`e|--------------------------5-7-5-7-|
 B|------------------5-7-5-7---------|
@@ -319,7 +319,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P3D", cat:"A4", dir:"D", num:3, notes:4, etape:1, etapeOrder:1, difficulty:"Débutant", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A4P3D", cat:"A4", dir:"D", num:3, notes:4, etape:1, etapeOrder:1, difficulty:"Débutant", related:"A2P2", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Alternance ton entier", bpm:60, bpmTarget:140,
     tab:`e|--------------------------7-5-7-5-|
 B|------------------7-5-7-5---------|
@@ -339,7 +339,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P3M", cat:"A4", dir:"M", num:3, notes:4, etape:1, etapeOrder:1, difficulty:"Débutant", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A4P3M", cat:"A4", dir:"M", num:3, notes:4, etape:1, etapeOrder:1, difficulty:"Débutant", related:"A2P2", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Alternance ton entier", bpm:60, bpmTarget:128,
     tab:`e|--------------------------5-7-5-7-|
 B|------------------5-7-5-7---------|
@@ -1083,7 +1083,7 @@ E|------------------|
   },
 
   {
-    id:"A2P2U", cat:"A2", dir:"U", num:2, notes:2, etape:1, etapeOrder:5, difficulty:"Débutant", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A2P2U", cat:"A2", dir:"U", num:2, notes:2, etape:1, etapeOrder:5, difficulty:"Débutant", related:"A4P3", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Ton entier", bpm:80, bpmTarget:160,
     tab:`e|--------------5-7-|
 B|----------5-7-----|
@@ -1103,7 +1103,7 @@ E|------------------|
   },
 
   {
-    id:"A2P2D", cat:"A2", dir:"D", num:2, notes:2, etape:1, etapeOrder:5, difficulty:"Débutant", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A2P2D", cat:"A2", dir:"D", num:2, notes:2, etape:1, etapeOrder:5, difficulty:"Débutant", related:"A4P3", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Ton entier", bpm:80, bpmTarget:160,
     tab:`e|--------------7-5-|
 B|----------7-5-----|
@@ -1123,7 +1123,7 @@ E|------------------|
   },
 
   {
-    id:"A2P2M", cat:"A2", dir:"M", num:2, notes:2, etape:1, etapeOrder:5, difficulty:"Débutant", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A2P2M", cat:"A2", dir:"M", num:2, notes:2, etape:1, etapeOrder:5, difficulty:"Débutant", related:"A4P3", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Ton entier", bpm:80, bpmTarget:147,
     tab:`e|--------------5-7-|
 B|----------5-7-----|
@@ -1446,8 +1446,8 @@ E|---------------------------------------------------------|
 
 const MODES = ["U","D","M"];
 const MODE_LABELS = {U:"Ascendant",D:"Descendant",M:"Mix"};
-const INTERPS = ["Leg","Up","Down"];
-const INTERP_LABELS = {Leg:"Legato",Up:"Alt Up",Down:"Alt Down"};
+const INTERPS = ["Up","Down","Leg"];
+const INTERP_LABELS = {Up:"Alt ↑",Down:"Alt ↓",Leg:"Legato"};
 const TEMPOS = [
   { key:'lent',  label:'Lent',  range:'40–60',   color:'#4a9e6b' },
   { key:'cool',  label:'Cool',  range:'70–100',  color:'#c07830' },
@@ -1457,66 +1457,24 @@ const FINGERINGS = [1,2,3,4];
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let state = {
-  tab: 'guide',
+  tab: 'parcours',
   filter: 'all',
   diffFilter: 'all',
   openCards: {},
-  progPattern: PATTERNS[0].id,
-  progFingering: 1,
-  progTabOpen: false,
-  showGlobal: false,
   progress: {},
   parcoursOpen: null,
-  parcoursFing: 1,
-  notesOpen: true,
 };
 
-// ─── NOTES DE SÉANCE ──────────────────────────────────────────────────────────
-let NOTES = [];
+// ─── NOTES PAR PATTERN ────────────────────────────────────────────────────────
+let PAT_NOTES = {};
 
-function loadNotes() {
-  try { NOTES = JSON.parse(localStorage.getItem('dicoNotes') || '[]'); } catch(e) { NOTES = []; }
+function loadPatNotes() {
+  try { PAT_NOTES = JSON.parse(localStorage.getItem('dicoPatNotes') || '{}'); } catch(e) { PAT_NOTES = {}; }
 }
 
-function saveNotes() {
-  try { localStorage.setItem('dicoNotes', JSON.stringify(NOTES.slice(0,40))); } catch(e) {}
-}
-
-function addNote() {
-  const inp = document.getElementById('note-input');
-  if (!inp || !inp.value.trim()) return;
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'2-digit'})
-    + ' · ' + now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  NOTES.unshift({ text: inp.value.trim(), date: dateStr });
-  inp.value = '';
-  saveNotes();
-  const el = document.getElementById('notes-list');
-  if (el) el.innerHTML = renderNotesList();
-}
-
-function deleteNote(i) {
-  NOTES.splice(i, 1);
-  saveNotes();
-  const el = document.getElementById('notes-list');
-  if (el) el.innerHTML = renderNotesList();
-}
-
-function renderNotesList() {
-  if (!NOTES.length) return `<p style="font-size:12px;color:var(--text2);text-align:center;padding:10px 0">Aucune note pour l'instant.</p>`;
-  return NOTES.map((n, i) => `
-    <div style="display:flex;align-items:flex-start;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)">
-      <div style="flex:1">
-        <div style="font-size:13px;color:var(--text);line-height:1.45">${n.text}</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:3px">${n.date}</div>
-      </div>
-      <button onclick="deleteNote(${i})" style="background:none;border:none;color:var(--text2);font-size:16px;cursor:pointer;padding:0 4px;line-height:1;opacity:.5">×</button>
-    </div>`).join('');
-}
-
-function toggleNotesCard() {
-  state.notesOpen = !state.notesOpen;
-  render();
+function savePatNote(patId, text) {
+  PAT_NOTES[patId] = text;
+  try { localStorage.setItem('dicoPatNotes', JSON.stringify(PAT_NOTES)); } catch(e) {}
 }
 
 // ─── ONBOARDING ───────────────────────────────────────────────────────────────
@@ -1541,7 +1499,7 @@ function checkOnboarding() {
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start">
           <div style="width:26px;height:26px;min-width:26px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800">3</div>
-          <div style="font-size:13px;color:var(--text);line-height:1.55"><strong>Note tes séances</strong> dans le Guide — ce qui était dur, ce qui a cliqué.</div>
+          <div style="font-size:13px;color:var(--text);line-height:1.55"><strong>Note tes impressions</strong> sous chaque grille de Progression — ce qui était dur, ce qui a cliqué.</div>
         </div>
       </div>
       <button onclick="dismissOnboarding()" style="width:100%;padding:15px;background:var(--blue);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:.2px">C'est parti !</button>
@@ -1578,7 +1536,7 @@ function loadState() {
     const saved = JSON.parse(localStorage.getItem('dicoPattern') || '{}');
     state.progress = saved.progress || {};
   } catch(e) {}
-  loadNotes();
+  loadPatNotes();
 }
 
 function saveState() {
@@ -1780,7 +1738,35 @@ function renderParcours() {
             <span style="font-size:16px;color:var(--text2)">${isOpen ? '▲' : '▼'}</span>
           </div>
         </div>
-        ${isOpen ? renderParcoursGrid(group.patterns, key) : ''}
+        ${isOpen ? (() => {
+          const fp = group.patterns[0];
+          let inner = `<div style="border-top:1px solid var(--border);padding:12px 14px 0">`;
+          // Doigté D1 + Aller plus loin (une fois pour le groupe)
+          if (fp.fingerings) {
+            inner += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+              ${handSVG(fp.fingerings[0])}
+              <span class="grid-label" style="margin:0">D1 — ${expandFingering(fp.fingerings[0])}</span>
+            </div>`;
+            if (fp.fingerings.length > 1) {
+              inner += `<div style="margin-bottom:10px">
+                <button id="apl-btn-${key}" onclick="toggleAllerPlusLoin('${key}')"
+                  style="font-size:10px;color:var(--blue);background:transparent;border:1px solid var(--blue);border-radius:20px;padding:3px 12px;cursor:pointer">
+                  Aller plus loin <span style="font-size:8px">▸</span>
+                </button>
+                <div id="apl-${key}" style="display:none;margin-top:7px;padding:10px 12px;background:var(--blue-light);border-radius:10px">
+                  <div style="font-size:10px;font-weight:600;color:var(--blue);margin-bottom:6px">Autres doigtés — exploration libre</div>
+                  <div style="display:flex;flex-direction:column;gap:5px">${fp.fingerings.slice(1).map((d,i)=>`<div style="font-size:10px;color:var(--text2)"><b>D${i+2}</b> — ${expandFingering(d)}</div>`).join('')}</div>
+                </div>
+              </div>`;
+            }
+          }
+          inner += `</div>`;
+          ['U','D','M'].forEach(dir => {
+            const p = group.patterns.find(x => x.dir === dir);
+            if (p) inner += renderPatternBody(p);
+          });
+          return inner;
+        })() : ''}
       </div>`;
     });
   });
@@ -1790,9 +1776,39 @@ function renderParcours() {
 
 // ── SHARED PATTERN BODY ──
 function renderPatternBody(p) {
+  const relPat = p.related ? PATTERNS.find(r => r.id === p.related + p.dir) : null;
+  const relLink = relPat
+    ? `<button onclick="goToPattern('${relPat.cat}P${relPat.num}')"
+        style="font-size:11px;color:var(--blue);background:transparent;border:1px solid var(--blue);border-radius:10px;padding:2px 10px;cursor:pointer;margin-top:6px">
+        Voir aussi : ${relPat.cat}P${relPat.num} — ${relPat.name}
+       </button>` : '';
+
+  // Tableau de progression
+  let gridRows = '';
+  TEMPOS.forEach(tempo => {
+    gridRows += `<tr><td class="tempo"><span style="color:${tempo.color};font-weight:700">${tempo.label}</span><br>
+      <span style="font-size:9px;color:var(--text2);font-weight:400">${tempo.range}</span></td>`;
+    INTERPS.forEach(interp => {
+      const k = getProgressKey(p.id, 1, p.dir, interp, tempo);
+      const done = !!state.progress[k];
+      gridRows += `<td><button class="cell-btn ${done?'checked':''}" onclick="toggleParcoursCell('${k}')">${done?'●':'·'}</button></td>`;
+    });
+    gridRows += `</tr>`;
+  });
+  const thStyle = i => PREVIEW.interp===i
+    ? 'background:var(--orange);color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.2);'
+    : 'background:var(--blue);color:rgba(255,255,255,.75);';
+  const progGrid = `<div class="prog-grid" style="margin-top:10px">
+    <table><thead><tr>
+      <th style="width:72px"></th>
+      ${INTERPS.map(i=>`<th data-interp-th="${i}" onclick="setPreviewInterp('${i}')"
+        style="cursor:pointer;transition:all .15s;${thStyle(i)}">${INTERP_LABELS[i]}${PREVIEW.interp===i?' ✓':''}</th>`).join('')}
+    </tr></thead>
+    <tbody>${gridRows}</tbody></table></div>`;
+
   return `
     <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
         <div style="font-size:13px;font-weight:700;color:var(--blue)">${dirLabel(p.dir)} — <code style="font-size:12px;background:var(--blue-light);padding:1px 6px;border-radius:4px">${p.id}</code></div>
         <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
           <button id="prev-btn-${p.id}" onclick="previewPlay('${p.id}')"
@@ -1802,13 +1818,18 @@ function renderPatternBody(p) {
           ${spdButtons()}
         </div>
       </div>
-      <div class="tab-wrap"><pre>${p.tab}</pre></div>
+      <div style="display:flex;gap:4px;margin-bottom:6px;align-items:center">
+        <span style="font-size:10px;color:var(--text2);margin-right:2px">Interp :</span>
+        ${interpButtons()}
+      </div>
+      <div class="tab-wrap"><pre data-tab-id="${p.id}">${tabWithSymbols(p.tab, PREVIEW.interp)}</pre></div>
       <p class="desc">${p.desc}</p>
       <div class="tip">💡 ${p.tip}</div>
-      <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
-        <span style="font-size:12px;color:var(--text2)">Tempo : ${p.bpm} → ${p.bpmTarget} BPM</span>
-        <button onclick="goToProgress('${p.id}')" style="margin-left:auto;font-size:12px;padding:5px 12px;border:none;background:var(--blue);color:#fff;border-radius:8px;cursor:pointer">Suivi 📊</button>
-      </div>
+      ${progGrid}
+      ${relLink}
+      <textarea placeholder="Notes sur ce pattern…"
+        style="width:100%;min-height:52px;margin-top:10px;padding:8px 10px;font-size:12px;font-family:-apple-system,sans-serif;color:var(--text);background:#fafaf8;border:1px solid var(--border);border-radius:8px;resize:vertical;outline:none;line-height:1.5"
+        onblur="savePatNote('${p.id}',this.value)">${PAT_NOTES[p.id]||''}</textarea>
     </div>`;
 }
 
@@ -1891,7 +1912,6 @@ function toggleParcours(key) {
   const wasOpen = state.parcoursOpen === key;
   if (wasOpen) previewStop();
   state.parcoursOpen = wasOpen ? null : key;
-  state.parcoursFing = 1;
   render();
   if (!wasOpen) {
     setTimeout(() => {
@@ -1901,82 +1921,11 @@ function toggleParcours(key) {
   }
 }
 
-function setParcoursFing(f) {
-  state.parcoursFing = f;
-  render();
-}
-
 function toggleParcoursCell(key) {
   state.progress[key] = !state.progress[key];
   checkSound(state.progress[key]);
   saveState();
   render();
-}
-
-function renderParcoursGrid(patterns, groupKey) {
-  const fing = 1; // Toujours D1 pour le suivi
-  const pat0 = patterns[0];
-  let html = `<div style="padding:0 14px 16px;border-top:1px solid var(--border)">`;
-
-  // D1 affiché, autres en accordéon
-  html += `<div style="display:flex;align-items:center;gap:10px;margin:12px 0 6px">
-    ${pat0.fingerings ? handSVG(pat0.fingerings[0]) : ''}
-    <span class="grid-label" style="margin:0">D1 — ${pat0.fingerings ? expandFingering(pat0.fingerings[0]) : 'Index'}</span>
-  </div>`;
-  if (pat0.fingerings && pat0.fingerings.length > 1) {
-    html += `<div style="margin-bottom:12px">
-      <button id="apl-btn-${groupKey}" onclick="toggleAllerPlusLoin('${groupKey}')"
-        style="font-size:10px;color:var(--blue);background:transparent;border:1px solid var(--blue);border-radius:20px;padding:3px 12px;cursor:pointer;transition:all .15s">
-        Aller plus loin <span style="font-size:8px">▸</span>
-      </button>
-      <div id="apl-${groupKey}" style="display:none;margin-top:7px;padding:10px 12px;background:var(--blue-light);border-radius:10px">
-        <div style="font-size:10px;font-weight:600;color:var(--blue);margin-bottom:7px">Autres doigtés — exploration libre</div>
-        <div style="display:flex;flex-direction:column;gap:6px">`;
-    pat0.fingerings.slice(1).forEach((desc, i) => {
-      html += `<div style="font-size:10px;color:var(--text2)"><span style="font-weight:700;color:var(--text1)">D${i+2}</span> — ${expandFingering(desc)}</div>`;
-    });
-    html += `</div></div></div>`;
-  }
-
-  // Un tableau par direction (U/D/M)
-  ['U','D','M'].forEach(dir => {
-    const p = patterns.find(x => x.dir === dir);
-    if (!p) return;
-    html += `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;margin-bottom:4px">
-      <div class="grid-label" style="margin:0">${dirLabel(dir)}</div>
-      <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
-        <button id="prev-btn-${p.id}" onclick="previewPlay('${p.id}')"
-          style="font-size:11px;padding:2px 9px;border:1px solid var(--border);border-radius:12px;background:transparent;cursor:pointer;color:var(--text2);display:flex;align-items:center;gap:4px;white-space:nowrap">
-          ${previewBtnInner('play')}
-        </button>
-        ${spdButtons()}
-      </div>
-    </div>
-    <div class="tab-wrap" style="margin-bottom:8px"><pre>${p.tab}</pre></div>
-    <div class="prog-grid">
-      <table>
-        <thead><tr>
-          <th style="width:72px"></th>
-          ${INTERPS.map(i=>`<th>${INTERP_LABELS[i]}</th>`).join('')}
-        </tr></thead>
-        <tbody>`;
-    TEMPOS.forEach(tempo => {
-      html += `<tr><td class="tempo"><span style="color:${tempo.color};font-weight:700">${tempo.label}</span><br><span style="font-size:9px;color:var(--text2);font-weight:400">${tempo.range}</span></td>`;
-      INTERPS.forEach(interp => {
-        const k = getProgressKey(p.id, fing, dir, interp, tempo);
-        const done = !!state.progress[k];
-        html += `<td><button class="cell-btn ${done?'checked':''}" onclick="toggleParcoursCell('${k}')">
-          ${done?'●':'·'}
-        </button></td>`;
-      });
-      html += `</tr>`;
-    });
-    html += `</tbody></table></div>`;
-  });
-
-  html += `</div>`;
-  return html;
 }
 
 function setFilter(f) {
@@ -2077,158 +2026,29 @@ function renderGlobalProgress() {
 }
 
 function selectPatAndGo(id) {
-  state.progPattern = id;
-  state.showGlobal = false;
-  render();
+  const pat = PATTERNS.find(p => p.id === id);
+  if (pat) goToPattern(pat.cat + 'P' + pat.num);
 }
 
 function renderProgress() {
-  const patId = state.progPattern;
-  const fing = state.progFingering;
-  const pct = getPatternPct(patId);
-  const pat = PATTERNS.find(p => p.id === patId) || PATTERNS[0];
-
-  // Vue globale en haut, avec toggle
-  let html = `
-  <div style="display:flex;gap:8px;margin-bottom:12px">
-    <button onclick="state.showGlobal=false;render()" style="flex:1;padding:8px;border:2px solid ${!state.showGlobal?'var(--blue)':'var(--border)'};background:${!state.showGlobal?'var(--blue)':'#fff'};color:${!state.showGlobal?'#fff':'var(--text2)'};border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">📊 Par pattern</button>
-    <button onclick="state.showGlobal=true;render()" style="flex:1;padding:8px;border:2px solid ${state.showGlobal?'var(--blue)':'var(--border)'};background:${state.showGlobal?'var(--blue)':'#fff'};color:${state.showGlobal?'#fff':'var(--text2)'};border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">🌐 Vue globale</button>
-  </div>`;
-
-  if (state.showGlobal) {
-    return html + renderGlobalProgress();
-  }
-
-  html += `
-  <div class="pct-card">
-    <h3>Progression — ${patId}</h3>
-    <div class="pct-big">${pct}%</div>
-    <div class="pct-sub">sur 36 combinaisons (3 interprétations × 4 doigtés × 3 tempos)</div>
-    <div class="progress-bar-wrap" style="margin-top:8px"><div class="progress-bar" style="width:${pct}%"></div></div>
-  </div>
-
-  <select class="pat-selector" onchange="selectPat(this.value)">`;
-
-  PATTERNS.forEach(p => {
-    html += `<option value="${p.id}" ${p.id===patId?'selected':''}>${p.id} — ${p.name} (${dirLabel(p.dir)})</option>`;
-  });
-
-  html += `</select>
-
-  <div class="card" style="margin-bottom:12px">
-    <div class="card-head" onclick="toggleProgTab()">
-      <div><h2 style="font-size:14px">📋 Tablature — ${pat.id}</h2></div>
-      <span class="arrow ${state.progTabOpen?'open':''}">▶</span>
-    </div>
-    <div class="card-body ${state.progTabOpen?'open':''}">
-      <div class="tab-wrap"><pre>${pat.tab}</pre></div>
-      <p class="desc" style="margin-top:6px">${pat.desc}</p>
-    </div>
-  </div>
-
-
-
-  <div id="fing-anchor" style="display:flex;align-items:center;gap:10px;margin:12px 0 6px">
-    ${pat.fingerings ? handSVG(pat.fingerings[0]) : ''}
-    <span class="grid-label" style="margin:0">D1 — ${pat.fingerings ? expandFingering(pat.fingerings[0]) : 'Index'}</span>
-  </div>
-
-  <div class="prog-grid">
-    <table>
-      <thead><tr>
-        <th style="width:72px"></th>
-        ${INTERPS.map(i=>`<th>${INTERP_LABELS[i]}</th>`).join('')}
-      </tr></thead>
-      <tbody>`;
-  const mode = pat.dir;
-  TEMPOS.forEach(tempo => {
-    html += `<tr><td class="tempo"><span style="color:${tempo.color};font-weight:700">${tempo.label}</span><br><span style="font-size:9px;color:var(--text2);font-weight:400">${tempo.range}</span></td>`;
-    INTERPS.forEach(interp => {
-      const key = getProgressKey(patId, 1, mode, interp, tempo);
-      const done = !!state.progress[key];
-      html += `<td><button class="cell-btn ${done?'checked':''}" onclick="toggleCell('${key}')">
-        ${done?'●':'·'}
-      </button></td>`;
-    });
-    html += `</tr>`;
-  });
-  html += `</tbody></table></div>`;
-
-  // Autres doigtés — suggestion facultative (accordéon)
-  if (pat.fingerings && pat.fingerings.length > 1) {
-    html += `<div style="margin-top:12px">
-      <button id="apl-btn-${patId}" onclick="toggleAllerPlusLoin('${patId}')"
-        style="font-size:11px;color:var(--blue);background:transparent;border:1px solid var(--blue);border-radius:20px;padding:4px 14px;cursor:pointer;width:100%;text-align:center;transition:all .15s">
-        Aller plus loin <span style="font-size:9px">▸</span>
-      </button>
-      <div id="apl-${patId}" style="display:none;margin-top:8px;padding:12px 14px;background:var(--blue-light);border-radius:10px">
-        <div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:9px">Autres doigtés — exploration libre</div>
-        <div style="display:flex;flex-direction:column;gap:7px">`;
-    pat.fingerings.slice(1).forEach((desc, i) => {
-      html += `<div style="font-size:11px;color:var(--text2)"><span style="font-weight:700;color:var(--text1)">D${i+2}</span> — ${expandFingering(desc)}</div>`;
-    });
-    html += `</div></div></div>`;
-  }
-
-  return html;
+  return renderGlobalProgress();
 }
 
-function selectPat(id) {
-  state.progPattern = id;
-  render();
+
+function goToPattern(groupKey) {
+  // Ouvre le tiroir du pattern dans l'onglet Patterns
+  state.openCards[groupKey] = true;
+  showTab('patterns');
   setTimeout(() => {
-    const el = document.getElementById('fing-anchor');
+    const el = document.getElementById('card-' + groupKey);
     if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
-  }, 60);
+  }, 80);
 }
 
-function toggleProgTab() {
-  state.progTabOpen = !state.progTabOpen;
-  render();
-}
-
-function selectFing(f) {
-  state.progFingering = f;
-  render();
-}
-
-function toggleCell(key) {
-  state.progress[key] = !state.progress[key];
-  checkSound(state.progress[key]);
-  saveState();
-  render();
-}
-
-function goToProgress(patId) {
-  state.progPattern = patId;
-  showTab('progress');
-  setTimeout(() => {
-    const el = document.getElementById('fing-anchor');
-    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
-  }, 100);
-}
 
 // ── GUIDE TAB ──
 function renderGuide() {
-  const notesCard = `
-  <div class="card" style="margin-bottom:12px">
-    <div class="card-head" onclick="toggleNotesCard()">
-      <div><h2 style="font-size:15px">📝 Notes de séance</h2></div>
-      <span class="arrow ${state.notesOpen?'open':''}">▶</span>
-    </div>
-    <div class="card-body ${state.notesOpen?'open':''}">
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input id="note-input" type="text" placeholder="Ce qui était dur, ce qui a cliqué…"
-          style="flex:1;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff"
-          onkeydown="if(event.key==='Enter')addNote()">
-        <button onclick="addNote()"
-          style="padding:9px 16px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:18px;font-weight:700;cursor:pointer;line-height:1">+</button>
-      </div>
-      <div id="notes-list">${renderNotesList()}</div>
-    </div>
-  </div>`;
-
-  return notesCard + `
+  return `
   <div class="card" style="margin-bottom:12px">
     <div class="card-head" style="cursor:default">
       <div><h2>📖 Le Dico Pattern — Guide</h2></div>
@@ -2378,7 +2198,7 @@ function metroPostRender() {
 
 // ─── PREVIEW AUDIO ────────────────────────────────────────────────────────────
 const OPEN_MIDI = {e:64, B:59, G:55, D:50, A:45, E:40};
-const PREVIEW = { ctx:null, masterGain:null, patId:null, timer:null, bpm:80 };
+const PREVIEW = { ctx:null, masterGain:null, patId:null, timer:null, bpm:80, interp:'Up' };
 
 function previewCtx() {
   if (!PREVIEW.ctx) PREVIEW.ctx = new (window.AudioContext||window.webkitAudioContext)();
@@ -2389,41 +2209,51 @@ function previewCtx() {
 // Ordre standard des cordes dans un tab ASCII (de haut en bas)
 const STRING_ORDER = ['e','B','G','D','A','E'];
 
-function extractLineNotes(content, baseMidi, notes) {
+function extractLineNotes(content, baseMidi, notes, strKey) {
   let i = 0;
   while (i < content.length) {
     if (/\d/.test(content[i])) {
       const col = i;
       let num = '';
       while (i < content.length && /\d/.test(content[i])) num += content[i++];
-      notes.push({ col, midi: baseMidi + parseInt(num) });
+      notes.push({ col, midi: baseMidi + parseInt(num), str: strKey });
     } else { i++; }
   }
 }
 
 function parseSection(lines) {
   const notes = [];
-  let unlabeledIdx = 0;  // position dans STRING_ORDER pour les lignes sans label
+  let unlabeledIdx = 0;
 
   for (const line of lines) {
     const labeled = line.match(/^([eEBGDA])\|(.+)/);
     if (labeled) {
-      const baseMidi = OPEN_MIDI[labeled[1]];
-      if (baseMidi !== undefined) extractLineNotes(labeled[2], baseMidi, notes);
+      const strKey = labeled[1];
+      const baseMidi = OPEN_MIDI[strKey];
+      if (baseMidi !== undefined) extractLineNotes(labeled[2], baseMidi, notes, strKey);
     } else if (/^-/.test(line)) {
-      // Ligne sans label (section retour) — mapping par position
       const str = STRING_ORDER[unlabeledIdx];
-      if (str && OPEN_MIDI[str] !== undefined) extractLineNotes(line, OPEN_MIDI[str], notes);
+      if (str && OPEN_MIDI[str] !== undefined) extractLineNotes(line, OPEN_MIDI[str], notes, str);
       unlabeledIdx++;
     }
   }
 
   notes.sort((a, b) => a.col - b.col);
+
+  // Marquer les attaques (premier temps de chaque nouvelle corde — legato)
+  let prevStr = null;
+  notes.forEach(n => { n.isAttack = n.str !== prevStr; prevStr = n.str; });
+
   const grouped = [];
   let lastCol = -1;
   for (const n of notes) {
-    if (n.col === lastCol) grouped[grouped.length-1].push(n.midi);
-    else { grouped.push([n.midi]); lastCol = n.col; }
+    if (n.col === lastCol) {
+      grouped[grouped.length-1].notes.push(n.midi);
+      if (n.isAttack) grouped[grouped.length-1].isAttack = true;
+    } else {
+      grouped.push({ notes:[n.midi], isAttack:n.isAttack });
+      lastCol = n.col;
+    }
   }
   return grouped;
 }
@@ -2445,7 +2275,7 @@ function parseTabNotes(tabStr) {
   return sections.map(parseSection).filter(s => s.length > 0);
 }
 
-function pluckNote(ctx, masterGain, freq, time) {
+function pluckNote(ctx, masterGain, freq, time, gainMult = 1.0) {
   const dur = 0.9;
   const osc  = ctx.createOscillator();
   const osc2 = ctx.createOscillator();
@@ -2459,7 +2289,7 @@ function pluckNote(ctx, masterGain, freq, time) {
   osc.connect(filt); osc2.connect(filt); filt.connect(env); env.connect(masterGain);
 
   env.gain.setValueAtTime(0.001, time);
-  env.gain.linearRampToValueAtTime(0.32, time + 0.004);
+  env.gain.linearRampToValueAtTime(0.32 * gainMult, time + 0.004);
   env.gain.exponentialRampToValueAtTime(0.001, time + dur);
 
   osc.start(time);  osc.stop(time + dur);
@@ -2553,6 +2383,116 @@ function spdButtons() {
   return presets + sep + custom;
 }
 
+// ─── SYMBOLES MÉDIATOR ────────────────────────────────────────────────────────
+function tabWithSymbols(tabStr, interp) {
+  const lines = tabStr.split('\n');
+  const isStrLine = l => /^[eEBGDA]\|/.test(l) || /^-/.test(l);
+  const STR_ORDER = ['e','B','G','D','A','E'];
+  const output = [];
+  let i = 0;
+  let globalIdx = 0;
+
+  while (i < lines.length) {
+    if (isStrLine(lines[i])) {
+      // ── Collecter le bloc ──────────────────────────────────────────────────
+      const block = [];
+      while (i < lines.length && isStrLine(lines[i])) {
+        block.push(lines[i]);
+        i++;
+      }
+
+      // ── Ramasser notes de TOUTES les cordes avec leur corde d'origine ─────
+      const allNotes = [];
+      block.forEach((line, li) => {
+        const m = line.match(/^([eEBGDA])\|(.+)/);
+        const strKey  = m ? m[1] : `_${li}`;
+        const content = m ? m[2] : line;
+        let j = 0;
+        while (j < content.length) {
+          if (/\d/.test(content[j])) {
+            allNotes.push({ col: j, strKey });
+            while (j < content.length && /\d/.test(content[j])) j++;
+          } else j++;
+        }
+      });
+
+      // Grouper par colonne (même col = même temps)
+      const byCol = {};
+      allNotes.forEach(n => { (byCol[n.col] = byCol[n.col] || []).push(n.strKey); });
+      const beats = Object.keys(byCol).map(Number).sort((a, b) => a - b);
+
+      // ── Construire la ligne de symboles ───────────────────────────────────
+      const fm = block[0].match(/^([eEBGDA])\|(.+)/);
+      const prefixLen  = fm ? 2 : 0;
+      const contentLen = fm ? fm[2].length : block[0].length;
+
+      let sym = ' '.repeat(contentLen);
+      let prevStr = null;
+      beats.forEach((col, j) => {
+        // Corde principale à ce temps (ordre d'affichage de la tab)
+        const primaryStr = byCol[col].sort(
+          (a, b) => (STR_ORDER.indexOf(a) + 99) % 99 - (STR_ORDER.indexOf(b) + 99) % 99
+        )[0];
+
+        let s = ' ';
+        if (interp === 'Up')   s = (globalIdx + j) % 2 === 0 ? '↑' : '↓';
+        if (interp === 'Down') s = (globalIdx + j) % 2 === 0 ? '↓' : '↑';
+        if (interp === 'Leg')  s = primaryStr !== prevStr ? '↑' : ' '; // ↑ à chaque changement de corde
+
+        prevStr = primaryStr;
+        if (col < sym.length) sym = sym.substring(0, col) + s + sym.substring(col + 1);
+      });
+
+      output.push(' '.repeat(prefixLen) + sym);
+      globalIdx += beats.length;
+      block.forEach(l => output.push(l));
+    } else {
+      output.push(lines[i]);
+      i++;
+    }
+  }
+
+  return output.join('\n');
+}
+
+function interpButtons() {
+  const s = 'font-size:10px;padding:2px 8px;border-radius:10px;border:1px solid;cursor:pointer;transition:all .15s;';
+  return [
+    { key:'Leg', label:'Legato' },
+    { key:'Up',  label:'Alt ↑' },
+    { key:'Down',label:'Alt ↓' },
+  ].map(({key, label}) => {
+    const active = PREVIEW.interp === key;
+    return `<button class="interp-btn" data-interp="${key}" onclick="setPreviewInterp('${key}')"
+      style="${s}background:${active?'var(--blue)':'transparent'};color:${active?'#fff':'var(--text2)'};border-color:${active?'var(--blue)':'var(--border)'}">
+      ${label}</button>`;
+  }).join('');
+}
+
+function setPreviewInterp(interp) {
+  PREVIEW.interp = interp;
+  // Boutons Interp (Patterns + Parcours)
+  document.querySelectorAll('.interp-btn').forEach(b => {
+    const active = b.dataset.interp === interp;
+    b.style.background  = active ? 'var(--blue)' : 'transparent';
+    b.style.color       = active ? '#fff' : 'var(--text2)';
+    b.style.borderColor = active ? 'var(--blue)' : 'var(--border)';
+  });
+  // Headers de colonne dans la grille Progression
+  document.querySelectorAll('[data-interp-th]').forEach(th => {
+    const active = th.dataset.interpTh === interp;
+    th.style.background = active ? 'var(--orange)' : 'var(--blue)';
+    th.style.color      = active ? '#fff' : 'rgba(255,255,255,.75)';
+    th.style.boxShadow  = active ? 'inset 0 -3px 0 rgba(0,0,0,.2)' : 'none';
+    th.textContent      = INTERP_LABELS[th.dataset.interpTh] + (active ? ' ✓' : '');
+  });
+  // Rafraîchir toutes les tabs visibles sans re-render
+  document.querySelectorAll('[data-tab-id]').forEach(pre => {
+    const pat = PATTERNS.find(p => p.id === pre.dataset.tabId);
+    if (pat) pre.textContent = tabWithSymbols(pat.tab, interp);
+  });
+}
+
 function setPreviewBpm(bpm) {
   PREVIEW.bpm = bpm;
   // Boutons préréglés
@@ -2583,9 +2523,12 @@ function scheduleCycle(ctx, cycle, t0, patId) {
   const sixteenth = 60 / PREVIEW.bpm / 4;
   // Recaler t0 si le setTimeout a tardé (évite la dérive de tempo)
   const safeT0 = Math.max(t0, ctx.currentTime + 0.01);
-  cycle.forEach((chord, i) => {
-    chord.forEach(midi => {
-      pluckNote(ctx, PREVIEW.masterGain, freq440(midi), safeT0 + i * sixteenth);
+  cycle.forEach(({ notes, isAttack }, i) => {
+    const gainMult = PREVIEW.interp === 'Leg'
+      ? (isAttack ? 1.5 : 0.62)
+      : 1.0;
+    notes.forEach(midi => {
+      pluckNote(ctx, PREVIEW.masterGain, freq440(midi), safeT0 + i * sixteenth, gainMult);
     });
   });
   const nextT0 = safeT0 + cycle.length * sixteenth;
