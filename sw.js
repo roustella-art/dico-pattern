@@ -1,4 +1,4 @@
-const CACHE = 'dico-pattern-v14';
+const CACHE = 'dico-pattern-v15';
 const ASSETS = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {

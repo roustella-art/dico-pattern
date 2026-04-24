@@ -109,15 +109,21 @@
   .metro-target{font-size:11px;color:var(--text2);flex:1;white-space:nowrap}
   .metro-btn{font-size:12px;font-weight:700;padding:6px 12px;border:none;border-radius:8px;cursor:pointer;color:#fff;flex-shrink:0}
 
+  /* DETAILS accordéon */
+  details summary::-webkit-details-marker{display:none}
+  details[open] summary span:last-child{transform:rotate(180deg)}
+  details[open] summary{border-radius:8px 8px 0 0}
+
   /* SPD CUSTOM INPUT (preview BPM libre) */
   .spd-custom::-webkit-outer-spin-button,
   .spd-custom::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  #metro-bpm-global::-webkit-inner-spin-button,#metro-bpm-global::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
   .spd-custom{-moz-appearance:textfield}
 
   /* CHRONO */
   .chrono-wrap{display:flex;align-items:center;gap:6px}
-  .chrono-btn{background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;padding:3px 7px;font-size:13px;cursor:pointer;line-height:1.4}
-  .chrono-btn:active{background:rgba(255,255,255,.35)}
+  .chrono-btn{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:7px;padding:4px 9px;font-size:13px;cursor:pointer;line-height:1.4;transition:background .1s}
+  .chrono-btn:active{background:rgba(255,255,255,.38)}
 
   /* NAV ICONS */
   nav button .ico{width:24px;height:24px;display:flex;align-items:center;justify-content:center}
@@ -128,7 +134,7 @@
 <div id="app">
   <header>
     <div style="display:flex;align-items:center;justify-content:space-between">
-      <h1>🎸 Dico Pattern <span style="font-size:11px;opacity:.65;font-weight:400;font-style:italic">· À la Loop !</span></h1>
+      <h1>Le Dico Pattern <span style="font-size:11px;opacity:.65;font-weight:400;font-style:italic">· par CedLoop</span></h1>
       <div class="chrono-wrap">
         <svg width="56" height="56" viewBox="0 0 56 56" style="flex-shrink:0">
           <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3"/>
@@ -144,14 +150,14 @@
         <button class="chrono-btn" onclick="chronoReset()">↺</button>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:6px">
-      <div class="metro-dot" id="metro-dot-global" style="width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.3);flex-shrink:0;transition:background .05s"></div>
+    <div style="border-top:1px solid rgba(255,255,255,.15);margin-top:4px;padding-top:6px;display:flex;align-items:center;justify-content:center;gap:7px">
+      <div class="metro-dot" id="metro-dot-global" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);flex-shrink:0;transition:background .05s"></div>
       <button class="chrono-btn" onclick="metroBpmChange('global',-5)">−</button>
-      <input id="metro-bpm-global" type="number" value="60" min="30" max="300"
-        style="width:44px;text-align:center;font-size:14px;font-weight:700;border:none;border-radius:5px;padding:2px;background:rgba(255,255,255,.15);color:#fff;-moz-appearance:textfield"
-        oninput="if(METRO.running&&METRO.patId==='global')METRO.bpm=Math.max(30,Math.min(300,parseInt(this.value)||60))">
+      <input id="metro-bpm-global" type="number" value="60" min="20" max="200"
+        style="width:44px;text-align:center;font-size:14px;font-weight:700;border:1px solid rgba(255,255,255,.18);border-radius:7px;padding:4px 2px;background:rgba(255,255,255,.22);color:#fff;-moz-appearance:textfield"
+        oninput="if(METRO.running&&METRO.patId==='global')METRO.bpm=Math.max(20,Math.min(200,parseInt(this.value)||60))">
       <button class="chrono-btn" onclick="metroBpmChange('global',+5)">+</button>
-      <span style="font-size:10px;opacity:.7">BPM</span>
+      <span style="font-size:10px;opacity:.65;letter-spacing:.4px">BPM</span>
       <button class="chrono-btn" id="metro-btn-global" onclick="metroToggle('global')">▶ Métro</button>
     </div>
   </header>
@@ -1447,11 +1453,25 @@ E|---------------------------------------------------------|
 const MODES = ["U","D","M"];
 const MODE_LABELS = {U:"Ascendant",D:"Descendant",M:"Mix"};
 const INTERPS = ["Up","Down","Leg"];
-const INTERP_LABELS = {Up:"Alt ↑",Down:"Alt ↓",Leg:"Legato"};
+const INTERP_LABELS = {Up:"Pick ↑",Down:"Pick ↓",Leg:"Legato"};
 const TEMPOS = [
-  { key:'lent',  label:'Lent',  range:'40–60',   color:'#4a9e6b' },
-  { key:'cool',  label:'Cool',  range:'70–100',  color:'#c07830' },
-  { key:'chaud', label:'Chaud', range:'110–130+', color:'#a03030' },
+  { key:'lent',  label:'Zen',   range:'30–60',   color:'#4a9e6b',
+    icon:`<svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="11" cy="10" rx="8" ry="5.5" fill="#4a9e6b" opacity=".55"/>
+      <ellipse cx="11" cy="8.5" rx="5" ry="4" fill="#4a9e6b" opacity=".85"/>
+      <circle cx="4"  cy="13.5" r="1.4" fill="#4a9e6b" opacity=".5"/>
+      <circle cx="18" cy="13.5" r="1.4" fill="#4a9e6b" opacity=".5"/>
+      <circle cx="6.5" cy="15.2" r="1.1" fill="#4a9e6b" opacity=".4"/>
+      <circle cx="15.5" cy="15.2" r="1.1" fill="#4a9e6b" opacity=".4"/>
+    </svg>`},
+  { key:'cool',  label:'Cool',  range:'70–100',  color:'#c07830',
+    icon:`<svg width="22" height="12" viewBox="0 0 22 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1 6 Q3.5 1.5 6 6 Q8.5 10.5 11 6 Q13.5 1.5 16 6 Q18.5 10.5 21 7" stroke="#c07830" stroke-width="2" stroke-linecap="round" fill="none"/>
+    </svg>`},
+  { key:'chaud', label:'Chaud', range:'110–130+', color:'#a03030',
+    icon:`<svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 19 Q2 14.5 4.5 9 Q5.5 6 8 2 Q8.5 5.5 7.5 8 Q11 5.5 10 10 Q13.5 8 11.5 13.5 Q14 15.5 8 19Z" fill="#a03030" opacity=".85"/>
+    </svg>`},
 ];
 const FINGERINGS = [1,2,3,4];
 
@@ -1462,6 +1482,7 @@ let state = {
   diffFilter: 'all',
   openCards: {},
   progress: {},
+  favorites: {},
   parcoursOpen: null,
 };
 
@@ -1534,7 +1555,8 @@ function checkSound(isDone) {
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem('dicoPattern') || '{}');
-    state.progress = saved.progress || {};
+    state.progress  = saved.progress  || {};
+    state.favorites = saved.favorites || {};
   } catch(e) {}
   loadPatNotes();
 }
@@ -1542,7 +1564,8 @@ function loadState() {
 function saveState() {
   try {
     localStorage.setItem('dicoPattern', JSON.stringify({
-      progress: state.progress,
+      progress:  state.progress,
+      favorites: state.favorites,
     }));
   } catch(e) {}
 }
@@ -1735,36 +1758,20 @@ function renderParcours() {
           </div>
           <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
             <div style="font-size:20px;font-weight:800;color:${color}">${pct > 0 ? pct+'%' : '—'}</div>
+            <button onclick="toggleFavorite('${key}',event)"
+              style="background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center">
+              ${heartSVG(!!state.favorites[key])}
+            </button>
             <span style="font-size:16px;color:var(--text2)">${isOpen ? '▲' : '▼'}</span>
           </div>
         </div>
         ${isOpen ? (() => {
-          const fp = group.patterns[0];
           let inner = `<div style="border-top:1px solid var(--border);padding:12px 14px 0">`;
-          // Doigté D1 + Aller plus loin (une fois pour le groupe)
-          if (fp.fingerings) {
-            inner += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-              ${handSVG(fp.fingerings[0])}
-              <span class="grid-label" style="margin:0">D1 — ${expandFingering(fp.fingerings[0])}</span>
-            </div>`;
-            if (fp.fingerings.length > 1) {
-              inner += `<div style="margin-bottom:10px">
-                <button id="apl-btn-${key}" onclick="toggleAllerPlusLoin('${key}')"
-                  style="font-size:10px;color:var(--blue);background:transparent;border:1px solid var(--blue);border-radius:20px;padding:3px 12px;cursor:pointer">
-                  Aller plus loin <span style="font-size:8px">▸</span>
-                </button>
-                <div id="apl-${key}" style="display:none;margin-top:7px;padding:10px 12px;background:var(--blue-light);border-radius:10px">
-                  <div style="font-size:10px;font-weight:600;color:var(--blue);margin-bottom:6px">Autres doigtés — exploration libre</div>
-                  <div style="display:flex;flex-direction:column;gap:5px">${fp.fingerings.slice(1).map((d,i)=>`<div style="font-size:10px;color:var(--text2)"><b>D${i+2}</b> — ${expandFingering(d)}</div>`).join('')}</div>
-                </div>
-              </div>`;
-            }
-          }
-          inner += `</div>`;
           ['U','D','M'].forEach(dir => {
             const p = group.patterns.find(x => x.dir === dir);
             if (p) inner += renderPatternBody(p);
           });
+          inner += `</div>`;
           return inner;
         })() : ''}
       </div>`;
@@ -1777,17 +1784,98 @@ function renderParcours() {
 // ── SHARED PATTERN BODY ──
 function renderPatternBody(p) {
   const relPat = p.related ? PATTERNS.find(r => r.id === p.related + p.dir) : null;
-  const relLink = relPat
-    ? `<button onclick="goToPattern('${relPat.cat}P${relPat.num}')"
-        style="font-size:11px;color:var(--blue);background:transparent;border:1px solid var(--blue);border-radius:10px;padding:2px 10px;cursor:pointer;margin-top:6px">
-        Voir aussi : ${relPat.cat}P${relPat.num} — ${relPat.name}
-       </button>` : '';
 
-  // Tableau de progression
+  // ── 1. PREVIEW (play + tempos + BPM) + INTERP à droite ─────────────────────
+  const previewBox = `
+    <div style="display:flex;align-items:center;gap:0;
+      padding:8px 10px;background:#f0f3fa;border-radius:10px;border:1px solid var(--blue-light);margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex:1;min-width:0">
+        <button id="prev-btn-${p.id}" onclick="previewPlay('${p.id}')"
+          style="font-size:12px;font-weight:600;padding:5px 12px;border:1px solid var(--blue);border-radius:10px;
+            background:var(--blue);color:#fff;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;flex-shrink:0">
+          ${previewBtnInner('play')}
+        </button>
+        <button class="countin-btn" onclick="toggleCountIn()" title="Décompte 4 temps avant la lecture"
+          style="font-size:11px;font-weight:600;padding:5px 10px;border-radius:10px;border:1px solid;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;
+            background:${PREVIEW.countIn?'var(--blue)':'transparent'};
+            color:${PREVIEW.countIn?'#fff':'var(--text2)'};
+            border-color:${PREVIEW.countIn?'var(--blue)':'var(--border)'};
+            opacity:${PREVIEW.countIn?1:.55}">
+          Décompte
+        </button>
+        <button class="click-btn" onclick="togglePreviewClick()" title="Clic métronome pendant la lecture"
+          style="font-size:11px;font-weight:600;padding:5px 10px;border-radius:10px;border:1px solid;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;
+            background:${PREVIEW.click?'var(--blue)':'transparent'};
+            color:${PREVIEW.click?'#fff':'var(--text2)'};
+            border-color:${PREVIEW.click?'var(--blue)':'var(--border)'};
+            opacity:${PREVIEW.click?1:.55}">
+          Clic
+        </button>
+        <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">${spdButtons()}</div>
+      </div>
+      <div style="width:1px;background:var(--border);align-self:stretch;margin:0 8px;flex-shrink:0"></div>
+      <div style="display:flex;gap:4px;align-items:center;flex-shrink:0">${interpButtons(false)}</div>
+    </div>`;
+
+  // ── 2. TAB pleine largeur ────────────────────────────────────────────────────
+  const tabBlock = `
+    <div style="margin-bottom:10px">
+      <div class="tab-wrap" style="margin:0">
+        <pre data-tab-id="${p.id}" style="font-size:12px">${tabWithSymbols(p.tab, PREVIEW.interp)}</pre>
+      </div>
+    </div>`;
+
+  // ── 3. ACCORDÉON : doigté principal + description + conseils + doigtés alternatifs + voir aussi ─
+  const d1hand = (p.fingerings && p.fingerings.length > 0)
+    ? `<div style="margin-bottom:10px;padding:7px 10px;background:#f5f4f0;border:1px solid var(--border);border-radius:8px">
+        <div style="font-size:9px;font-weight:700;color:var(--text2);letter-spacing:.4px;margin-bottom:3px">DOIGTÉ PRINCIPAL</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.5">${expandFingering(p.fingerings[0])}</div>
+      </div>` : '';
+
+  const relLink = relPat
+    ? `<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+        <button onclick="goToPattern('${relPat.cat}P${relPat.num}')"
+          style="font-size:11px;color:var(--blue);background:transparent;border:1px solid var(--blue);
+            border-radius:10px;padding:2px 10px;cursor:pointer">
+          Voir aussi : ${relPat.cat}P${relPat.num} — ${relPat.name}
+        </button>
+      </div>` : '';
+
+  const altFingerings = (p.fingerings && p.fingerings.length > 1)
+    ? p.fingerings.slice(1).map((d, i) => `
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+          <div style="font-size:10px;font-weight:700;color:var(--text2);margin-bottom:2px;letter-spacing:.3px">DOIGTÉ ${i+2}</div>
+          <div style="font-size:12px;color:var(--text);line-height:1.5">${expandFingering(d)}</div>
+        </div>`).join('')
+    : '';
+
+  const infoBlock = `
+    <details style="margin-bottom:10px">
+      <summary style="font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;
+        padding:7px 10px;background:#f8f7f4;border-radius:8px;border:1px solid var(--border);
+        list-style:none;display:flex;align-items:center;justify-content:space-between;user-select:none">
+        <span>Description &amp; conseils</span>
+        <span style="font-size:9px;opacity:.6">▼</span>
+      </summary>
+      <div style="padding:10px 12px 8px;border:1px solid var(--border);border-top:none;
+        border-radius:0 0 8px 8px;background:#fff">
+        ${d1hand}
+        <p class="desc" style="margin-top:0">${p.desc}</p>
+        <div class="tip">💡 ${p.tip}</div>
+        ${altFingerings}
+        ${relLink}
+      </div>
+    </details>`;
+
+  // ── 5. TABLEAU DE PROGRESSION ────────────────────────────────────────────────
   let gridRows = '';
   TEMPOS.forEach(tempo => {
-    gridRows += `<tr><td class="tempo"><span style="color:${tempo.color};font-weight:700">${tempo.label}</span><br>
-      <span style="font-size:9px;color:var(--text2);font-weight:400">${tempo.range}</span></td>`;
+    gridRows += `<tr>
+      <td class="tempo" style="text-align:center;padding:4px 6px">
+        ${tempo.icon}
+        <span style="color:${tempo.color};font-weight:700;font-size:11px;display:block">${tempo.label}</span>
+        <span style="font-size:9px;color:var(--text2);font-weight:400">${tempo.range}</span>
+      </td>`;
     INTERPS.forEach(interp => {
       const k = getProgressKey(p.id, 1, p.dir, interp, tempo);
       const done = !!state.progress[k];
@@ -1796,40 +1884,45 @@ function renderPatternBody(p) {
     gridRows += `</tr>`;
   });
   const thStyle = i => PREVIEW.interp===i
-    ? 'background:var(--orange);color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.2);'
+    ? 'background:var(--orange);color:#fff;'
     : 'background:var(--blue);color:rgba(255,255,255,.75);';
-  const progGrid = `<div class="prog-grid" style="margin-top:10px">
+  const progGrid = `<div class="prog-grid" style="margin-bottom:10px">
     <table><thead><tr>
-      <th style="width:72px"></th>
+      <th style="width:68px;background:var(--blue)"></th>
       ${INTERPS.map(i=>`<th data-interp-th="${i}" onclick="setPreviewInterp('${i}')"
-        style="cursor:pointer;transition:all .15s;${thStyle(i)}">${INTERP_LABELS[i]}${PREVIEW.interp===i?' ✓':''}</th>`).join('')}
+        style="cursor:pointer;transition:all .15s;${thStyle(i)}">${INTERP_LABELS[i]}</th>`).join('')}
     </tr></thead>
     <tbody>${gridRows}</tbody></table></div>`;
 
+  // ── 6. NOTES TEXTAREA ────────────────────────────────────────────────────────
+  const notesBlock = `
+    <textarea placeholder="Notes sur ce pattern…"
+      style="width:100%;min-height:52px;padding:8px 10px;font-size:12px;font-family:-apple-system,sans-serif;
+        color:var(--text);background:#fafaf8;border:1px solid var(--border);border-radius:8px;
+        resize:vertical;outline:none;line-height:1.5"
+      onblur="savePatNote('${p.id}',this.value)">${PAT_NOTES[p.id]||''}</textarea>`;
+
+  // ── ENTÊTE : code (A4P3) + flèche + direction ──────────────────────────────
+  const dirArrow = {U:'↑',D:'↓',M:'↕'}[p.dir] || '';
+  const dirWord  = {U:'Ascendant',D:'Descendant',M:'Mix'}[p.dir] || '';
+  const codeBase = p.cat + 'P' + p.num;  // ex: A4P3
+  const header = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-size:14px;font-weight:700;color:var(--blue)">
+        ${codeBase}
+        <span style="font-weight:500;color:var(--text2);margin-left:4px">${dirArrow} ${dirWord}</span>
+      </div>
+      <span class="tag ${p.difficulty==='Débutant'?'diff-deb':p.difficulty==='Intermédiaire'?'diff-int':'diff-adv'}" style="font-size:10px">${p.difficulty}</span>
+    </div>`;
+
   return `
     <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-        <div style="font-size:13px;font-weight:700;color:var(--blue)">${dirLabel(p.dir)} — <code style="font-size:12px;background:var(--blue-light);padding:1px 6px;border-radius:4px">${p.id}</code></div>
-        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0">
-          <button id="prev-btn-${p.id}" onclick="previewPlay('${p.id}')"
-            style="font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:12px;background:transparent;cursor:pointer;color:var(--text2);display:flex;align-items:center;gap:5px;white-space:nowrap">
-            ${previewBtnInner('play')}
-          </button>
-          ${spdButtons()}
-        </div>
-      </div>
-      <div style="display:flex;gap:4px;margin-bottom:6px;align-items:center">
-        <span style="font-size:10px;color:var(--text2);margin-right:2px">Interp :</span>
-        ${interpButtons()}
-      </div>
-      <div class="tab-wrap"><pre data-tab-id="${p.id}">${tabWithSymbols(p.tab, PREVIEW.interp)}</pre></div>
-      <p class="desc">${p.desc}</p>
-      <div class="tip">💡 ${p.tip}</div>
+      ${header}
+      ${previewBox}
+      ${tabBlock}
+      ${infoBlock}
       ${progGrid}
-      ${relLink}
-      <textarea placeholder="Notes sur ce pattern…"
-        style="width:100%;min-height:52px;margin-top:10px;padding:8px 10px;font-size:12px;font-family:-apple-system,sans-serif;color:var(--text);background:#fafaf8;border:1px solid var(--border);border-radius:8px;resize:vertical;outline:none;line-height:1.5"
-        onblur="savePatNote('${p.id}',this.value)">${PAT_NOTES[p.id]||''}</textarea>
+      ${notesBlock}
     </div>`;
 }
 
@@ -1895,6 +1988,10 @@ function renderPatterns() {
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
           ${pct > 0 ? `<span style="font-size:11px;font-weight:600;color:var(--blue)">${pct}%</span>` : ''}
+          <button onclick="toggleFavorite('${key}',event)"
+            style="background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center">
+            ${heartSVG(!!state.favorites[key])}
+          </button>
           <span class="arrow ${isOpen?'open':''}">▶</span>
         </div>
       </div>
@@ -1911,6 +2008,7 @@ function renderPatterns() {
 function toggleParcours(key) {
   const wasOpen = state.parcoursOpen === key;
   if (wasOpen) previewStop();
+  if (!wasOpen) { PREVIEW.bpm = 40; PREVIEW.interp = 'Up'; }
   state.parcoursOpen = wasOpen ? null : key;
   render();
   if (!wasOpen) {
@@ -1938,9 +2036,27 @@ function setDiffFilter(d) {
   render();
 }
 
+function toggleFavorite(key, e) {
+  e.stopPropagation(); // ne pas ouvrir/fermer la carte
+  state.favorites[key] = !state.favorites[key];
+  saveState();
+  if (navigator.vibrate) navigator.vibrate(state.favorites[key] ? [15,30,15] : 8);
+  render();
+}
+
+function heartSVG(active) {
+  return `<svg width="18" height="18" viewBox="0 0 24 24" style="flex-shrink:0;transition:all .15s">
+    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      fill="${active ? '#E91E63' : 'none'}"
+      stroke="${active ? '#E91E63' : '#ccc'}"
+      stroke-width="2"/>
+  </svg>`;
+}
+
 function toggleCard(key) {
   const wasOpen = !!state.openCards[key];
   if (wasOpen) previewStop();
+  if (!wasOpen) { PREVIEW.bpm = 40; PREVIEW.interp = 'Up'; }
   state.openCards[key] = !wasOpen;
   render();
   if (!wasOpen) {
@@ -2014,11 +2130,20 @@ function renderGlobalProgress() {
   Object.entries(groups).forEach(([key, pats]) => {
     const pct = getPatternPct(pats[0].id);
     const color = pct >= 80 ? 'var(--green)' : pct >= 40 ? 'var(--orange)' : pct > 0 ? 'var(--blue)' : 'var(--border)';
+    const isFav = !!state.favorites[key];
     html += `
-    <button onclick="selectPatAndGo('${pats[0].id}')" style="background:var(--card);border:2px solid ${pct>0?color:'var(--border)'};border-radius:8px;padding:7px 4px;cursor:pointer;text-align:center">
-      <div style="font-size:10px;font-weight:700;color:var(--text2)">${key}</div>
-      <div style="font-size:16px;font-weight:800;color:${color}">${pct}%</div>
-    </button>`;
+    <div style="position:relative;background:var(--card);border:2px solid ${pct>0?color:'var(--border)'};border-radius:8px;overflow:hidden">
+      <button onclick="selectPatAndGo('${pats[0].id}')" style="width:100%;padding:7px 4px 7px;cursor:pointer;text-align:center;background:none;border:none">
+        <div style="font-size:10px;font-weight:700;color:var(--text2)">${key}</div>
+        <div style="font-size:16px;font-weight:800;color:${color}">${pct}%</div>
+      </button>
+      <button onclick="toggleFavorite('${key}',event)" style="position:absolute;top:2px;right:2px;background:none;border:none;cursor:pointer;padding:2px;line-height:0">
+        <svg width="13" height="13" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+            fill="${isFav?'#E91E63':'none'}" stroke="${isFav?'#E91E63':'#ccc'}" stroke-width="2.5"/>
+        </svg>
+      </button>
+    </div>`;
   });
 
   html += `</div>`;
@@ -2157,7 +2282,7 @@ function metroStart(patId) {
   metroStop(false);
   const ctx = metroCtx();
   const inp = document.getElementById('metro-bpm-' + patId);
-  METRO.bpm = inp ? Math.max(30, Math.min(300, parseInt(inp.value) || 60)) : 60;
+  METRO.bpm = inp ? Math.max(20, Math.min(200, parseInt(inp.value) || 60)) : 60;
   METRO.patId = patId;
   METRO.running = true;
   METRO.nextBeat = ctx.currentTime + 0.1;
@@ -2180,7 +2305,7 @@ function metroToggle(patId) {
 function metroBpmChange(patId, delta) {
   const inp = document.getElementById('metro-bpm-' + patId);
   if (!inp) return;
-  const v = Math.max(30, Math.min(300, (parseInt(inp.value) || 60) + delta));
+  const v = Math.max(20, Math.min(200, (parseInt(inp.value) || 60) + delta));
   inp.value = v;
   if (METRO.running && METRO.patId === patId) METRO.bpm = v;
 }
@@ -2198,7 +2323,7 @@ function metroPostRender() {
 
 // ─── PREVIEW AUDIO ────────────────────────────────────────────────────────────
 const OPEN_MIDI = {e:64, B:59, G:55, D:50, A:45, E:40};
-const PREVIEW = { ctx:null, masterGain:null, patId:null, timer:null, bpm:80, interp:'Up' };
+const PREVIEW = { ctx:null, masterGain:null, patId:null, timer:null, clickTimer:null, bpm:40, interp:'Up', countIn:false, click:false };
 
 function previewCtx() {
   if (!PREVIEW.ctx) PREVIEW.ctx = new (window.AudioContext||window.webkitAudioContext)();
@@ -2311,6 +2436,7 @@ function previewStop() {
   // Nullifier immédiatement — empêche scheduleCycle de continuer à utiliser l'ancien nœud
   PREVIEW.masterGain = null;
   if (PREVIEW.timer) { clearTimeout(PREVIEW.timer); PREVIEW.timer = null; }
+  stopClickLoop();
   if (PREVIEW.patId) {
     document.querySelectorAll('[id^="prev-btn-"]').forEach(b => {
       b.innerHTML = previewBtnInner('play');
@@ -2318,6 +2444,31 @@ function previewStop() {
     });
   }
   PREVIEW.patId = null;
+}
+
+function togglePreviewClick() {
+  PREVIEW.click = !PREVIEW.click;
+  document.querySelectorAll('.click-btn').forEach(b => {
+    b.style.background  = PREVIEW.click ? 'var(--blue)' : 'transparent';
+    b.style.color       = PREVIEW.click ? '#fff' : 'var(--text2)';
+    b.style.borderColor = PREVIEW.click ? 'var(--blue)' : 'var(--border)';
+    b.style.opacity     = PREVIEW.click ? '1' : '.55';
+  });
+  if (PREVIEW.click && PREVIEW.masterGain) {
+    startClickLoop(PREVIEW.ctx.currentTime);
+  } else {
+    stopClickLoop();
+  }
+}
+
+function toggleCountIn() {
+  PREVIEW.countIn = !PREVIEW.countIn;
+  document.querySelectorAll('.countin-btn').forEach(b => {
+    b.style.background   = PREVIEW.countIn ? 'var(--blue)' : 'transparent';
+    b.style.color        = PREVIEW.countIn ? '#fff' : 'var(--text2)';
+    b.style.borderColor  = PREVIEW.countIn ? 'var(--blue)' : 'var(--border)';
+    b.style.opacity      = PREVIEW.countIn ? '1' : '.55';
+  });
 }
 
 function previewBtnInner(state) {
@@ -2337,22 +2488,42 @@ function expandFingering(s) {
 }
 
 function handSVG(raw) {
-  // Schéma de la main gauche (4 doigts) — doigts utilisés en rouge
-  const fingers = [
-    { key:'ind', label:'I',  x:2  },
-    { key:'maj', label:'M',  x:20 },
-    { key:'ann', label:'A',  x:38 },
-    { key:'aur', label:'P',  x:56 },
-  ];
-  const palm = `<rect x="2" y="28" width="68" height="14" rx="5" fill="#e0ddd8"/>`;
-  const rects = fingers.map(f => {
-    const on   = new RegExp('\\b' + f.key + '\\b').test(raw);
-    const fill = on ? '#C00000' : '#e8e6e2';
-    const col  = on ? '#fff'    : '#b8b4b0';
-    return `<rect x="${f.x}" y="0" width="16" height="34" rx="8" fill="${fill}"/>
-            <text x="${f.x+8}" y="21" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="10" font-weight="700" fill="${col}">${f.label}</text>`;
-  }).join('');
-  return `<svg width="72" height="42" viewBox="0 0 72 42" style="flex-shrink:0;display:block">${palm}${rects}</svg>`;
+  // Main gauche organique — peau, pouce, bouts rouges sur doigts actifs
+  const act = k => new RegExp('\\b' + k + '\\b').test(raw);
+  const skin  = '#f5c4a0';
+  const shade = '#dea078';
+  const tip   = k => act(k) ? '#D32F2F' : shade;
+  const lbl   = k => act(k) ? '#8b0000' : '#c8b8a8';
+
+  return `<svg width="68" height="104" viewBox="0 0 68 104" style="flex-shrink:0;display:block">
+    <!-- Poignet -->
+    <path d="M22 84 Q19 100 24 103 Q33 106 44 103 Q48 100 46 84 Z" fill="${shade}"/>
+    <!-- Paume -->
+    <path d="M10 70 Q7 56 14 50 Q20 47 27 50 L41 50 Q47 47 54 50 Q61 56 58 70 Q55 83 34 86 Q13 83 10 70Z" fill="${skin}"/>
+    <!-- Pouce -->
+    <path d="M15 57 Q6 54 3 47 Q1 40 5 35 Q9 30 15 34 Q19 39 17 55 Z" fill="${skin}"/>
+    <ellipse cx="6" cy="34" rx="5.5" ry="4.5" fill="${shade}"/>
+    <!-- Index -->
+    <path d="M14 53 Q11 35 13 19 Q15 8 21 8 Q27 8 28 18 Q29 35 27 53 Z" fill="${skin}"/>
+    <ellipse cx="21" cy="9" rx="7" ry="5.5" fill="${tip('ind')}"/>
+    <!-- Majeur (le plus long) -->
+    <path d="M27 53 Q25 30 27 12 Q29 2 34 1 Q39 1 41 11 Q43 30 41 53 Z" fill="${skin}"/>
+    <ellipse cx="34" cy="2.5" rx="7.5" ry="6" fill="${tip('maj')}"/>
+    <!-- Annulaire -->
+    <path d="M41 53 Q39 32 41 17 Q43 7 48 7 Q53 7 54 17 Q55 32 53 53 Z" fill="${skin}"/>
+    <ellipse cx="48" cy="8" rx="7" ry="5.5" fill="${tip('ann')}"/>
+    <!-- Auriculaire (le plus court) -->
+    <path d="M53 53 Q52 40 54 29 Q56 20 61 20 Q66 20 67 28 Q68 39 66 53 Z" fill="${skin}"/>
+    <ellipse cx="60" cy="21" rx="6" ry="5" fill="${tip('aur')}"/>
+    <!-- Lignes de paume (subtiles) -->
+    <path d="M18 71 Q30 66 46 70" stroke="${shade}" stroke-width="1.2" fill="none" stroke-linecap="round" opacity=".6"/>
+    <path d="M24 78 Q33 76 42 78" stroke="${shade}" stroke-width="1" fill="none" stroke-linecap="round" opacity=".45"/>
+    <!-- Labels doigts -->
+    <text x="21" y="47" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="${lbl('ind')}">I</text>
+    <text x="34" y="47" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="${lbl('maj')}">M</text>
+    <text x="48" y="47" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="${lbl('ann')}">A</text>
+    <text x="60" y="47" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="${lbl('aur')}">P</text>
+  </svg>`;
 }
 
 function toggleAllerPlusLoin(id) {
@@ -2365,21 +2536,24 @@ function toggleAllerPlusLoin(id) {
 }
 
 function spdButtons() {
-  const s = 'font-size:10px;padding:2px 7px;border-radius:10px;border:1px solid;cursor:pointer;transition:all .15s;';
-  const presets = [50,80,120].map(b => {
+  const s = 'font-size:11px;font-weight:500;padding:4px 10px;border-radius:10px;border:1px solid;cursor:pointer;transition:all .15s;';
+  const presets = [40,80,120].map(b => {
     const active = PREVIEW.bpm === b;
     return `<button class="spd-btn" data-bpm="${b}" onclick="setPreviewBpm(${b})"
       style="${s}background:${active?'var(--blue)':'transparent'};color:${active?'#fff':'var(--text2)'};border-color:${active?'var(--blue)':'var(--border)'}">
-      ${b}
-    </button>`;
+      ${b}</button>`;
   }).join('');
-  const isCustom = ![50,80,120].includes(PREVIEW.bpm);
-  const custom = `<input class="spd-custom" type="number" min="30" max="220" value="${PREVIEW.bpm}"
-    style="font-size:10px;padding:2px 4px;width:42px;border-radius:10px;border:1px solid;text-align:center;transition:all .15s;
-      background:${isCustom?'var(--blue)':'transparent'};color:${isCustom?'#fff':'var(--text2)'};border-color:${isCustom?'var(--blue)':'var(--border)'}"
-    onkeydown="if(event.key==='Enter'){const v=Math.max(30,Math.min(220,parseInt(this.value)||80));setPreviewBpm(v);this.blur()}"
-    onblur="const v=Math.max(30,Math.min(220,parseInt(this.value)||80));if(v!==PREVIEW.bpm)setPreviewBpm(v)">`;
-  const sep = `<span style="color:var(--border);font-size:11px;margin:0 1px;line-height:1;align-self:center">·</span>`;
+  const isCustom = ![40,80,120].includes(PREVIEW.bpm);
+  const sep = `<span style="color:var(--border);font-size:13px;font-weight:300;margin:0 3px;align-self:center;line-height:1">/</span>`;
+  const custom = `<input class="spd-custom" type="number" min="10" max="200" value="${PREVIEW.bpm}"
+    title="Tempo libre"
+    style="width:46px;font-size:11px;font-weight:600;padding:4px 5px;border-radius:10px;border:1px solid;
+      text-align:center;transition:all .15s;-moz-appearance:textfield;
+      background:${isCustom?'var(--blue)':'transparent'};
+      color:${isCustom?'#fff':'var(--text2)'};
+      border-color:${isCustom?'var(--blue)':'var(--border)'}"
+    onkeydown="if(event.key==='Enter'){const v=Math.max(10,Math.min(200,parseInt(this.value)||80));setPreviewBpm(v);this.blur()}"
+    onblur="const v=Math.max(10,Math.min(200,parseInt(this.value)||80));if(v!==PREVIEW.bpm)setPreviewBpm(v)">`;
   return presets + sep + custom;
 }
 
@@ -2437,7 +2611,7 @@ function tabWithSymbols(tabStr, interp) {
         let s = ' ';
         if (interp === 'Up')   s = (globalIdx + j) % 2 === 0 ? '↑' : '↓';
         if (interp === 'Down') s = (globalIdx + j) % 2 === 0 ? '↓' : '↑';
-        if (interp === 'Leg')  s = primaryStr !== prevStr ? '↑' : ' '; // ↑ à chaque changement de corde
+        if (interp === 'Leg')  s = primaryStr !== prevStr ? '↑' : ' ';
 
         prevStr = primaryStr;
         if (col < sym.length) sym = sym.substring(0, col) + s + sym.substring(col + 1);
@@ -2452,20 +2626,22 @@ function tabWithSymbols(tabStr, interp) {
     }
   }
 
-  return output.join('\n');
+  // Coloriser les flèches médiator en orange (post-processing HTML)
+  return output.join('\n')
+    .replace(/↑/g, '<span style="color:var(--orange)">↑</span>')
+    .replace(/↓/g, '<span style="color:var(--orange)">↓</span>');
 }
 
-function interpButtons() {
-  const s = 'font-size:10px;padding:2px 8px;border-radius:10px;border:1px solid;cursor:pointer;transition:all .15s;';
-  return [
-    { key:'Leg', label:'Legato' },
-    { key:'Up',  label:'Alt ↑' },
-    { key:'Down',label:'Alt ↓' },
-  ].map(({key, label}) => {
+function interpButtons(vertical) {
+  const base = `font-size:11px;font-weight:600;border:1px solid;cursor:pointer;transition:all .15s;text-align:left;`;
+  const vs = vertical
+    ? `${base}padding:5px 10px;border-radius:8px;width:100%;display:block;white-space:nowrap;`
+    : `${base}padding:3px 10px;border-radius:20px;`;
+  return INTERPS.map(key => {
     const active = PREVIEW.interp === key;
     return `<button class="interp-btn" data-interp="${key}" onclick="setPreviewInterp('${key}')"
-      style="${s}background:${active?'var(--blue)':'transparent'};color:${active?'#fff':'var(--text2)'};border-color:${active?'var(--blue)':'var(--border)'}">
-      ${label}</button>`;
+      style="${vs}background:${active?'var(--blue)':'transparent'};color:${active?'#fff':'var(--text2)'};border-color:${active?'var(--blue)':'var(--border)'}">
+      ${INTERP_LABELS[key]}</button>`;
   }).join('');
 }
 
@@ -2483,13 +2659,13 @@ function setPreviewInterp(interp) {
     const active = th.dataset.interpTh === interp;
     th.style.background = active ? 'var(--orange)' : 'var(--blue)';
     th.style.color      = active ? '#fff' : 'rgba(255,255,255,.75)';
-    th.style.boxShadow  = active ? 'inset 0 -3px 0 rgba(0,0,0,.2)' : 'none';
+    th.style.boxShadow  = 'none';
     th.textContent      = INTERP_LABELS[th.dataset.interpTh] + (active ? ' ✓' : '');
   });
   // Rafraîchir toutes les tabs visibles sans re-render
   document.querySelectorAll('[data-tab-id]').forEach(pre => {
     const pat = PATTERNS.find(p => p.id === pre.dataset.tabId);
-    if (pat) pre.textContent = tabWithSymbols(pat.tab, interp);
+    if (pat) pre.innerHTML = tabWithSymbols(pat.tab, interp);
   });
 }
 
@@ -2503,7 +2679,7 @@ function setPreviewBpm(bpm) {
     b.style.borderColor = active ? 'var(--blue)' : 'var(--border)';
   });
   // Champ libre — se met en bleu si la valeur est hors préréglages
-  const isCustom = ![50,80,120].includes(bpm);
+  const isCustom = ![40,80,120].includes(bpm);
   document.querySelectorAll('.spd-custom').forEach(inp => {
     inp.value = bpm;
     inp.style.background  = isCustom ? 'var(--blue)' : 'transparent';
@@ -2516,6 +2692,34 @@ function setPreviewBpm(bpm) {
     previewStop();
     setTimeout(() => previewPlay(id), 40);
   }
+}
+
+function scheduleClick(ctx, t) {
+  const osc = ctx.createOscillator();
+  const env = ctx.createGain();
+  osc.connect(env); env.connect(PREVIEW.masterGain);
+  osc.type = 'square';
+  osc.frequency.value = 900;
+  env.gain.setValueAtTime(0.10, t);
+  env.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+  osc.start(t); osc.stop(t + 0.04);
+  osc.onended = () => { try { osc.disconnect(); env.disconnect(); } catch(e){} };
+}
+
+function startClickLoop(t0) {
+  if (PREVIEW.clickTimer) { clearTimeout(PREVIEW.clickTimer); PREVIEW.clickTimer = null; }
+  if (!PREVIEW.click || !PREVIEW.masterGain) return;
+  const ctx = PREVIEW.ctx;
+  const quarter = 60 / PREVIEW.bpm;
+  const safeT = Math.max(t0, ctx.currentTime + 0.01);
+  scheduleClick(ctx, safeT);
+  const nextT = safeT + quarter;
+  const delay = Math.max(0, (nextT - ctx.currentTime - 0.05) * 1000);
+  PREVIEW.clickTimer = setTimeout(() => startClickLoop(nextT), delay);
+}
+
+function stopClickLoop() {
+  if (PREVIEW.clickTimer) { clearTimeout(PREVIEW.clickTimer); PREVIEW.clickTimer = null; }
 }
 
 function scheduleCycle(ctx, cycle, t0, patId) {
@@ -2563,21 +2767,23 @@ function previewPlay(patId) {
   // ─ Décompte 4 temps avant le pattern ─
   const quarter = 60 / PREVIEW.bpm;
   const t0 = ctx.currentTime + 0.08;
-  for (let i = 0; i < 4; i++) {
-    const t   = t0 + i * quarter;
-    const osc = ctx.createOscillator();
-    const env = ctx.createGain();
-    osc.connect(env); env.connect(PREVIEW.masterGain);
-    osc.type = 'square';
-    osc.frequency.value = i === 0 ? 1200 : 900; // 1er temps plus aigu
-    env.gain.setValueAtTime(0.14, t);
-    env.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
-    osc.start(t); osc.stop(t + 0.05);
-    osc.onended = () => { try { osc.disconnect(); env.disconnect(); } catch(e){} };
+  if (PREVIEW.countIn) {
+    for (let i = 0; i < 4; i++) {
+      const t   = t0 + i * quarter;
+      const osc = ctx.createOscillator();
+      const env = ctx.createGain();
+      osc.connect(env); env.connect(PREVIEW.masterGain);
+      osc.type = 'square';
+      osc.frequency.value = i === 0 ? 1200 : 900;
+      env.gain.setValueAtTime(0.14, t);
+      env.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+      osc.start(t); osc.stop(t + 0.05);
+      osc.onended = () => { try { osc.disconnect(); env.disconnect(); } catch(e){} };
+    }
   }
-
-  // Pattern démarre après le décompte
-  scheduleCycle(ctx, cycle, t0 + 4 * quarter, patId);
+  const patStart = t0 + (PREVIEW.countIn ? 4 * quarter : 0);
+  scheduleCycle(ctx, cycle, patStart, patId);
+  if (PREVIEW.click) startClickLoop(patStart);
 }
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
