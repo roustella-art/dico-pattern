@@ -74,6 +74,15 @@ BÉTA — FAIT (session 9)
 ✅ Béta envoyée aux élèves (dimanche 26 avril 2026, SMS d'envoi rédigé)
 
 
+APP PRINCIPALE — FAIT (session 10)
+✅ Header refonte : ▶/■ contextuel (métro solo par défaut → preview après sélection d'un pattern)
+✅ BPM +/− dans le header, partagé entre preview et métronome solo
+✅ Boutons Décompte et Clic dans le header + Clic plus fort (0.10 → 0.28)
+✅ Bouton 🥁 métronome solo toujours disponible, lié au BPM en cours
+✅ Chrono en toutes lettres sous le cadran SVG (ex. "4 min 55")
+✅ Popup à 5 min (messages encourageants, aléatoire) et 10 min ("passe à autre chose", aléatoire)
+✅ Onglet Progression en accordéon : "Progression globale" (ouvert), "Mes séances", "Détail par pattern"
+
 APP PRINCIPALE — À FAIRE
 - Ajouter de nouveaux patterns (travail en cours, prochaine session)
 - Corriger les doigtés pattern par pattern (travail en cours — Cédric)
