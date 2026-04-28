@@ -1,5 +1,13 @@
 DICO PATTERN — Idées & Chantiers
-Mis à jour : 26 avril 2026 (session 9)
+Mis à jour : 28 avril 2026 (session 11)
+
+NOTE DESIGN — PALETTE "WARM VINTAGE STUDIO" (Opus, session 11)
+--header-bg:#1F2D33 (teal sombre) · --bg:#F4EEE2 (parchemin crème) · --card:#FFFFFF
+--blue:#0F4C5C (teal profond) · --blue-light:#D9E5E9
+--green:#56864A · --orange:#D4622E (sienna brûlée) · --red:#B0413E
+--text:#1B1815 · --text2:#7E746A · --border:#E8DFD0
+Nouvelles classes CSS : .h-pill / .h-icon-btn / .h-toggle / .metro-row / .metro-stepper / .metro-pulse / .metro-start
+Toujours cohérent avec ce design pour les futures sessions.
 
 
 APP HTML — FAIT

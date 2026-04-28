@@ -1,5 +1,5 @@
 # Le Dico Pattern — Journal de construction
-_Avril 2026 · 9 sessions de travail_
+_Avril 2026 · 10 sessions de travail_
 
 ---
 
@@ -101,13 +101,37 @@ Déployée sur GitHub Pages. SMS d'envoi rédigé — ton canapé vs ta guitare,
 
 ---
 
+## Session 10 — L'interface devient un instrument
+
+Session consacrée à l'ergonomie et à la cohérence visuelle. Le retour terrain est arrivé : un élève confondait le métronome du header avec la preview. Le diagnostic est posé — l'interface doit parler d'elle-même.
+
+**Refonte du header :**
+Le header devient un vrai centre de contrôle, épuré et lisible. Le chrono SVG est sorti — trop encombrant, il rejoint l'onglet Progression. À la place : un bandeau compact avec un **bouton ▶/■ contextuel** (métronome solo par défaut, preview dès qu'un pattern est sélectionné), un **affichage BPM en glassmorphism vert** (le même style qu'avant mais assumé), et les boutons Décompte / Clic directement accessibles. Une petite **icône SVG métronome pendule** remplace l'emoji 🥁 — plus flat, plus cohérent. Le **point de bip** est bien là, fidèle au poste.
+
+**Le chrono dans Progression :**
+Le chrono numérique `MM:SS` prend sa place en haut de l'onglet Progression — sobre, monospace, toujours visible dès que l'utilisateur consulte sa progression. Il vire au rouge au bip des 5 minutes, puis reprend sa couleur. Le chrono tourne en fond peu importe l'onglet actif.
+
+**Popups de session :**
+À 5 minutes, un message d'encouragement apparaît (aléatoire parmi 4). À 10 minutes — et à chaque bip suivant — un rappel philosophique : "Le Dico Pattern se consomme avec modération. 10 min régulières > 1h par mois." L'app ne se contente plus d'être un outil, elle accompagne.
+
+**Onglet Progression en accordéon :**
+Les trois sections sont maintenant repliables. **"Progression globale"** reste ouvert par défaut et affiche le pourcentage dans son titre. **"Mes séances"** affiche en titre fermé la série actuelle, le record et le total de jours. **"Détail par pattern"** est replié. L'essentiel est visible d'un coup d'œil, le reste se déplie quand on veut.
+
+**Clic plus fort :**
+Le volume du clic métronome pendant la preview est presque triplé (0.10 → 0.28). Il s'entend vraiment maintenant.
+
+**Outillage :**
+Premier test du script `deploy.sh` — commit et push vers GitHub Pages en une commande depuis le terminal. Ça marche.
+
+---
+
 ## Où en est l'app aujourd'hui
 
 **App principale** — https://roustella-art.github.io/dico-pattern/
-63 patterns, catégories A2/A4/A6/B6, Étape 1 définie, audio complet, chrono, métronome, progression par élève, doigtés + schémas de main, accordéon alternatif 🌶️.
+63 patterns, catégories A2/A4/A6/B6, Étape 1 définie, audio complet (doux/piano/guitare), preview avec décompte et clic, réglages (groupe de cordes, son, case de départ), progression par élève, doigtés + schémas de main, accordéon alternatif 🌶️, header épuré, chrono dans Progression, popups de session.
 
 **Béta élèves** — https://roustella-art.github.io/dico-pattern/index-beta.html
-Étape 1 uniquement, onboarding personnalisé, questionnaire verrouillé 2 semaines (code CACTUS), export propre par copier-coller.
+Étape 1 uniquement, onboarding personnalisé, questionnaire verrouillé 2 semaines (code CACTUS), export propre par copier-coller. Envoyée le 26 avril 2026.
 
 **Retours attendus** autour du 10 mai 2026. C'est là que le projet entre dans sa deuxième phase.
 
