@@ -18,7 +18,7 @@
     --green:#56864A;--green-light:#E2EBD9;
     --red:#B0413E;--orange:#D4622E;--orange-light:#FAEDDC;
     --bg:#F4EEE2;--card:#FFFFFF;
-    --text:#1B1815;--text2:#7E746A;--text3:#A89E94;
+    --text:#1B1815;--text2:#5C5250;--text3:#7E746A;
     --border:#E8DFD0;--radius:12px;
     --header-bg:#1F2D33;--header-text:#F4EEE2;
     --nav-h:64px;--header-h:56px;
@@ -291,6 +291,7 @@
           ontouchstart="bpmValTouchStart(event)" ontouchend="bpmValTouchEnd()" ontouchmove="bpmValTouchEnd()"
           style="min-width:30px;text-align:center;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.3px;color:var(--header-text);padding:0 4px;transition:color .2s;cursor:pointer" title="Double-tap → saisir BPM">40</span>
           <input type="number" id="bpm-edit-input" min="20" max="240" inputmode="numeric" pattern="[0-9]*"
+          aria-label="Tempo en BPM (20-240)"
           onkeydown="bpmEditKeydown(event)" onblur="bpmEditCommit()"
           style="display:none;width:46px;font-size:13px;font-weight:700;text-align:center;background:transparent;border:none;border-bottom:1.5px solid #4dd0e1;color:var(--header-text);font-variant-numeric:tabular-nums;outline:none;padding:0 2px;margin:0;-moz-appearance:textfield;-webkit-appearance:none;appearance:none">
           <button onclick="headerBpmChange(+5)" aria-label="+5 BPM">+</button>
@@ -316,10 +317,10 @@
     <div id="subdiv-popup" style="display:none;align-items:center;gap:6px;padding:6px 0 8px;border-top:1px solid rgba(244,238,226,.08)">
       <span style="font-size:9px;font-weight:700;letter-spacing:.6px;color:rgba(244,238,226,.4);text-transform:uppercase;flex-shrink:0">÷ clic</span>
       <div style="display:flex;gap:5px">
-        <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdivAndClose(2)" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">2<span style="font-size:8px;font-weight:400;opacity:.7">croche</span></button>
-        <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdivAndClose(3)" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">3<span style="font-size:8px;font-weight:400;opacity:.7">triolet</span></button>
-        <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdivAndClose(4)" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">4<span style="font-size:8px;font-weight:400;opacity:.7">♬</span></button>
-        <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdivAndClose(6)" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">6<span style="font-size:8px;font-weight:400;opacity:.7">sextolet</span></button>
+        <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdivAndClose(2)" aria-label="2 crochés" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">2<span style="font-size:8px;font-weight:400;opacity:.7">croche</span></button>
+        <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdivAndClose(3)" aria-label="3 triolets" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">3<span style="font-size:8px;font-weight:400;opacity:.7">triolet</span></button>
+        <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdivAndClose(4)" aria-label="4 croches (quartet)" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">4<span style="font-size:8px;font-weight:400;opacity:.7">♬</span></button>
+        <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdivAndClose(6)" aria-label="6 sextolets" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">6<span style="font-size:8px;font-weight:400;opacity:.7">sextolet</span></button>
       </div>
     </div>
   </header>
@@ -1129,19 +1130,19 @@ function openSettings(tab) {
 
       <!-- ONGLETS -->
       <div class="seg tabs-settings" id="seg-settings-tabs" style="margin-bottom:16px">
-        <button data-val="son"      class="${settingsTab==='son'?'active':''}"      onclick="switchSettingsTab('son')" style="display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px">
+        <button data-val="son" aria-label="Paramètres son: volume métronome, sample guitare"      class="${settingsTab==='son'?'active':''}"      onclick="switchSettingsTab('son')" style="display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><rect x="1" y="5" width="2.5" height="7" rx="1.2"/><rect x="4.75" y="2" width="2.5" height="10" rx="1.2"/><rect x="8.5" y="0" width="2.5" height="12" rx="1.2"/></svg>
           Son
         </button>
-        <button data-val="tempo"    class="${settingsTab==='tempo'?'active':''}"    onclick="switchSettingsTab('tempo')" style="display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px">
+        <button data-val="tempo" aria-label="Paramètres tempo: presets et tempo d'entraînement"    class="${settingsTab==='tempo'?'active':''}"    onclick="switchSettingsTab('tempo')" style="display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px">
           <svg width="12" height="13" viewBox="0 0 12 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 13L6 1l4 12"/><line x1="2" y1="13" x2="10" y2="13"/><line x1="6" y1="5" x2="9.5" y2="7.5"/></svg>
           Tempo
         </button>
-        <button data-val="boucle"   class="${settingsTab==='boucle'?'active':''}"   onclick="switchSettingsTab('boucle')" style="display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px">
+        <button data-val="boucle" aria-label="Paramètres boucle: mode entraînement progressif"   class="${settingsTab==='boucle'?'active':''}"   onclick="switchSettingsTab('boucle')" style="display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px">
           <svg width="18" height="10" viewBox="0 0 36 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 9C15.5 5.5 12.5 3 9 3C5.1 3 2 5.9 2 9s3.1 6 7 6c3.5 0 6.5-2.5 9-6z"/><path d="M18 9C20.5 5.5 23.5 3 27 3c3.9 0 7 2.9 7 6s-3.1 6-7 6c-3.5 0-6.5-2.5-9-6z"/></svg>
           Boucle
         </button>
-        <button data-val="affichage" class="${settingsTab==='affichage'?'active':''}" onclick="switchSettingsTab('affichage')" style="display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px">
+        <button data-val="affichage" aria-label="Paramètres affichage: groupe de cordes et position neck" class="${settingsTab==='affichage'?'active':''}" onclick="switchSettingsTab('affichage')" style="display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px">
           <svg width="13" height="11" viewBox="0 0 13 11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="0.7" y="0.7" width="11.6" height="7.6" rx="1.3"/><line x1="4.5" y1="10" x2="8.5" y2="10"/><line x1="6.5" y1="8.3" x2="6.5" y2="10"/></svg>
           Affichage
         </button>
