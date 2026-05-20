@@ -23,7 +23,7 @@ function render() {
 function getDailyRandomPatterns() {
   const today = new Date().toISOString().slice(0, 10);
   let cache = {};
-  try { cache = JSON.parse(localStorage.getItem('dicoDailyChallenge') || '{}'); } catch(e) {}
+  try { cache = JSON.parse(localStorage.getItem('dicoDailyChallenge') || '{}'); } catch(e) { console.warn('getDailyRandomPatterns:', e); }
 
   if (cache.date === today && cache.patterns) {
     return cache.patterns.map(id => PATTERNS.find(p => p.id === id)).filter(Boolean);
@@ -796,10 +796,10 @@ function refreshSpecialProgressPercent(patId) {
 function logSession() {
   const today = new Date().toISOString().slice(0,10);
   let sessions = [];
-  try { sessions = JSON.parse(localStorage.getItem('dicoSessions') || '[]'); } catch(e) {}
+  try { sessions = JSON.parse(localStorage.getItem('dicoSessions') || '[]'); } catch(e) { console.warn('logSession parse:', e); }
   if (!sessions.includes(today)) {
     sessions.push(today);
-    try { localStorage.setItem('dicoSessions', JSON.stringify(sessions)); } catch(e) {}
+    try { localStorage.setItem('dicoSessions', JSON.stringify(sessions)); } catch(e) { console.warn('logSession save:', e); }
   }
 }
 

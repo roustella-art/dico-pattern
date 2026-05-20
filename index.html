@@ -719,7 +719,7 @@ function recordPatPlay(patId) {
   updateTrainDisplay(patId);
 
   // Enregistrer la session dès qu'une preview est lancée (v1.12)
-  try { logSession(); } catch(e) {}
+  try { logSession(); } catch(e) { console.warn('logSession:', e); }
 }
 
 // Appelé à l'arrêt — commit les boucles jouées pendant la session
@@ -789,7 +789,7 @@ function checkSound(isDone) {
     gain.gain.setValueAtTime(0.12, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + (isDone ? 0.22 : 0.08));
     osc.start(t); osc.stop(t + (isDone ? 0.23 : 0.09));
-  } catch(e) {}
+  } catch(e) { console.warn('checkSound:', e); }
 }
 
 // ─── PROGRESS STATE ───────────────────────────────────────────────────────────
@@ -1008,7 +1008,7 @@ function chronoBeep() {
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
       osc.start(t); osc.stop(t + 0.13);
     });
-  } catch(e) {}
+  } catch(e) { console.warn('chronoBeep:', e); }
 }
 
 function chronoTick() {
@@ -1678,7 +1678,7 @@ async function wakeLockRequest() {
     if (_wakeLock) return; // déjà acquis
     _wakeLock = await navigator.wakeLock.request('screen');
     _wakeLock.addEventListener('release', () => { _wakeLock = null; });
-  } catch(e) { /* batterie faible ou onglet en arrière-plan — silencieux */ }
+  } catch(e) { console.warn('wakeLockRequest:', e); }
 }
 
 function wakeLockRelease() {

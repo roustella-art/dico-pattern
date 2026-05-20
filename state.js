@@ -78,7 +78,7 @@ function loadSettings() {
         if (Number.isFinite(v) && v >= 20 && v <= 200) SETTINGS.tempoPresets[k] = v;
       });
     }
-  } catch(e) {}
+  } catch(e) { console.warn('loadSettings:', e); }
 }
 
 function saveSettings() {
@@ -99,7 +99,7 @@ function saveSettings() {
       patVolume: SETTINGS.patVolume,
       clickVolume: SETTINGS.clickVolume,
     }));
-  } catch(e) {}
+  } catch(e) { console.warn('saveSettings:', e); }
 }
 
 let PAT_NOTES = {};
@@ -110,7 +110,7 @@ function loadPatNotes() {
 
 function savePatNote(patId, text) {
   PAT_NOTES[patId] = text;
-  try { localStorage.setItem('dicoPatNotes', JSON.stringify(PAT_NOTES)); } catch(e) {}
+  try { localStorage.setItem('dicoPatNotes', JSON.stringify(PAT_NOTES)); } catch(e) { console.warn('savePatNote:', e); }
 }
 
 // ─── SESSION TRACE ────────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ function loadPatTrace() {
 }
 
 function savePatTrace() {
-  try { localStorage.setItem('dicoPatTrace', JSON.stringify(PAT_TRACE)); } catch(e) {}
+  try { localStorage.setItem('dicoPatTrace', JSON.stringify(PAT_TRACE)); } catch(e) { console.warn('savePatTrace:', e); }
 }
 
 function loadState() {
@@ -133,7 +133,7 @@ function loadState() {
     state.pimtDone  = saved.pimtDone  || {};
     state.showHeaderStats = saved.showHeaderStats === true; // false by default
     if (saved.dailyChallengeOpen !== undefined) state.dailyChallengeOpen = saved.dailyChallengeOpen;
-  } catch(e) {}
+  } catch(e) { console.warn('loadState:', e); }
   loadPatNotes();
   loadPatTrace();
   loadSettings();
@@ -148,7 +148,7 @@ function saveState() {
       showHeaderStats: state.showHeaderStats,
       dailyChallengeOpen: state.dailyChallengeOpen,
     }));
-  } catch(e) {}
+  } catch(e) { console.warn('saveState:', e); }
 }
 
 function getProgressKey(patId, fing, mode, interp, tempo) {

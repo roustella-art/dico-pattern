@@ -1110,7 +1110,7 @@ function checkSound(isDone) {
     gain.gain.setValueAtTime(0.12, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + (isDone ? 0.22 : 0.08));
     osc.start(t); osc.stop(t + (isDone ? 0.23 : 0.09));
-  } catch(e) {}
+  } catch(e) { console.warn('pluckNote:', e); }
 }
 
 function previewPlay(patId) {
