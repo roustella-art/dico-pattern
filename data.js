@@ -979,6 +979,66 @@ E|--------------------------|
   },
 
   {
+    id:"A3P3bU", cat:"A3", dir:"U", num:'3b', notes:3, difficulty:"Intermédiaire", fingerings:['vide + ind + ann'],
+    name:"Groupe 0-5-7", bpm:80, bpmTarget:0,
+    tab:`e|------------------------0-5-7-|
+B|----------------0-5-7---------|
+G|--------0-5-7-----------------|
+D|--0-5-7------------------------|
+A|------------------------------|
+E|------------------------------|
+↩ retour décalé +1
+--0-7-9--------------------------|||
+-------0-7-9--------------------|||
+-----------0-7-9----------------o|||
+---------------0-7-9-----------o|||
+------------------------------|
+------------------------------|`,
+    desc:"Groupe 0-5-7 avec corde à vide. Synchronisation entre vide et doigté sur 3 notes.",
+    tip:"La corde à vide doit avoir le même son que les notes doigtées. Travaille la continuité d\'attaque.",
+  },
+
+  {
+    id:"A3P3bD", cat:"A3", dir:"D", num:'3b', notes:3, difficulty:"Intermédiaire", fingerings:['vide + ind + ann'],
+    name:"Groupe 0-5-7", bpm:80, bpmTarget:0,
+    tab:`e|------------------------0-7-5-|
+B|----------------0-7-5---------|
+G|--------0-7-5-----------------|
+D|--0-7-5------------------------|
+A|------------------------------|
+E|------------------------------|
+↩ retour +1 case
+--0-9-7--------------------------|||
+-------0-9-7--------------------|||
+-----------0-9-7----------------o|||
+---------------0-9-7-----------o|||
+------------------------------|
+------------------------------|`,
+    desc:"Groupe inversé 0-7-5. Descente avec corde à vide finale. Inversion du groupe ascendant.",
+    tip:"L\'annulaire frappe en premier. Le retour au 0 doit être transparent et net.",
+  },
+
+  {
+    id:"A3P3bM", cat:"A3", dir:"M", num:'3b', notes:3, difficulty:"Intermédiaire", fingerings:['vide + ind + ann'],
+    name:"Groupe 0-5-7", bpm:80, bpmTarget:0,
+    tab:`e|------------------------0-5-7-|
+B|----------------0-5-7---------|
+G|--------0-5-7-----------------|
+D|--0-5-7------------------------|
+A|------------------------------|
+E|------------------------------|
+↩ retour inversé +1
+--0-9-7--------------------------|||
+-------0-9-7--------------------|||
+-----------0-9-7----------------o|||
+---------------0-9-7-----------o|||
+------------------------------|
+------------------------------|`,
+    desc:"Montée puis retour inversé décalé. Changement de sens fluide avec corde à vide.",
+    tip:"Le vide en début et fin doit sonner identiquement. Fluidité entre montée et descente inversée.",
+  },
+
+  {
     id:"A3P1bU", cat:"A3", dir:"U", num:'1b', notes:3, difficulty:"Débutant", fingerings:['ind + ann + aur', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'],
     name:"Triade 1-3-4", bpm:70, bpmTarget:140,
     tab:`e|--------------------5-7-8-|
@@ -1572,6 +1632,127 @@ E|--------------------------------------------------|
     desc:"Montée triade doublée 1-3-5, retour inversé décalé. Le run complet pentatonique aller-retour.",
     tip:"Le changement de sens en haut doit être transparent. Legato ↑ à chaque changement de corde.",
   },
+
+  {
+    id:"A6P2aU", cat:"A6", dir:"U", num:'2a', notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + ann + aur + ann + maj'],
+    name:"Chromatique 1-2-3-4-3-2", bpm:60, bpmTarget:0,
+    tab:`e|--------------------------------------5-6-7-8-7-6-|
+B|--------------------------5-6-7-8-7-6-------------|
+G|--------------5-6-7-8-7-6-------------------------|
+D|--5-6-7-8-7-6-------------------------------------|
+A|--------------------------------------------------|
+E|--------------------------------------------------|
+↩ retour décalé +1
+--6-7-8-9-8-7-------------------------------------|||
+--------------6-7-8-9-8-7-------------------------|||
+--------------------------6-7-8-9-8-7------------o|||
+--------------------------------------6-7-8-9-8-7o|||
+--------------------------------------------------|||
+--------------------------------------------------|||`,
+    desc:"Montée chromatique sur 4 frettes : 1-2-3-4-3-2. Dextérité et indépendance des doigts sur extension maximale.",
+    tip:"Commence très lentement. Chaque doigt doit rester fixe et stable après avoir joué. Aucune tension inutile dans la main.",
+  },
+
+  {
+    id:"A6P2aD", cat:"A6", dir:"D", num:'2a', notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + ann + aur + ann + maj'],
+    name:"Chromatique 1-2-3-4-3-2", bpm:60, bpmTarget:0,
+    tab:`e|--------------------------------------8-7-6-5-6-7-|
+B|--------------------------8-7-6-5-6-7-------------|
+G|--------------8-7-6-5-6-7-------------------------|
+D|--8-7-6-5-6-7-------------------------------------|
+A|--------------------------------------------------|
+E|--------------------------------------------------|
+↩ retour +1 case
+--9-8-7-6-7-8-------------------------------------|||
+--------------9-8-7-6-7-8-------------------------|||
+--------------------------9-8-7-6-7-8------------o|||
+--------------------------------------9-8-7-6-7-8o|||
+--------------------------------------------------|||
+--------------------------------------------------|||`,
+    desc:"Descente chromatique inversée : 4-3-2-1-2-3. Le doigté inversé force la main à apprendre une nouvelle séquence motrice.",
+    tip:"La descente est souvent plus difficile. Travaille lentement en isolation avant de combiner avec la montée.",
+  },
+
+  {
+    id:"A6P2aM", cat:"A6", dir:"M", num:'2a', notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + ann + aur + ann + maj'],
+    name:"Chromatique 1-2-3-4-3-2", bpm:60, bpmTarget:0,
+    tab:`e|--------------------------------------5-6-7-8-7-6-|
+B|--------------------------5-6-7-8-7-6-------------|
+G|--------------5-6-7-8-7-6-------------------------|
+D|--5-6-7-8-7-6-------------------------------------|
+A|--------------------------------------------------|
+E|--------------------------------------------------|
+↩ retour inversé +1
+--9-8-7-6-7-8-------------------------------------|||
+--------------9-8-7-6-7-8-------------------------|||
+--------------------------9-8-7-6-7-8------------o|||
+--------------------------------------9-8-7-6-7-8o|||
+--------------------------------------------------|||
+--------------------------------------------------|||`,
+    desc:"Montée puis retour inversé décalé. Maîtrise de l\'extension suivi d\'une réaction rapide au changement de sens.",
+    tip:"Le sommet doit être net et propre. Le passage en descente inversée doit être instantané sans pause entre les deux directions.",
+  },
+
+  {
+    id:"A6P3bU", cat:"A6", dir:"U", num:'3b', notes:6, difficulty:"Débutant", fingerings:['vide + ind + ann + vide + ind + ann'],
+    name:"Groupe 0-5-7", bpm:70, bpmTarget:0,
+    tab:`e|--------------------------------------0-5-7-0-5-7-|
+B|--------------------------0-5-7-0-5-7-------------|
+G|--------------0-5-7-0-5-7-------------------------|
+D|--0-5-7-0-5-7-------------------------------------|
+A|--------------------------------------------------|
+E|--------------------------------------------------|
+↩ retour décalé +1
+--0-7-9-0-7-9-------------------------------------|||
+--------------0-7-9-0-7-9-------------------------|||
+--------------------------0-7-9-0-7-9------------o|||
+--------------------------------------0-7-9-0-7-9o|||
+--------------------------------------------------|||
+--------------------------------------------------|||`,
+    desc:"Groupe de trois notes 0-5-7 avec corde à vide. Travail de synchronisation entre corde libre et doigté.",
+    tip:"La corde à vide doit sonner aussi clairement que les notes doigtées. Aucune différence de volume ou de timbre.",
+  },
+
+  {
+    id:"A6P3bD", cat:"A6", dir:"D", num:'3b', notes:6, difficulty:"Débutant", fingerings:['vide + ind + ann + vide + ind + ann'],
+    name:"Groupe 0-5-7", bpm:70, bpmTarget:0,
+    tab:`e|--------------------------------------0-7-5-0-7-5-|
+B|--------------------------0-7-5-0-7-5-------------|
+G|--------------0-7-5-0-7-5-------------------------|
+D|--0-7-5-0-7-5-------------------------------------|
+A|--------------------------------------------------|
+E|--------------------------------------------------|
+↩ retour +1 case
+--0-9-7-0-9-7-------------------------------------|||
+--------------0-9-7-0-9-7-------------------------|||
+--------------------------0-9-7-0-9-7------------o|||
+--------------------------------------0-9-7-0-9-7o|||
+--------------------------------------------------|||
+--------------------------------------------------|||`,
+    desc:"Groupe inversé 7-5-0 : descente avec corde à vide finale. Inversion rythmique du groupe ascendant.",
+    tip:"L\'annulaire frappe en premier. Le retour au 0 doit être net et transparent. Travaille la transition 7→5→0.",
+  },
+
+  {
+    id:"A6P3bM", cat:"A6", dir:"M", num:'3b', notes:6, difficulty:"Débutant", fingerings:['vide + ind + ann + vide + ind + ann'],
+    name:"Groupe 0-5-7", bpm:70, bpmTarget:0,
+    tab:`e|--------------------------------------0-5-7-0-5-7-|
+B|--------------------------0-5-7-0-5-7-------------|
+G|--------------0-5-7-0-5-7-------------------------|
+D|--0-5-7-0-5-7-------------------------------------|
+A|--------------------------------------------------|
+E|--------------------------------------------------|
+↩ retour inversé +1
+--0-9-7-0-9-7-------------------------------------|||
+--------------0-9-7-0-9-7-------------------------|||
+--------------------------0-9-7-0-9-7------------o|||
+--------------------------------------0-9-7-0-9-7o|||
+--------------------------------------------------|||
+--------------------------------------------------|||`,
+    desc:"Montée puis retour inversé décalé avec corde à vide. Changement de sens fluide au sommet.",
+    tip:"Le vide en début et fin doit sonner identiquement. La fluidité entre montée et descente inversée est clé.",
+  },
+
   // ── A5 — 5 NOTES ────────────────────────────────────────────────────────────
 
   {

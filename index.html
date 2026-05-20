@@ -493,7 +493,7 @@ function tabReRenderLabeledBlock(lines, offset) {
     const info = tabParseLine(tabTokenize(m[3]));
     info.label = m[1];
     info.spacing = m[2];
-    info.notes = info.notes.map(n => n + offset);
+    info.notes = info.notes.map(n => n === 0 ? 0 : n + offset);  // Don't transpose open strings (0)
     return info;
   });
 
@@ -508,7 +508,7 @@ function tabReRenderUnlabeledBlock(lines, offset) {
   const parsed = lines.map(line => {
     const info = tabParseLine(tabTokenize(line));
     info.label = '';
-    info.notes = info.notes.map(n => n + offset);
+    info.notes = info.notes.map(n => n === 0 ? 0 : n + offset);  // Don't transpose open strings (0)
     return info;
   });
 
@@ -1329,7 +1329,7 @@ function openSettings(tab) {
           border-radius:10px;font-size:11px;cursor:pointer;margin-top:10px">
         ⚙️ Reset (debug)
       </button>
-      <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px">v1.14</div>
+      <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px">v2.1</div>
     </div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
