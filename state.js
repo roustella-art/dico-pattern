@@ -47,6 +47,7 @@ const SETTINGS = {
   tempoPresets: { lent: 40, cool: 70, chaud: 100 },  // BPM presets pour chaque zone
   patVolume: 75,             // 0–100 → gain tablature (75 ≈ ×1.5)
   clickVolume: 60,           // 0–100 → gain clic métronome (60 ≈ ×0.36)
+  shuffleMode: false,        // mode shuffle/swing (facteur fixe 0.67 = triolet)
 };
 
 function loadSettings() {
@@ -72,6 +73,7 @@ function loadSettings() {
     if (!isNaN(pv) && pv >= 0 && pv <= 100) SETTINGS.patVolume = pv;
     const cv = parseInt(s.clickVolume);
     if (!isNaN(cv) && cv >= 0 && cv <= 100) SETTINGS.clickVolume = cv;
+    if (s.shuffleMode === true) SETTINGS.shuffleMode = true;
     if (s.tempoPresets && typeof s.tempoPresets === 'object') {
       ['lent','cool','chaud'].forEach(k => {
         const v = parseInt(s.tempoPresets[k]);
@@ -98,6 +100,7 @@ function saveSettings() {
       tempoPresets: SETTINGS.tempoPresets,
       patVolume: SETTINGS.patVolume,
       clickVolume: SETTINGS.clickVolume,
+      shuffleMode: SETTINGS.shuffleMode,
     }));
   } catch(e) { console.warn('saveSettings:', e); }
 }
@@ -153,7 +156,8 @@ function saveState() {
 
 function getProgressKey(patId, fing, mode, interp, tempo) {
   const t = typeof tempo === 'object' ? tempo.key : tempo;
-  return `${patId}__${fing}__${mode}__${interp}__${t}`;
+  const sh = SETTINGS.shuffleMode ? '__sh' : '';
+  return `${patId}__${fing}__${mode}__${interp}__${t}${sh}`;
 }
 
 function getPatternPct(patId) {

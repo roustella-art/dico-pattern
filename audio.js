@@ -1039,6 +1039,13 @@ function syncSubdivUI() {
   if (ind) ind.textContent = n !== 4 ? `÷${n}` : '';
 }
 
+// Calcule le décalage temporel d'une note selon le mode shuffle
+// Shuffle 0.67 (triolet) : les notes impaires sont décalées vers l'arrière (longue-courte)
+function noteOffset(i, sx) {
+  if (!SETTINGS.shuffleMode) return i * sx;
+  return Math.floor(i / 2) * 2 * sx + (i % 2 === 0 ? 0 : 2 * 0.67 * sx);
+}
+
 function scheduleCycle(ctx, cycle, t0, patId) {
   if (!PREVIEW.masterGain) return; // déjà stoppé
   // La subdivision détermine la vitesse de lecture : n notes par temps
@@ -1052,7 +1059,7 @@ function scheduleCycle(ctx, cycle, t0, patId) {
       ? (isAttack ? 1.5 : 0.62)
       : 1.0;
     notes.forEach(midi => {
-      pluckNote(ctx, PREVIEW.masterGain, freq440(midi), safeT0 + i * sixteenth, gainMult);
+      pluckNote(ctx, PREVIEW.masterGain, freq440(midi), safeT0 + noteOffset(i, sixteenth), gainMult);
     });
   });
   // Incrémente les compteurs de cycles
@@ -1236,7 +1243,7 @@ function previewPlay(patId) {
           const sx = 60 / (PREVIEW.bpm * (PREVIEW.clickNotes || 4));
 
           steps.forEach((step, i) => {
-            const delay = Math.max(0, (t0Cursor + i * sx - ctx.currentTime) * 1000);
+            const delay = Math.max(0, (t0Cursor + noteOffset(i, sx) - ctx.currentTime) * 1000);
             const tid = setTimeout(() => {
               if (PREVIEW.patId !== patId) return;
               const bar = document.getElementById('tab-cursor-montee-' + patId);

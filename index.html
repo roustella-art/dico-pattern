@@ -314,7 +314,7 @@
       </div>
       <div style="flex:1"></div>
       <button id="header-countin-btn" class="countin-btn h-toggle" onclick="toggleCountIn()" title="Décompte 4 temps avant la lecture">Décompte</button>
-      <button id="header-click-btn" class="click-btn h-toggle" onclick="togglePreviewClick()" title="Clic métronomique">Clic <span id="subdiv-ind" style="font-size:8px;opacity:.5;font-weight:400"></span></button>
+      <button id="header-click-btn" class="click-btn h-toggle" onclick="togglePreviewClick()" title="Clic métronomique">Clic <span id="subdiv-ind" style="font-size:8px;opacity:.5;font-weight:400"></span><span id="shuffle-ind" style="font-size:8px;font-weight:700;color:var(--orange);margin-left:2px;display:none">SH</span></button>
       <button id="header-metro-solo-btn" class="h-icon-btn large" onclick="headerMetroSolo()" title="Métronome solo" aria-label="Métronome solo">
         <svg width="12" height="13" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="10,2 18,20 2,20"/><line x1="10" y1="7" x2="14.5" y2="17"/>
@@ -1242,6 +1242,21 @@ function openSettings(tab) {
         </div>
 
         <div class="group">
+          <label class="group-label">Shuffle / Swing</label>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+            <button onclick="toggleShuffleMode()"
+              style="padding:5px 16px;font-size:12px;font-weight:600;border-radius:8px;border:1px solid;cursor:pointer;
+                background:${SETTINGS.shuffleMode ? 'var(--orange)' : 'transparent'};
+                color:${SETTINGS.shuffleMode ? '#fff' : 'var(--text2)'};
+                border-color:${SETTINGS.shuffleMode ? 'var(--orange)' : 'var(--border)'}">
+              ${SETTINGS.shuffleMode ? '♩ Activé' : 'Désactivé'}
+            </button>
+            ${!SETTINGS.shuffleMode ? '<span style="font-size:11px;color:var(--text3)">Active pour jouer en swing</span>' : ''}
+          </div>
+          <div class="hint">Interprétation longue-courte des notes (swing 0.67 = triolet). La progression est trackée séparément — nouveau défi, nouvelle vision.</div>
+        </div>
+
+        <div class="group">
           <label class="group-label">Mode Entraînement</label>
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:${SETTINGS.trainMode ? '10px' : '4px'}">
             <button onclick="toggleTrainMode()"
@@ -1517,6 +1532,25 @@ function setNeckPosition(pos) {
   applySettingsAndRender();
 }
 
+function toggleShuffleMode() {
+  SETTINGS.shuffleMode = !SETTINGS.shuffleMode;
+  saveSettings();
+  syncShuffleModeUI();
+  // Arrêter la lecture en cours — le timing change fondamentalement
+  if (PREVIEW.masterGain) previewStop();
+  // Rafraîchir les réglages si ouverts
+  if (document.getElementById('settings-overlay')) {
+    closeSettings();
+    setTimeout(() => openSettings('tempo'), 50);
+  }
+}
+
+function syncShuffleModeUI() {
+  // Indicateur header sur le bouton Clic
+  const ind = document.getElementById('shuffle-ind');
+  if (ind) ind.style.display = SETTINGS.shuffleMode ? 'inline' : 'none';
+}
+
 function toggleTrainMode() {
   SETTINGS.trainMode = !SETTINGS.trainMode;
   saveSettings();
@@ -1765,7 +1799,8 @@ const countinBtn = document.getElementById('header-countin-btn');
 if (countinBtn && PREVIEW.countIn) countinBtn.classList.add('on');
 const clickBtn = document.getElementById('header-click-btn');
 if (clickBtn && PREVIEW.click) clickBtn.classList.add('on');
-syncTrainModeUI(); // couleur BPM verte si mode entraînement actif
+syncTrainModeUI();   // couleur BPM verte si mode entraînement actif
+syncShuffleModeUI(); // indicateur SH sur bouton Clic si shuffle actif
 chronoToggle();       // démarre le chrono automatiquement
 checkOnboarding();    // affiche l'onboarding au premier lancement
 
