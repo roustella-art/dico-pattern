@@ -41,6 +41,7 @@
   .h-pill:active{background:rgba(244,238,226,.16)}
   .h-icon-btn{background:rgba(244,238,226,.08);border:1px solid rgba(244,238,226,.12);color:var(--header-text);border-radius:10px;width:30px;height:30px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0;padding:0}
   .h-icon-btn:active{background:rgba(244,238,226,.22)}
+  .h-icon-btn.active{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
   .h-time{font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.3px;color:var(--header-text);transition:color .3s}
 
   /* Metro row — clean stepper */
@@ -843,9 +844,19 @@ function headerMetroStart() {
   metroStop(false);
   const ctx = metroCtx();
 
-  METRO.bpm = HCTRL.bpm;
+  // In training mode, start at trainBpmStart; otherwise use current BPM
+  if (SETTINGS.trainMode) {
+    METRO.bpm = SETTINGS.trainBpmStart;
+    HCTRL.bpm = SETTINGS.trainBpmStart;
+    const hbpm = document.getElementById('header-bpm-val');
+    if (hbpm) hbpm.textContent = SETTINGS.trainBpmStart;
+    METRO._trainPyramidePhase = 1; // Initialize pyramide phase for training mode
+  } else {
+    METRO.bpm = HCTRL.bpm;
+  }
   METRO.patId = 'global';
   METRO.running = true;
+  METRO._beatCount = 0;
   METRO.nextBeat = ctx.currentTime + 0.1;
   METRO.timer = setInterval(metroSchedule, 50);
 }
@@ -872,15 +883,23 @@ function headerBpmChange(delta) {
 
 function syncHeaderPlay() {
   const btn = document.getElementById('header-play-btn');
+  const metroBtn = document.getElementById('header-metro-solo-btn');
   const lbl = document.getElementById('header-mode-lbl');
-  if (!btn) return;
   const playing = (HCTRL.mode === 'preview' && PREVIEW.patId === HCTRL.patId)
     || (HCTRL.mode === 'metro' && METRO.running && METRO.patId === 'global');
-  // Stop = carré, Play = triangle
-  btn.innerHTML = playing
-    ? '<svg width="9" height="9" viewBox="0 0 9 9" fill="currentColor"><rect width="9" height="9" rx="1"/></svg>'
-    : '<svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M0 0l9 5-9 5z"/></svg>';
-  btn.classList.toggle('running', playing);
+  // Update play/stop button if it exists
+  if (btn) {
+    btn.innerHTML = playing
+      ? '<svg width="9" height="9" viewBox="0 0 9 9" fill="currentColor"><rect width="9" height="9" rx="1"/></svg>'
+      : '<svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor"><path d="M0 0l9 5-9 5z"/></svg>';
+    btn.classList.toggle('running', playing);
+  }
+  // Set active state on metronome solo button when global metro is running
+  const metroActive = METRO.running && METRO.patId === 'global';
+  if (metroBtn) {
+    if (metroActive) metroBtn.classList.add('active');
+    else metroBtn.classList.remove('active');
+  }
   if (lbl) lbl.textContent = HCTRL.mode === 'preview'
     ? (HCTRL.patName || 'Preview')
     : 'Métro';
