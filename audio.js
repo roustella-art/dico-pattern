@@ -1026,13 +1026,13 @@ function setClickSubdiv(n) {
 
 function syncSubdivUI() {
   const n = SETTINGS.clickSubdiv;
-  // Boutons du popup
+  // Chips dans les réglages (fond clair)
   document.querySelectorAll('.subdiv-btn').forEach(b => {
     const active = parseInt(b.dataset.subdiv) === n;
-    b.style.background = active ? 'rgba(244,238,226,.85)' : 'rgba(244,238,226,.06)';
-    b.style.color      = active ? 'var(--header-bg)'      : 'rgba(244,238,226,.7)';
-    b.style.borderColor = active ? 'rgba(244,238,226,.7)' : 'rgba(244,238,226,.18)';
-    b.style.fontWeight  = active ? '800' : '700';
+    b.style.background  = active ? 'var(--green)'         : 'rgba(28,45,51,.07)';
+    b.style.color       = active ? '#fff'                  : 'var(--text2)';
+    b.style.borderColor = active ? 'var(--green)'         : 'rgba(28,45,51,.18)';
+    b.style.fontWeight  = active ? '800'                   : '700';
   });
   // Indicateur discret sur le bouton Clic (n'affiche rien pour 1 = défaut)
   const ind = document.getElementById('subdiv-ind');

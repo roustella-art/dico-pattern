@@ -1220,25 +1220,23 @@ function openSettings(tab) {
 
         <div class="group">
           <label class="group-label">Valeur rythmique de référence</label>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
-              <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdiv(2)" aria-label="2 crochés" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.50);background:rgba(244,238,226,.40);color:rgba(244,238,226,1);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===2 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
-                <span>2</span>
-                <span style="font-size:10px;font-weight:400;opacity:.7">croche</span>
-              </button>
-              <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdiv(3)" aria-label="3 triolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.50);background:rgba(244,238,226,.40);color:rgba(244,238,226,1);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===3 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
-                <span>3</span>
-                <span style="font-size:10px;font-weight:400;opacity:.7">triolet</span>
-              </button>
-              <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdiv(4)" aria-label="4 croches (quartet)" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.50);background:rgba(244,238,226,.40);color:rgba(244,238,226,1);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===4 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
-                <span>4</span>
-                <span style="font-size:10px;font-weight:400;opacity:.7">♬</span>
-              </button>
-              <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdiv(6)" aria-label="6 sextolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.50);background:rgba(244,238,226,.40);color:rgba(244,238,226,1);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===6 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
-                <span>6</span>
-                <span style="font-size:10px;font-weight:400;opacity:.7">sextolet</span>
-              </button>
-            </div>
+          <div style="display:flex;gap:6px">
+            <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdiv(2)" aria-label="2 crochés" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===2 ? 'border-color:var(--green);background:var(--green);color:#fff;' : ''}">
+              <span style="font-size:14px;font-weight:800;line-height:1.1">2</span>
+              <span style="font-size:9px;font-weight:500;opacity:.75">croche</span>
+            </button>
+            <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdiv(3)" aria-label="3 triolets" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===3 ? 'border-color:var(--green);background:var(--green);color:#fff;' : ''}">
+              <span style="font-size:14px;font-weight:800;line-height:1.1">3</span>
+              <span style="font-size:9px;font-weight:500;opacity:.75">triolet</span>
+            </button>
+            <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdiv(4)" aria-label="4 croches" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===4 ? 'border-color:var(--green);background:var(--green);color:#fff;' : ''}">
+              <span style="font-size:14px;font-weight:800;line-height:1.1">4</span>
+              <span style="font-size:9px;font-weight:500;opacity:.75">♬</span>
+            </button>
+            <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdiv(6)" aria-label="6 sextolets" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===6 ? 'border-color:var(--green);background:var(--green);color:#fff;' : ''}">
+              <span style="font-size:14px;font-weight:800;line-height:1.1">6</span>
+              <span style="font-size:9px;font-weight:500;opacity:.75">sextolet</span>
+            </button>
           </div>
           <div class="hint">Choisis le découpage rythmique du clic métronome.</div>
         </div>
