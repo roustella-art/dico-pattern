@@ -26,9 +26,14 @@
   html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text)}
   #app{display:flex;flex-direction:column;height:100dvh;max-width:640px;margin:0 auto}
 
-  /* Landscape mode: fill entire screen width (iPad/tablet) */
-  @media (orientation: landscape) {
+  /* Landscape mode: only on tablet/iPad (min-width: 768px), not on smartphone */
+  @media (orientation: landscape) and (min-width: 768px) {
     #app{max-width:100%;padding:0}
+  }
+
+  /* Force portrait layout on small screens even if device is in landscape */
+  @media (orientation: landscape) and (max-width: 767px) {
+    #app{max-width:640px;height:auto;min-height:100dvh}
   }
 
   /* HEADER — dark warm teal */
