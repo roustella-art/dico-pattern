@@ -51,7 +51,7 @@
   .metro-pulse.flash-metro{background:#4dd0e1;box-shadow:0 0 8px rgba(77,208,225,.6)}
   .metro-label{font-size:10px;font-weight:700;letter-spacing:.7px;color:rgba(244,238,226,.55);text-transform:uppercase}
   .metro-stepper{display:flex;align-items:center;background:rgba(244,238,226,.08);border-radius:8px;overflow:hidden;flex-shrink:0}
-  .metro-stepper button{background:transparent;border:none;color:var(--header-text);font-size:14px;font-weight:600;width:26px;height:26px;cursor:pointer;line-height:1;padding:0}
+  .metro-stepper button{background:transparent;border:none;color:var(--header-text);font-size:14px;font-weight:600;width:36px;height:36px;cursor:pointer;line-height:1;padding:0;display:flex;align-items:center;justify-content:center}
   .metro-stepper button:active{background:rgba(244,238,226,.16)}
   .metro-stepper input{width:34px;background:transparent;border:none;color:var(--header-text);font-size:13px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums;letter-spacing:.3px;padding:0;outline:none;-moz-appearance:textfield}
   .metro-stepper input::-webkit-inner-spin-button,.metro-stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
@@ -68,7 +68,7 @@
   .dual-range #train-range-max::-webkit-slider-thumb{background:var(--red)}
 
   /* Toggles header (Décompte / Clic) */
-  .h-toggle{font-size:10px;font-weight:600;padding:4px 9px;border-radius:7px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;white-space:nowrap;transition:all .12s;letter-spacing:.2px;flex-shrink:0}
+  .h-toggle{font-size:10px;font-weight:600;padding:8px 14px;border-radius:7px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;white-space:nowrap;transition:all .12s;letter-spacing:.2px;flex-shrink:0;min-height:36px;display:flex;align-items:center;justify-content:center}
   .h-toggle:active{background:rgba(244,238,226,.16)}
   .h-toggle.on{background:rgba(244,238,226,.92);border-color:rgba(244,238,226,.92);color:var(--header-bg);font-weight:700}
 
@@ -289,7 +289,7 @@
     <!-- ROW 2 : BPM + toggles + metro solo -->
     <div class="metro-row">
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-        <span id="header-bpm-lbl" onclick="bpmLabelClick()" style="font-size:9px;font-weight:700;letter-spacing:.7px;color:rgba(244,238,226,.45);text-transform:uppercase;flex-shrink:0;cursor:pointer;padding:4px 2px;margin:-4px -2px;-webkit-tap-highlight-color:transparent" title="Triple-clic → mode entraînement">bpm</span>
+        <span id="header-bpm-lbl" onclick="bpmLabelClick()" style="font-size:9px;font-weight:700;letter-spacing:.7px;color:rgba(244,238,226,.45);text-transform:uppercase;flex-shrink:0;cursor:pointer;padding:8px 8px;margin:-8px -8px;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center" title="Triple-clic → mode entraînement">bpm</span>
         <div class="metro-stepper">
           <button onclick="headerBpmChange(-5)" aria-label="−5 BPM">−</button>
           <span id="header-bpm-val"
@@ -844,19 +844,9 @@ function headerMetroStart() {
   metroStop(false);
   const ctx = metroCtx();
 
-  // In training mode, start at trainBpmStart; otherwise use current BPM
-  if (SETTINGS.trainMode) {
-    METRO.bpm = SETTINGS.trainBpmStart;
-    HCTRL.bpm = SETTINGS.trainBpmStart;
-    const hbpm = document.getElementById('header-bpm-val');
-    if (hbpm) hbpm.textContent = SETTINGS.trainBpmStart;
-    METRO._trainPyramidePhase = 1; // Initialize pyramide phase for training mode
-  } else {
-    METRO.bpm = HCTRL.bpm;
-  }
+  METRO.bpm = HCTRL.bpm;
   METRO.patId = 'global';
   METRO.running = true;
-  METRO._beatCount = 0;
   METRO.nextBeat = ctx.currentTime + 0.1;
   METRO.timer = setInterval(metroSchedule, 50);
 }

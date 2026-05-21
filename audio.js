@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─── METRONOME ────────────────────────────────────────────────────────────────
-const METRO = { ctx:null, running:false, bpm:60, nextBeat:0, timer:null, patId:null, _loopCount:0, _trainPyramidePhase:undefined, _beatCount:0 };
+const METRO = { ctx:null, running:false, bpm:60, nextBeat:0, timer:null, patId:null };
 
 function metroCtx() {
   if (!METRO.ctx) METRO.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -43,14 +43,6 @@ function metroSchedule() {
   while (METRO.nextBeat < ctx.currentTime + 0.15) {
     metroClick(METRO.nextBeat);
     METRO.nextBeat += 60.0 / METRO.bpm;
-
-    // Track beats for training mode (every 4 beats = 1 measure)
-    if (SETTINGS.trainMode && METRO.patId === 'global') {
-      METRO._beatCount++;
-      if (METRO._beatCount % (4 * SETTINGS.trainLoopEvery) === 0) {
-        trainBpmIncrementMetro();
-      }
-    }
   }
 }
 
@@ -76,9 +68,6 @@ function metroStop(refresh=true) {
   if (METRO.timer) { clearInterval(METRO.timer); METRO.timer = null; }
   const old = METRO.patId;
   METRO.running = false;
-  // Reset training mode state
-  METRO._beatCount = 0;
-  METRO._trainPyramidePhase = undefined;
   const hp = document.getElementById('header-pulse');
   if (hp) { hp.classList.remove('flash'); hp.classList.remove('flash-metro'); }
   if (refresh) {
@@ -874,49 +863,6 @@ function trainBpmIncrement(nextCycleT) {
       updatePatTraceDisplay(PREVIEW.patId);
       updateTrainDisplay(PREVIEW.patId);
     }
-  }
-}
-
-// ─── TRAINING MODE POUR METRONOME SOLO ────────────────────────────────────────
-function trainBpmIncrementMetro() {
-  if (!SETTINGS.trainMode) return;
-  if (METRO._trainPyramidePhase === undefined) {
-    METRO._trainPyramidePhase = 1; // 1 = montée, -1 = descente
-  }
-
-  let newBpm = METRO.bpm;
-
-  if (SETTINGS.trainPyramide) {
-    // Mode pyramide : monte jusqu'au max, puis redescend
-    if (METRO._trainPyramidePhase === 1) {
-      // Phase montée
-      newBpm = Math.min(METRO.bpm + SETTINGS.trainBpmStep, SETTINGS.trainBpmMax);
-      if (newBpm >= SETTINGS.trainBpmMax) {
-        METRO._trainPyramidePhase = -1; // Basculer en descente
-      }
-    } else {
-      // Phase descente
-      newBpm = Math.max(METRO.bpm - SETTINGS.trainBpmStep, SETTINGS.trainBpmStart);
-      if (newBpm <= SETTINGS.trainBpmStart) {
-        METRO._trainPyramidePhase = 1; // Revenir en montée
-      }
-    }
-  } else {
-    // Mode normal : juste monter jusqu'au max
-    newBpm = Math.min(METRO.bpm + SETTINGS.trainBpmStep, SETTINGS.trainBpmMax);
-  }
-
-  if (newBpm === METRO.bpm) return; // pas de changement
-  METRO.bpm = newBpm;
-  HCTRL.bpm = newBpm;
-
-  // Feedback visuel : header BPM flashe en orange
-  const hbpm = document.getElementById('header-bpm-val');
-  if (hbpm) {
-    hbpm.textContent = newBpm;
-    hbpm.style.transition = 'color .15s';
-    hbpm.style.color = 'var(--orange)';
-    setTimeout(() => { if (hbpm) { hbpm.style.color = ''; } }, 900);
   }
 }
 
