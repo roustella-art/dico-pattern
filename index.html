@@ -1538,6 +1538,9 @@ function toggleShuffleMode() {
   syncShuffleModeUI();
   // Arrêter la lecture en cours — le timing change fondamentalement
   if (PREVIEW.masterGain) previewStop();
+  // Re-rendre toutes les vues : les % Étapes / Patterns / Progression
+  // passent tous par getProgressKey() → clés __sh séparées → live refresh
+  render();
   // Rafraîchir les réglages si ouverts
   if (document.getElementById('settings-overlay')) {
     closeSettings();
