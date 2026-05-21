@@ -47,6 +47,7 @@
   .h-icon-btn{background:rgba(244,238,226,.08);border:1px solid rgba(244,238,226,.12);color:var(--header-text);border-radius:10px;width:30px;height:30px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0;padding:0}
   .h-icon-btn:active{background:rgba(244,238,226,.22)}
   .h-icon-btn.active{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
+  .h-icon-btn.large{width:auto;min-width:36px;height:36px;padding:0 8px}
   .h-time{font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:.3px;color:var(--header-text);transition:color .3s}
 
   /* Metro row — clean stepper */
@@ -314,7 +315,7 @@
       <div style="flex:1"></div>
       <button id="header-countin-btn" class="countin-btn h-toggle" onclick="toggleCountIn()" title="Décompte 4 temps avant la lecture">Décompte</button>
       <button id="header-click-btn" class="click-btn h-toggle" onclick="togglePreviewClick()" title="Clic métronomique">Clic <span id="subdiv-ind" style="font-size:8px;opacity:.5;font-weight:400"></span></button>
-      <button id="header-metro-solo-btn" class="h-icon-btn" onclick="headerMetroSolo()" title="Métronome solo" aria-label="Métronome solo">
+      <button id="header-metro-solo-btn" class="h-icon-btn large" onclick="headerMetroSolo()" title="Métronome solo" aria-label="Métronome solo">
         <svg width="12" height="13" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="10,2 18,20 2,20"/><line x1="10" y1="7" x2="14.5" y2="17"/>
         </svg>
@@ -1218,22 +1219,22 @@ function openSettings(tab) {
         </div>
 
         <div class="group">
-          <label class="group-label">Subdivision du clic</label>
+          <label class="group-label">Valeur rythmique de référence</label>
           <div style="display:flex;flex-direction:column;gap:8px">
             <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
-              <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdiv(2)" aria-label="2 crochés" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===2 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+              <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdiv(2)" aria-label="2 crochés" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.28);background:rgba(244,238,226,.16);color:rgba(244,238,226,.9);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===2 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
                 <span>2</span>
                 <span style="font-size:10px;font-weight:400;opacity:.7">croche</span>
               </button>
-              <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdiv(3)" aria-label="3 triolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===3 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+              <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdiv(3)" aria-label="3 triolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.28);background:rgba(244,238,226,.16);color:rgba(244,238,226,.9);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===3 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
                 <span>3</span>
                 <span style="font-size:10px;font-weight:400;opacity:.7">triolet</span>
               </button>
-              <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdiv(4)" aria-label="4 croches (quartet)" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===4 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+              <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdiv(4)" aria-label="4 croches (quartet)" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.28);background:rgba(244,238,226,.16);color:rgba(244,238,226,.9);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===4 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
                 <span>4</span>
                 <span style="font-size:10px;font-weight:400;opacity:.7">♬</span>
               </button>
-              <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdiv(6)" aria-label="6 sextolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===6 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+              <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdiv(6)" aria-label="6 sextolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.28);background:rgba(244,238,226,.16);color:rgba(244,238,226,.9);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===6 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
                 <span>6</span>
                 <span style="font-size:10px;font-weight:400;opacity:.7">sextolet</span>
               </button>
@@ -1721,7 +1722,22 @@ function wakeLockRelease() {
 
 async function wakeLockReacquire() {
   // Reacquérir après retour en premier plan (visibilitychange)
-  if (document.visibilityState === 'visible') await wakeLockRequest();
+  if (document.visibilityState === 'visible') {
+    await wakeLockRequest();
+    audioContextResume();
+  }
+}
+
+function audioContextResume() {
+  // Reprendre les contextes audio après retour en premier plan (bug iOS)
+  if (document.visibilityState === 'visible') {
+    if (METRO.ctx && METRO.ctx.state === 'suspended') {
+      METRO.ctx.resume().catch(e => console.warn('Metro context resume failed:', e));
+    }
+    if (PREVIEW.ctx && PREVIEW.ctx.state === 'suspended') {
+      PREVIEW.ctx.resume().catch(e => console.warn('Preview context resume failed:', e));
+    }
+  }
 }
 
 function wakeLockResetInactiveTimer() {

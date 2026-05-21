@@ -800,6 +800,8 @@ function logSession() {
   if (!sessions.includes(today)) {
     sessions.push(today);
     try { localStorage.setItem('dicoSessions', JSON.stringify(sessions)); } catch(e) { console.warn('logSession save:', e); }
+    // Mise à jour en temps réel du compteur journalier si affiché
+    if (state.showHeaderStats) updateHeaderStatsDisplay();
   }
 }
 
