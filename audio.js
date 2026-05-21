@@ -921,28 +921,7 @@ function stopPulseTicker() {
 }
 
 // ── Long press sur le bouton Clic ───────────────────────────────────────────
-let _clickPressTimer = null;
-let _clickLongFired  = false;
 
-function clickPressStart(e) {
-  e.preventDefault();
-  _clickLongFired = false;
-  _clickPressTimer = setTimeout(() => {
-    _clickLongFired = true;
-    const p = document.getElementById('subdiv-popup');
-    if (p) p.style.display = p.style.display === 'none' ? 'flex' : 'none';
-  }, 480);
-}
-function clickPressEnd(e) {
-  e.preventDefault();
-  clearTimeout(_clickPressTimer);
-  _clickPressTimer = null;
-  if (!_clickLongFired) togglePreviewClick(); // tap court = toggle clic normal
-}
-function clickPressCancel() {
-  clearTimeout(_clickPressTimer);
-  _clickPressTimer = null;
-}
 
 // ── Long press sur le logo/titre — masquer/afficher les onglets ────────────────
 let _navHidePressTimer = null;
@@ -1043,12 +1022,6 @@ function setClickSubdiv(n) {
     stopClickLoop();
     startClickLoop(PREVIEW.ctx.currentTime);
   }
-}
-
-function setClickSubdivAndClose(n) {
-  setClickSubdiv(n);
-  const p = document.getElementById('subdiv-popup');
-  if (p) p.style.display = 'none';
 }
 
 function syncSubdivUI() {

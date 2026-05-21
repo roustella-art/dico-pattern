@@ -313,26 +313,12 @@
       </div>
       <div style="flex:1"></div>
       <button id="header-countin-btn" class="countin-btn h-toggle" onclick="toggleCountIn()" title="Décompte 4 temps avant la lecture">Décompte</button>
-      <button id="header-click-btn" class="click-btn h-toggle"
-        ontouchstart="clickPressStart(event)" ontouchend="clickPressEnd(event)"
-        ontouchcancel="clickPressCancel()" ontouchmove="clickPressCancel()"
-        onmousedown="clickPressStart(event)" onmouseup="clickPressEnd(event)" onmouseleave="clickPressCancel()"
-        title="Clic métronomique · maintenir pour choisir la subdivision">Clic <span id="subdiv-ind" style="font-size:8px;opacity:.5;font-weight:400"></span></button>
+      <button id="header-click-btn" class="click-btn h-toggle" onclick="togglePreviewClick()" title="Clic métronomique">Clic <span id="subdiv-ind" style="font-size:8px;opacity:.5;font-weight:400"></span></button>
       <button id="header-metro-solo-btn" class="h-icon-btn" onclick="headerMetroSolo()" title="Métronome solo" aria-label="Métronome solo">
         <svg width="12" height="13" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="10,2 18,20 2,20"/><line x1="10" y1="7" x2="14.5" y2="17"/>
         </svg>
       </button>
-    </div>
-    <!-- Popup subdivision — apparaît sur long press du bouton Clic -->
-    <div id="subdiv-popup" style="display:none;align-items:center;gap:6px;padding:6px 0 8px;border-top:1px solid rgba(244,238,226,.08)">
-      <span style="font-size:9px;font-weight:700;letter-spacing:.6px;color:rgba(244,238,226,.4);text-transform:uppercase;flex-shrink:0">÷ clic</span>
-      <div style="display:flex;gap:5px">
-        <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdivAndClose(2)" aria-label="2 crochés" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">2<span style="font-size:8px;font-weight:400;opacity:.7">croche</span></button>
-        <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdivAndClose(3)" aria-label="3 triolets" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">3<span style="font-size:8px;font-weight:400;opacity:.7">triolet</span></button>
-        <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdivAndClose(4)" aria-label="4 croches (quartet)" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">4<span style="font-size:8px;font-weight:400;opacity:.7">♬</span></button>
-        <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdivAndClose(6)" aria-label="6 sextolets" style="display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:700;width:46px;padding:5px 4px;border-radius:8px;border:1px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s">6<span style="font-size:8px;font-weight:400;opacity:.7">sextolet</span></button>
-      </div>
     </div>
   </header>
   <main id="content"></main>
@@ -1229,6 +1215,31 @@ function openSettings(tab) {
             </div>`).join('')}
           </div>
           <div class="hint">Toucher une ligne dans le tableau règle directement le BPM.</div>
+        </div>
+
+        <div class="group">
+          <label class="group-label">Subdivision du clic</label>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+              <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdiv(2)" aria-label="2 crochés" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===2 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+                <span>2</span>
+                <span style="font-size:10px;font-weight:400;opacity:.7">croche</span>
+              </button>
+              <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdiv(3)" aria-label="3 triolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===3 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+                <span>3</span>
+                <span style="font-size:10px;font-weight:400;opacity:.7">triolet</span>
+              </button>
+              <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdiv(4)" aria-label="4 croches (quartet)" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===4 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+                <span>4</span>
+                <span style="font-size:10px;font-weight:400;opacity:.7">♬</span>
+              </button>
+              <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdiv(6)" aria-label="6 sextolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.18);background:rgba(244,238,226,.06);color:rgba(244,238,226,.7);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===6 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+                <span>6</span>
+                <span style="font-size:10px;font-weight:400;opacity:.7">sextolet</span>
+              </button>
+            </div>
+          </div>
+          <div class="hint">Choisis le découpage rythmique du clic métronome.</div>
         </div>
 
         <div class="group">
