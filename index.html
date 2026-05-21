@@ -1222,19 +1222,19 @@ function openSettings(tab) {
           <label class="group-label">Valeur rythmique de référence</label>
           <div style="display:flex;flex-direction:column;gap:8px">
             <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
-              <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdiv(2)" aria-label="2 crochés" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.28);background:rgba(244,238,226,.16);color:rgba(244,238,226,.9);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===2 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+              <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdiv(2)" aria-label="2 crochés" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.50);background:rgba(244,238,226,.40);color:rgba(244,238,226,1);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===2 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
                 <span>2</span>
                 <span style="font-size:10px;font-weight:400;opacity:.7">croche</span>
               </button>
-              <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdiv(3)" aria-label="3 triolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.28);background:rgba(244,238,226,.16);color:rgba(244,238,226,.9);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===3 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+              <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdiv(3)" aria-label="3 triolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.50);background:rgba(244,238,226,.40);color:rgba(244,238,226,1);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===3 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
                 <span>3</span>
                 <span style="font-size:10px;font-weight:400;opacity:.7">triolet</span>
               </button>
-              <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdiv(4)" aria-label="4 croches (quartet)" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.28);background:rgba(244,238,226,.16);color:rgba(244,238,226,.9);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===4 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+              <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdiv(4)" aria-label="4 croches (quartet)" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.50);background:rgba(244,238,226,.40);color:rgba(244,238,226,1);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===4 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
                 <span>4</span>
                 <span style="font-size:10px;font-weight:400;opacity:.7">♬</span>
               </button>
-              <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdiv(6)" aria-label="6 sextolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.28);background:rgba(244,238,226,.16);color:rgba(244,238,226,.9);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===6 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
+              <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdiv(6)" aria-label="6 sextolets" style="display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:12px 8px;border-radius:8px;border:2px solid rgba(244,238,226,.50);background:rgba(244,238,226,.40);color:rgba(244,238,226,1);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===6 ? 'border-color:var(--green);background:rgba(86,134,74,.1);color:var(--green)' : ''}">
                 <span>6</span>
                 <span style="font-size:10px;font-weight:400;opacity:.7">sextolet</span>
               </button>
@@ -1361,7 +1361,7 @@ function openSettings(tab) {
           border-radius:10px;font-size:11px;cursor:pointer;margin-top:10px">
         ⚙️ Reset (debug)
       </button>
-      <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px">v2.1</div>
+      <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px">v2.2</div>
     </div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
