@@ -128,6 +128,35 @@ function savePatTrace() {
   try { localStorage.setItem('dicoPatTrace', JSON.stringify(PAT_TRACE)); } catch(e) { console.warn('savePatTrace:', e); }
 }
 
+// ─── PATTERN JOURNAL ──────────────────────────────────────────────────────────
+// Enregistre chaque lecture de pattern avec timestamp, tempo, mode
+let PATTERN_JOURNAL = [];
+
+function loadPatternJournal() {
+  try { PATTERN_JOURNAL = JSON.parse(localStorage.getItem('dicoPatternJournal') || '[]'); } catch(e) { PATTERN_JOURNAL = []; }
+}
+
+function savePatternJournal() {
+  try { localStorage.setItem('dicoPatternJournal', JSON.stringify(PATTERN_JOURNAL)); } catch(e) { console.warn('savePatternJournal:', e); }
+}
+
+function addJournalEntry(patId, bpm, trainMode, pyramideMode, shuffleMode) {
+  const pat = PATTERNS.find(p => p.id === patId);
+  if (!pat) return;
+  const now = new Date();
+  const entry = {
+    timestamp: now.getTime(),
+    patId: patId,
+    patName: pat.name,
+    bpm: bpm,
+    trainMode: trainMode || false,
+    pyramideMode: pyramideMode || false,
+    shuffleMode: shuffleMode || false,
+  };
+  PATTERN_JOURNAL.push(entry);
+  savePatternJournal();
+}
+
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem('dicoPattern') || '{}');
@@ -139,6 +168,7 @@ function loadState() {
   } catch(e) { console.warn('loadState:', e); }
   loadPatNotes();
   loadPatTrace();
+  loadPatternJournal();
   loadSettings();
 }
 

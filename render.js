@@ -2,7 +2,7 @@
 // Extrait de index.html lors du refactor v1.15
 // Contient : render(), renderParcours(), renderPatterns(), renderPatternGroupBody(),
 //            renderSessionCalendar(), renderCalendarAccordion(),
-//            renderGlobalProgress(), renderProgress(), renderGuide()
+//            renderGlobalProgress(), renderProgress(), renderJournal()
 // Dépendances (globales) : state, SETTINGS (state.js) · PATTERNS, TEMPOS (data.js)
 //                          PREVIEW, METRO (audio.js) · HCTRL (index.html)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -12,7 +12,7 @@ function render() {
   const el = document.getElementById('content');
   if (state.tab === 'patterns') el.innerHTML = renderPatterns();
   else if (state.tab === 'parcours') el.innerHTML = renderParcours();
-  else if (state.tab === 'guide') el.innerHTML = renderGuide();
+  else if (state.tab === 'journal') el.innerHTML = renderJournal();
   else el.innerHTML = renderProgress();
   metroPostRender();
   refreshAllTraceDisplays();
@@ -74,6 +74,10 @@ function getDailyRandomPatterns() {
 // ── PARCOURS TAB ──
 function renderParcours() {
   const etapeNames = { 1: 'La base', 2: "L'indépendance", 3: "L'extension" };
+  const etapeDescs = {
+    1: `<em>Premiers pas dans l'app et sur les patterns : <strong>les déliateurs</strong>. Des exercices simples, mais fondateurs. Travaille lentement, sans forcer — et prête attention dès maintenant au <strong>sens du médiator</strong> : c'est une habitude essentielle à ancrer dès le départ. Quand les doigts se meuvent librement, tout le reste devient possible.</em>`,
+    2: `<em>Les doigtés se complexifient, le contrôle s'affine. <strong>L'indépendance</strong>, c'est la capacité de chaque doigt à agir sans les autres. Ces exercices demandent des doigtés plus contraignants et plus d'attention. Travaille lentement pour ancrer chaque geste — c'est ainsi que naît la précision. Quand tu maîtrises le lent, la vitesse devient accessible.</em>`,
+  };
 
   // Collecter les étapes et groupes
   const etapes = {};
@@ -145,6 +149,9 @@ function renderParcours() {
     const sorted = Object.entries(groups).sort((a,b) => a[1].order - b[1].order);
 
     html += `<div id="etape-content-${etapeNum}" style="border-top:2px solid rgba(255,255,255,.2);padding:10px;display:${isEtapeOpen ? 'block' : 'none'}">`;
+    if (etapeDescs[etapeNum]) {
+      html += `<div style="font-size:13px;font-style:italic;line-height:1.65;color:rgba(255,255,255,.88);background:rgba(0,0,0,.12);border-radius:8px;padding:11px 14px;margin-bottom:12px">${etapeDescs[etapeNum]}</div>`;
+    }
     sorted.forEach(([key, group]) => {
       const base = group.patterns[0];
       const pct = getGroupPct(key);
@@ -1138,123 +1145,122 @@ function goToPattern(groupKey) {
 }
 
 
-// ── GUIDE TAB ──
-function renderGuide() {
-  const cardStyle = 'margin-bottom:10px';
-  const bodyStyle = 'padding:0 14px 18px';
+// ── JOURNAL TAB ──
+function renderJournal() {
+  if (!PATTERN_JOURNAL || PATTERN_JOURNAL.length === 0) {
+    return `
+    <div style="padding:20px;text-align:center;color:var(--text2)">
+      <div style="font-size:48px;margin-bottom:12px">📝</div>
+      <div style="font-size:14px;font-weight:500">Journal vide</div>
+      <div style="font-size:12px;color:var(--text3);margin-top:8px">Les patterns seront enregistrés ici au fur et à mesure</div>
+    </div>`;
+  }
 
-  // Helper pour accordéon
-  const sub = (title, content, open) =>
-    `<details${open ? ' open' : ''} style="border-top:1px solid rgba(244,238,226,.07);margin-top:10px">
-      <summary style="list-style:none;display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:9px 0;font-size:13px;font-weight:600;color:var(--text1);user-select:none">
-        ${title}
-        <svg class="sub-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="2 4 6 8 10 4"/></svg>
-      </summary>
-      <div style="padding-bottom:10px">${content}</div>
-    </details>`;
+  // Grouper par jour (date locale)
+  const byDay = {};
+  PATTERN_JOURNAL.forEach(entry => {
+    const date = new Date(entry.timestamp);
+    const dayKey = date.toLocaleDateString('fr-FR');
+    if (!byDay[dayKey]) byDay[dayKey] = [];
+    byDay[dayKey].push(entry);
+  });
 
-  return `
-  <style>
-    details[open] .sub-chevron{transform:rotate(180deg)}
-    .sub-chevron{transition:transform .18s;flex-shrink:0}
-    details summary::-webkit-details-marker{display:none}
-  </style>
+  // Trier les jours en ordre décroissant (plus récent en premier)
+  const sortedDays = Object.keys(byDay).sort((a, b) => {
+    const dateA = new Date(a.split('/').reverse().join('-'));
+    const dateB = new Date(b.split('/').reverse().join('-'));
+    return dateB - dateA;
+  });
 
-  <!-- ── NOTES DE VERSION ── -->
-  <div class="card" style="${cardStyle}">
-    <div class="card-head" style="cursor:default">
-      <div style="display:flex;align-items:center;gap:8px;color:var(--text1)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span style="font-size:14px;font-weight:700">Notes de version</span>
-      </div>
-    </div>
-    <div class="card-body open" style="${bodyStyle}">
+  let html = `<style>
+    .journal-accordion{margin-bottom:10px}
+    .journal-accordion details{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+    .journal-accordion summary{list-style:none;display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:12px 14px;background:var(--blue-light);font-weight:600;color:var(--blue);user-select:none;transition:background .15s}
+    .journal-accordion details[open] summary{background:var(--blue);color:#fff}
+    .journal-accordion summary:hover{opacity:.9}
+    .journal-accordion details[open] summary span{transform:none!important}
+    .journal-accordion .summary-chevron{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+    .journal-accordion .summary-chevron::before{content:'▼';transition:none}
+    .journal-accordion details[open] .summary-chevron::before{content:'▲'}
+    .journal-entries{padding:0}
+    .journal-entry{padding:12px 14px;border-bottom:1px solid var(--border);font-size:12px;display:grid;grid-template-columns:50px 1fr auto;gap:10px;align-items:center;line-height:1.5;cursor:pointer;transition:background .15s}
+    .journal-entries > .journal-entry:last-child{border-bottom:none}
+    .journal-entry:hover{background:rgba(15,76,92,.05)}
+    .journal-time{color:var(--text3);font-weight:600;font-size:11px}
+    .journal-pattern-info{display:flex;flex-direction:column;gap:4px}
+    .journal-pattern-name{color:var(--text);font-weight:500;cursor:pointer;text-decoration:underline;transition:color .15s}
+    .journal-pattern-name:hover{color:var(--blue)}
+    .journal-pattern-id{font-size:10px;color:var(--text3)}
+    .journal-meta{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+    .journal-meta-badge{display:inline-block;background:var(--orange-light);color:var(--orange);padding:2px 6px;border-radius:4px;font-weight:500;font-size:11px;white-space:nowrap}
+    .journal-meta-train{background:#FFF3E0;color:#E65100}
+    .journal-meta-pyramide{background:#E8F5E9;color:#2E7D32}
+    .journal-meta-shuffle{background:#F3E5F5;color:#6A1B9A}
+    .journal-day-summary{display:flex;justify-content:space-between;align-items:center;width:100%;font-size:12px}
+    .journal-day-title{font-weight:600}
+    .journal-day-stats-mini{font-size:11px;color:var(--text3);text-align:right}
+  </style>`;
 
-      ${sub('v1.14', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li><strong>Patterns B6P1a/b/c</strong> — intégrés avec système static tabMid/tabHigh (sans transformation dynamique)</li>' +
-        '<li><strong>Patterns B12P1c U/D/M</strong> — concept doublé (6×2=12 notes) pour ancrage du geste par répétition motrice. Static tabs midneck/highneck.</li>' +
-        '<li>High neck gammes corrigées — transposition +7 appliquée correctement sans double décalage</li>' +
-        '<li>Architecture regex mise à jour — support optionnel des espaces dans labels de cordes (e | vs e|)</li>' +
-        '<li>Framework B12 complète — B12P1c trois directions intégrées. B12P1a/b à venir en futurs updates.</li>' +
-        '<li>Centralisation transformation — previewStart() unique source of truth pour transformTab(). parseTabNotes() et parseTabForCursor() acceptent tabs pré-transformés.</li>' +
-        '</ul>')}
+  sortedDays.forEach((dayKey, idx) => {
+    const entries = byDay[dayKey];
+    const bpms = entries.map(e => e.bpm);
+    const avgBpm = Math.round(bpms.reduce((a, b) => a + b, 0) / bpms.length);
+    const trainCount = entries.filter(e => e.trainMode).length;
+    const pyramideCount = entries.filter(e => e.pyramideMode).length;
+    const shuffleCount = entries.filter(e => e.shuffleMode).length;
+    const isToday = new Date().toLocaleDateString('fr-FR') === dayKey;
+    const open = isToday ? 'open' : ''; // Ouvrir le jour actuel par défaut
 
-      ${sub('v1.12', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li><strong>Système de Gammes Spéciales</strong> — lecture note-par-note sur 2 mesures complètes (6 montée + 6 retour)</li>' +
-        '<li>Section 🎵 Gammes dédiée — visible seulement si filtre = « Tous » ou « Gamme », cachée dans autres filtres (A2-A6, B6, B8)</li>' +
-        '<li>UI simplifiée pour gammes — pas de direction U/D/M, grille sans colonne direction</li>' +
-        '<li>Format ASCII flexible — tablature 6 cordes avec variabilité d\'espaces supportée (EADGBe)</li>' +
-        '<li>Pourcentage de progression en temps réel — mise à jour instantanée sans fermer l\'accordéon</li>' +
-        '<li>Boutons de progression redessinés — blanc + bordure grise discrète au repos, colorés quand cochés (meilleur contraste)</li>' +
-        '<li>2 gammes incluses : Pentatonic C/Am forme 1 · Pentatonic Bb/Gm forme 2</li>' +
-        '<li>Documentation : guide GAMMES_vs_PATTERNS.md avec checklist pour ajouter nouvelles gammes</li>' +
-        '</ul>')}
+    html += `
+    <div class="journal-accordion">
+      <details ${open}>
+        <summary>
+          <div class="journal-day-summary">
+            <span class="journal-day-title">${isToday ? '📅 Aujourd\'hui' : dayKey}</span>
+            <span class="journal-day-stats-mini">${entries.length} pattern${entries.length > 1 ? 's' : ''} • Ø ${avgBpm} BPM</span>
+          </div>
+          <span class="summary-chevron"></span>
+        </summary>
+        <div class="journal-entries">`;
 
+    entries.forEach(entry => {
+      const time = new Date(entry.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
+      const mode = entry.trainMode ? '🎯 Entraînement' : '🎸 Libre';
+      const shuffle = entry.shuffleMode ? '<span class="journal-meta-badge journal-meta-shuffle">🔀 Shuffle</span>' : '';
+      const pyramide = entry.pyramideMode ? '<span class="journal-meta-badge journal-meta-pyramide">🔺 Pyramide</span>' : '';
+      const trainBadge = entry.trainMode ? `<span class="journal-meta-badge journal-meta-train">${mode}</span>` : `<span class="journal-meta-badge">${mode}</span>`;
 
-      ${sub('v1.11', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li><strong>Accordéons fluides</strong> — Challenge du jour et Étapes s\'ouvrent/ferment instantanément sans re-render</li>' +
-        '<li>Animation flèche cohérente partout — rotation 180° sur tous les accordéons (Étapes 1-3, Challenge)</li>' +
-        '<li>Sauvegarde d\'état des accordéons — le Challenge du jour se souvient d\'être ouvert ou fermé</li>' +
-        '<li>Réglage Mode Pyramide — le BPM monte jusqu\'au max, puis redescend jusqu\'au min en boucle</li>' +
-        '<li>Amélioration visuelle du dés SVG (ombre douce) et couleur orange adoucie du Challenge</li>' +
-        '<li>Readabilité : texte de journalisation augmenté (13px, opacité 0.7)</li>' +
-        '<li>Pattern A4P2d modifié — descendant 6-7-8-5 → 8-5-6-7, retour et mix ajustés</li>' +
-        '</ul>')}
+      html += `
+      <div class="journal-entry">
+        <div class="journal-time">${time}</div>
+        <div class="journal-pattern-info" onclick="goToPatternFromJournal('${entry.patId}')">
+          <div class="journal-pattern-name">${entry.patName}</div>
+          <div class="journal-pattern-id">${entry.patId}</div>
+        </div>
+        <div class="journal-meta">
+          <span style="font-weight:600;color:var(--text)">${entry.bpm} BPM</span>
+          ${trainBadge}
+          ${shuffle}
+          ${pyramide}
+        </div>
+      </div>`;
+    });
 
-      ${sub('v1.09', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li>Nouveaux patterns B8 — 2 cordes × 8 notes : B8P1bU, B8P1bD, B8P1bM</li>' +
-        '<li>Catégorie B8 ajoutée à la progression</li>' +
-        '<li>Fix : flèches de mesure affichées correctement sur les retours (cascade)</li>' +
-        '<li>Fix : lignes de retour débutant par un chiffre reconnues dans tous les parseurs</li>' +
-        '</ul>')}
+    html += `
+        </div>
+      </details>
+    </div>`;
+  });
 
-      ${sub('v1.08', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li>Pinch-to-zoom + pan sur les tablatures — zoom autour du point de contact, déplacement libre, spring-back au relâcher</li>' +
-        '<li>BPM passe en rouge quand le plateau est atteint en mode Entraînement</li>' +
-        '<li>Nouveau parcours en 3 étapes : <strong>La base</strong> · <strong>L\'indépendance</strong> · <strong>L\'extension</strong></li>' +
-        '<li>A4P1d et A6P1c reclassifiés Intermédiaire</li>' +
-        '</ul>')}
-
-      ${sub('v1.05', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li>Journalisation : date en premier dans chaque ligne</li>' +
-        '</ul>')}
-
-      ${sub('v1.04', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li>Journalisation séparée : mode Libre (tempo max) et mode Entraînement (min/max) sur deux lignes distinctes</li>' +
-        '<li>L\'incrément de BPM en entraînement ne pollue plus les données du mode libre</li>' +
-        '</ul>')}
-
-      ${sub('v1.03', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li>Fix : le toggle Mode Entraînement ouvrait le mauvais onglet</li>' +
-        '<li>Plages preset tempo corrigées : 20–60 · 60–100 · 100–200 — défauts 40 / 70 / 100</li>' +
-        '<li>Nouvel onglet Affichage dans les réglages : groupe de cordes, case départ, mode paysage</li>' +
-        '</ul>')}
-
-      ${sub('v1.02', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li>Patterns A2 reclassifiés Intermédiaire</li>' +
-        '<li>Réorganisation des onglets Réglages (Son · Tempo · Boucle)</li>' +
-        '<li>Mode Paysage déplacé en section commune au-dessus du reset</li>' +
-        '</ul>')}
-
-      ${sub('v1.01', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li>Mode Paysage dans les réglages (verrouillage orientation tablette)</li>' +
-        "<li>Wake lock : l'écran reste allumé pendant la pratique, se libère après 5 min d'inactivité</li>" +
-        '<li>Journalisation des sessions au-dessus de la tablature</li>' +
-        '<li>Refonte des boutons direction (↑ Ascendant · ↓ Descendant · ↑↓ Mix) aux couleurs du tableau de progression</li>' +
-        '<li>Suppression du chronomètre dans la section Progression</li>' +
-        '</ul>')}
-
-      ${sub('v1.00 — initial', '<ul style="font-size:12.5px;color:var(--text2);line-height:1.75;padding-left:16px;margin:0">' +
-        '<li>Dictionnaire de patterns guitar (A2, A4, A6) avec tablatures interactives</li>' +
-        '<li>Lecture audio Web Audio API (Legato · Alternate ↓ · Alternate ↑) + curseur animé</li>' +
-        '<li>Métronome, présets tempo, mode Entraînement BPM automatique</li>' +
-        '<li>Parcours guidé, tableau de progression, favoris, statistiques de session</li>' +
-        '<li>Grande vue paysage automatique, boucle étendue, son actif en mode silencieux iOS</li>' +
-        '<li>PWA installable, données sauvegardées localement</li>' +
-        '</ul>')}
-
-    </div>
+  // Bouton réinitialiser
+  html += `
+  <div style="margin-top:20px;display:flex;gap:8px">
+    <button onclick="if(confirm('Effacer tout le journal ?')) { PATTERN_JOURNAL=[]; savePatternJournal(); render(); }" style="flex:1;padding:10px;background:var(--red);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px">
+      🗑 Réinitialiser le journal
+    </button>
   </div>`;
+
+  return html;
 }
 
 

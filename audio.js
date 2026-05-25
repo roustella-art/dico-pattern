@@ -1096,6 +1096,19 @@ function checkSound(isDone) {
   } catch(e) { console.warn('pluckNote:', e); }
 }
 
+// ── Sélectionner le bon tab selon la position du manche ──
+function getTabForNeckPosition(pat) {
+  if (pat.tabMid && pat.tabHigh) {
+    return SETTINGS.neckPosition === 'high' ? pat.tabHigh : pat.tabMid;
+  }
+  return pat.tab;
+}
+
+// ── Retourner le tab sans transformation supplémentaire ──
+function getEffectiveTab(tabStr) {
+  return tabStr;
+}
+
 function previewPlay(patId) {
   if (PREVIEW.patId === patId) { previewStop(); return; }
   if (METRO.running) metroStop();
@@ -1286,6 +1299,24 @@ function previewPlay(patId) {
       }
     }
   }
+}
+
+// ─── BIP FEEDBACK ──────────────────────────────────────────────────────────────
+function playBip() {
+  try {
+    const ctx = METRO.ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    const time = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 800;
+    gain.gain.setValueAtTime(0.15, time);
+    gain.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+    osc.start(time);
+    osc.stop(time + 0.08);
+  } catch(e) { console.warn('playBip error:', e); }
 }
 
 

@@ -38,7 +38,16 @@
   }
 
   /* HEADER — dark warm teal */
-  header{background:var(--header-bg);color:var(--header-text);padding:10px 14px 4px;display:flex;flex-direction:column;flex-shrink:0}
+  header{background:var(--header-bg);color:var(--header-text);padding:10px 14px 4px;display:flex;flex-direction:column;flex-shrink:0;border-top:3px solid transparent;transition:border-color .2s}
+  @keyframes shuffle-pulse{0%,100%{border-top-color:#FF6B35;box-shadow:0 0 0 rgba(255,107,53,.3)}50%{border-top-color:#FF6B35;box-shadow:0 0 8px rgba(255,107,53,.5)}}
+  @keyframes shuffle-pulse-badge{0%,100%{opacity:.8}50%{opacity:1}}
+  header.header-shuffle{animation:shuffle-pulse 2s ease-in-out infinite}
+  header.header-shuffle h1,
+  header.header-shuffle .brand-sub,
+  header.header-shuffle svg:not(button svg),
+  header.header-shuffle #header-stats,
+  header.header-shuffle .metro-pulse,
+  header.header-shuffle #header-pulse{filter:grayscale(100%);transition:filter .2s}
   header h1{font-size:18px;font-weight:700;letter-spacing:-.3px;line-height:1.1;color:var(--header-text)}
   .brand-sub{font-size:10.5px;color:rgba(244,238,226,.55);font-weight:400;font-style:italic;margin-top:2px;letter-spacing:.1px}
 
@@ -266,6 +275,7 @@
           <div class="brand-sub">le dictionnaire de patterns</div>
         </div>
       </div>
+      <div id="header-shuffle-badge" style="display:none;align-items:center;gap:6px;padding:4px 10px;background:rgba(255,107,53,.15);border:1.5px solid #FF6B35;border-radius:8px;font-size:11px;font-weight:700;color:#FF6B35;text-transform:uppercase;letter-spacing:.3px;flex-shrink:0;animation:shuffle-pulse-badge .8s ease-in-out infinite">♩ Shuffle</div>
       <div style="flex:1"></div>
       <div id="header-stats" style="display:none;align-items:center;gap:6px;padding:0 8px;flex-shrink:0;font-size:12px;font-weight:700">
         <div style="display:flex;align-items:center;gap:3px;color:#FF6B35">
@@ -296,7 +306,7 @@
     <!-- ROW 2 : BPM + toggles + metro solo -->
     <div class="metro-row">
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-        <button id="header-train-btn" onclick="trainBtnClick()" style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;cursor:pointer;padding:4px 6px;border-radius:5px;border:1px solid transparent;background:transparent;color:rgba(244,238,226,.45);-webkit-tap-highlight-color:transparent;transition:all .15s" title="1 clic = mode entraînement · 2 clics = mode pyramide">Train.</button>
+        <button id="header-train-btn" onclick="trainBtnClick()" style="font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;cursor:pointer;padding:0 6px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:5px;border:1.5px solid rgba(77,208,225,.4);background:transparent;color:rgba(244,238,226,.45);-webkit-tap-highlight-color:transparent;transition:all .15s" title="1 clic = mode entraînement · 2 clics = mode pyramide">Train.</button>
         <div class="metro-stepper">
           <button onclick="headerBpmChange(-5)" aria-label="−5 BPM">−</button>
           <span id="header-bpm-val"
@@ -337,8 +347,8 @@
     <button onclick="showTab('progress')" id="nav-progress">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="18" y1="20" x2="18" y2="10"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span>Progression
     </button>
-    <button onclick="showTab('guide')" id="nav-guide">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7c0-1.1.9-2 2-2h6a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V7z"/><path d="M22 7c0-1.1-.9-2-2-2h-6a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V7z"/></svg></span>Guide
+    <button onclick="showTab('journal')" id="nav-journal">
+      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><polyline points="16 2 16 8 8 8 8 2"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg></span>Journal
     </button>
   </nav>
 </div>
@@ -690,6 +700,25 @@ function relativeTime(ts) {
   return new Date(ts).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 }
 
+// Navigue vers un pattern depuis le journal
+function goToPatternFromJournal(patId) {
+  const pat = PATTERNS.find(p => p.id === patId);
+  if (!pat) return;
+  state.tab = 'patterns';
+  state.filter = 'all';
+  state.diffFilter = 'all';
+  state.openCards = { [pat.cat + 'P' + pat.num]: true };
+  state.cardDir[pat.cat + 'P' + pat.num] = pat.dir || 'U';
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-patterns').classList.add('active');
+  render();
+  // Scroll vers le pattern
+  setTimeout(() => {
+    const card = document.querySelector(`[data-group="${pat.cat}P${pat.num}"]`);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
+}
+
 // Appelé au début du playback — enregistre le moment + BPM courant
 function recordPatPlay(patId) {
   if (!patId) return;
@@ -719,6 +748,9 @@ function recordPatPlay(patId) {
   PAT_TRACE[patId] = t;
   savePatTrace();
   updatePatTraceDisplay(patId);
+
+  // Ajouter une entrée au journal
+  addJournalEntry(patId, PREVIEW.bpm, SETTINGS.trainMode, SETTINGS.trainPyramide, SETTINGS.shuffleMode);
   updateTrainDisplay(patId);
 
   // Enregistrer la session dès qu'une preview est lancée (v1.12)
@@ -858,6 +890,7 @@ function headerBpmChange(delta) {
   HCTRL.bpm = Math.max(20, Math.min(200, HCTRL.bpm + delta));
   const el = document.getElementById('header-bpm-val');
   if (el) el.textContent = HCTRL.bpm;
+  playBip();
   if (METRO.running && METRO.patId === 'global') METRO.bpm = HCTRL.bpm;
   if (PREVIEW.patId) {
     PREVIEW.bpm = HCTRL.bpm;
@@ -1426,7 +1459,7 @@ function openSettings(tab) {
           border-radius:10px;font-size:11px;cursor:pointer;margin-top:10px">
         ⚙️ Reset (debug)
       </button>
-      <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px">v2.3</div>
+      <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px">v2.4</div>
     </div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
@@ -1601,9 +1634,11 @@ function toggleShuffleMode() {
 }
 
 function syncShuffleModeUI() {
-  // Indicateur header sur le bouton Clic
-  const ind = document.getElementById('shuffle-ind');
-  if (ind) ind.style.display = SETTINGS.shuffleMode ? 'inline' : 'none';
+  // Appliquer grayscale et badge au header quand shuffle est actif
+  const header = document.querySelector('header');
+  if (header) header.classList.toggle('header-shuffle', SETTINGS.shuffleMode);
+  const badge = document.getElementById('header-shuffle-badge');
+  if (badge) badge.style.display = SETTINGS.shuffleMode ? 'flex' : 'none';
 }
 
 function toggleTrainMode() {
