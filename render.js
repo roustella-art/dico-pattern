@@ -687,13 +687,17 @@ function renderPatterns() {
 }
 
 function toggleEtape(num) {
+  const wasOpen = state.etapeOpen[num];
   state.etapeOpen[num] = !state.etapeOpen[num];
   saveState();
-
+  // Si on FERME l'étape, arrêter la lecture
+  if (wasOpen && !state.etapeOpen[num]) {
+    previewStop();
+    metroStop();
+  }
   // Manipuler directement le DOM au lieu de re-rendre
   const contentDiv = document.getElementById(`etape-content-${num}`);
   const arrow = document.getElementById(`etape-arrow-${num}`);
-
   if (contentDiv) {
     contentDiv.style.display = state.etapeOpen[num] ? 'block' : 'none';
   }
@@ -701,7 +705,6 @@ function toggleEtape(num) {
     arrow.style.transform = state.etapeOpen[num] ? 'rotate(180deg)' : 'rotate(0deg)';
   }
 }
-
 function toggleParcours(key) {
   const wasOpen = state.parcoursOpen === key;
   if (wasOpen) previewStop();
@@ -1172,6 +1175,25 @@ function renderJournal() {
     return dateB - dateA;
   });
 
+  // Fonction pour compter les cases cochées (progress) pour une date donnée
+  function countProgressForDay(dayKey) {
+    // Convertir la date au format YYYY-MM-DD pour comparaison
+    const parts = dayKey.split('/');
+    const dayDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    const dayStart = new Date(dayDate.getFullYear(), dayDate.getMonth(), dayDate.getDate());
+    const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
+
+    // Compter les clés dans state.progress qui sont true
+    // (assuming progress keys incluent un timestamp ou on compte juste les vraies valeurs)
+    let count = 0;
+    Object.entries(state.progress || {}).forEach(([key, value]) => {
+      if (value === true) count++;
+    });
+    // Note: Ceci compte TOUS les progress, pas juste du jour.
+    // Une meilleure approche serait de tracker la date dans progress ou utiliser PATTERN_JOURNAL
+    return count;
+  }
+
   let html = `<style>
     .journal-accordion{margin-bottom:10px}
     .journal-accordion details{border:1px solid var(--border);border-radius:8px;overflow:hidden}
@@ -1203,13 +1225,23 @@ function renderJournal() {
 
   sortedDays.forEach((dayKey, idx) => {
     const entries = byDay[dayKey];
-    const bpms = entries.map(e => e.bpm);
-    const avgBpm = Math.round(bpms.reduce((a, b) => a + b, 0) / bpms.length);
-    const trainCount = entries.filter(e => e.trainMode).length;
-    const pyramideCount = entries.filter(e => e.pyramideMode).length;
-    const shuffleCount = entries.filter(e => e.shuffleMode).length;
     const isToday = new Date().toLocaleDateString('fr-FR') === dayKey;
     const open = isToday ? 'open' : ''; // Ouvrir le jour actuel par défaut
+
+    // Grouper les entrées par patId
+    const byPattern = {};
+    entries.forEach(entry => {
+      if (!byPattern[entry.patId]) {
+        byPattern[entry.patId] = [];
+      }
+      byPattern[entry.patId].push(entry);
+    });
+
+    // Résumé du jour
+    const uniquePatterns = Object.keys(byPattern).length;
+    const totalPlays = entries.length;
+    // Prendre le nombre de cases cochées de la DERNIÈRE relecture du jour (la plus à jour)
+    const checkedCount = entries.length > 0 ? (entries[entries.length - 1].checkedCount || 0) : 0;
 
     html += `
     <div class="journal-accordion">
@@ -1217,31 +1249,56 @@ function renderJournal() {
         <summary>
           <div class="journal-day-summary">
             <span class="journal-day-title">${isToday ? '📅 Aujourd\'hui' : dayKey}</span>
-            <span class="journal-day-stats-mini">${entries.length} pattern${entries.length > 1 ? 's' : ''} • Ø ${avgBpm} BPM</span>
+            <span class="journal-day-stats-mini">
+              ✓ ${checkedCount} case${checkedCount > 1 ? 's' : ''} •
+              ${uniquePatterns} pattern${uniquePatterns > 1 ? 's' : ''} •
+              ${totalPlays} relecture${totalPlays > 1 ? 's' : ''}
+            </span>
           </div>
           <span class="summary-chevron"></span>
         </summary>
         <div class="journal-entries">`;
 
-    entries.forEach(entry => {
-      const time = new Date(entry.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
-      const mode = entry.trainMode ? '🎯 Entraînement' : '🎸 Libre';
-      const shuffle = entry.shuffleMode ? '<span class="journal-meta-badge journal-meta-shuffle">🔀 Shuffle</span>' : '';
-      const pyramide = entry.pyramideMode ? '<span class="journal-meta-badge journal-meta-pyramide">🔺 Pyramide</span>' : '';
-      const trainBadge = entry.trainMode ? `<span class="journal-meta-badge journal-meta-train">${mode}</span>` : `<span class="journal-meta-badge">${mode}</span>`;
+    // Pour chaque pattern du jour, afficher UNE SEULE ligne condensée
+    Object.entries(byPattern).forEach(([patId, patEntries]) => {
+      // Trier par timestamp pour que la première lecture soit en premier
+      patEntries.sort((a, b) => a.timestamp - b.timestamp);
+      const firstEntry = patEntries[0];
+
+      // Tempo min/max
+      const tempos = patEntries.map(e => e.bpm);
+      const bpmMin = Math.min(...tempos);
+      const bpmMax = Math.max(...tempos);
+      const bpmText = bpmMin === bpmMax ? `${bpmMin}` : `${bpmMin}–${bpmMax}`;
+
+      // Heure de la première lecture
+      const time = new Date(firstEntry.timestamp).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
+
+      // Nombre de fois joué
+      const playCount = patEntries.length;
+
+      // Modes utilisés (deduplicated)
+      const hasTrainMode = patEntries.some(e => e.trainMode);
+      const hasPyramideMode = patEntries.some(e => e.pyramideMode);
+      const hasShuffleMode = patEntries.some(e => e.shuffleMode);
+
+      const modesText = [];
+      if (hasTrainMode) modesText.push('🎯');
+      if (hasPyramideMode) modesText.push('🔺');
+      if (hasShuffleMode) modesText.push('🔀');
+      const modesBadge = modesText.length > 0 ? `<span style="color:var(--text2);font-size:10px">${modesText.join(' ')}</span>` : '';
 
       html += `
       <div class="journal-entry">
         <div class="journal-time">${time}</div>
-        <div class="journal-pattern-info" onclick="goToPatternFromJournal('${entry.patId}')">
-          <div class="journal-pattern-name">${entry.patName}</div>
-          <div class="journal-pattern-id">${entry.patId}</div>
+        <div class="journal-pattern-info" onclick="goToPatternFromJournal('${patId}')">
+          <div class="journal-pattern-name">${firstEntry.patName}</div>
+          <div class="journal-pattern-id">${patId}</div>
         </div>
         <div class="journal-meta">
-          <span style="font-weight:600;color:var(--text)">${entry.bpm} BPM</span>
-          ${trainBadge}
-          ${shuffle}
-          ${pyramide}
+          <span style="font-weight:600;color:var(--orange)">${bpmText} BPM</span>
+          <span style="font-size:11px;color:var(--text3)">(${playCount}×)</span>
+          ${modesBadge}
         </div>
       </div>`;
     });

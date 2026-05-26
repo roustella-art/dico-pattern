@@ -1223,15 +1223,15 @@ E|--------------------------|
   {
     id:"A2P1aU", cat:"A2", dir:"U", num:'1a', notes:2, difficulty:"Intermédiaire", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
     name:"Demi-ton", bpm:80, bpmTarget:160,
-    tab:`e|--------------6-7-|
-B|----------6-7-----|
+    tab:`e|--------------5-6-|
+B|----------5-6-----|
 G|------5-6---------|
 D|--5-6-------------|
 A|------------------|
 E|------------------|
 ↩ retour décalé +1
---7-8-------------|||
-------7-8---------|||
+--6-7-------------|||
+------6-7---------|||
 ----------6-7----o|||
 --------------6-7o|||
 ------------------|||
@@ -1243,15 +1243,15 @@ E|------------------|
   {
     id:"A2P1aD", cat:"A2", dir:"D", num:'1a', notes:2, difficulty:"Intermédiaire", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
     name:"Demi-ton", bpm:80, bpmTarget:160,
-    tab:`e|--------------7-6-|
-B|----------7-6-----|
+    tab:`e|--------------6-5-|
+B|----------6-5-----|
 G|------6-5---------|
 D|--6-5-------------|
 A|------------------|
 E|------------------|
 ↩ retour +1 case
---8-7-------------|||
-------8-7---------|||
+--7-6-------------|||
+------7-6---------|||
 ----------7-6----o|||
 --------------7-6o|||
 ------------------|||
@@ -1263,15 +1263,15 @@ E|------------------|
   {
     id:"A2P1aM", cat:"A2", dir:"M", num:'1a', notes:2, difficulty:"Intermédiaire", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
     name:"Demi-ton", bpm:80, bpmTarget:147,
-    tab:`e|--------------6-7-|
-B|----------6-7-----|
+    tab:`e|--------------5-6-|
+B|----------5-6-----|
 G|------5-6---------|
 D|--5-6-------------|
 A|------------------|
 E|------------------|
 ↩ retour descendant +1
---8-7-------------|||
-------8-7---------|||
+--7-6-------------|||
+------7-6---------|||
 ----------7-6----o|||
 --------------7-6o|||
 ------------------|||
@@ -1805,14 +1805,556 @@ D|--5-6-8-6-8-------------------------------|
 A|------------------------------------------|
 E|------------------------------------------|
 ↩ retour descendant +1
---9-7-9-7-6-------------------------------|||
-------------9-7-9-7-6---------------------|||
-----------------------9-7-9-7-6----------o|||
---------------------------------9-7-9-7-6o|||
+--9-7-6-7-6-------------------------------|||
+------------9-7-6-7-6---------------------|||
+----------------------9-7-6-7-6----------o|||
+--------------------------------9-7-6-7-6o|||
 ------------------------------------------|||
 ------------------------------------------|||`,
     desc:"Groupe de 5 ascendant puis retour oscillant décalé. Le run complet sur 4 cordes crée un déplacement rythmique profond.",
     tip:"Maîtrise bien U et D avant de mixer. Le décalage du groupe de 5 peut perturber la pulsation — c\'est précisément l\'exercice.",
+  },
+
+  {
+    id:"A5P1bU", cat:"A5", dir:"U", num:'1b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-3-4-3-4)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------5-7-8-7-8-|
+B|----------------------5-7-8-7-8-----------|
+G|------------5-7-8-7-8---------------------|
+D|--5-7-8-7-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--6-8-9-8-9-------------------------------|||
+------------6-8-9-8-9---------------------|||
+----------------------6-8-9-8-9----------o|||
+--------------------------------6-8-9-8-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Groupe de 5 avec écart (1-3-4-3-4). Nouvelle combinaison de doigts qui élargit l\'indépendance.",
+    tip:"Compare avec A5P1a — la différence de doigté change subtilement le ressenti rhythmique.",
+  },
+
+  {
+    id:"A5P1bD", cat:"A5", dir:"D", num:'1b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-3-4-3-4)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------8-7-5-7-5-|
+B|----------------------8-7-5-7-5-----------|
+G|------------8-7-5-7-5---------------------|
+D|--8-7-5-7-5-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour ascendant +1
+--9-8-6-8-6-------------------------------|||
+------------9-8-6-8-6---------------------|||
+----------------------9-8-6-8-6----------o|||
+--------------------------------9-8-6-8-6o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Version descendante du groupe (1-3-4-3-4). Débute du sommet.",
+    tip:"Le doigté inversé peut surprendre — prends ton temps pour bien sentir chaque transition.",
+  },
+
+  {
+    id:"A5P1bM", cat:"A5", dir:"M", num:'1b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-3-4-3-4)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------5-7-8-7-8-|
+B|----------------------5-7-8-7-8-----------|
+G|------------5-7-8-7-8---------------------|
+D|--5-7-8-7-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--9-8-6-8-6-------------------------------|||
+------------9-8-6-8-6---------------------|||
+----------------------9-8-6-8-6----------o|||
+--------------------------------9-8-6-8-6o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Montée ascendante avec retour descendant. Mélange les deux versants du pattern.",
+    tip:"Sens bien la transition entre montée et retour — c\'est où les erreurs de rythme apparaissent.",
+  },
+
+  {
+    id:"A5P1cU", cat:"A5", dir:"U", num:'1c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    name:"Groupe de 5 (1-3-5-3-5)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------4-6-8-6-8-|
+B|----------------------4-6-8-6-8-----------|
+G|------------4-6-8-6-8---------------------|
+D|--4-6-8-6-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--5-7-9-7-9-------------------------------|||
+------------5-7-9-7-9---------------------|||
+----------------------5-7-9-7-9----------o|||
+--------------------------------5-7-9-7-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Groupe de 5 avec écart (1-3-5-3-5). Intervalle moyen — transition vers l\'extension.",
+    tip:"L\'auriculaire commence à travailler plus. Assure-toi que chaque note est claire avant d\'accélérer.",
+  },
+
+  {
+    id:"A5P1cD", cat:"A5", dir:"D", num:'1c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    name:"Groupe de 5 (1-3-5-3-5)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------8-6-4-6-4-|
+B|----------------------8-6-4-6-4-----------|
+G|------------8-6-4-6-4---------------------|
+D|--8-6-4-6-4-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour ascendant +1
+--9-7-5-7-5-------------------------------|||
+------------9-7-5-7-5---------------------|||
+----------------------9-7-5-7-5----------o|||
+--------------------------------9-7-5-7-5o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Version descendante avec écart (1-3-5-3-5). Débute du sommet aigu.",
+    tip:"Compare avec la montée — sens bien comment le doigté change avec la direction.",
+  },
+
+  {
+    id:"A5P1cM", cat:"A5", dir:"M", num:'1c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    name:"Groupe de 5 (1-3-5-3-5)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------4-6-8-6-8-|
+B|----------------------4-6-8-6-8-----------|
+G|------------4-6-8-6-8---------------------|
+D|--4-6-8-6-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--9-7-5-7-5-------------------------------|||
+------------9-7-5-7-5---------------------|||
+----------------------9-7-5-7-5----------o|||
+--------------------------------9-7-5-7-5o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Montée ascendante avec retour descendant. L\'écart (1-3-5-3-5) en deux sens.",
+    tip:"C\'est la progression logique après A5P1a et A5P1b. Prends ton temps pour bien sentir chaque transition.",
+  },
+
+  {
+    id:"A5P1dU", cat:"A5", dir:"U", num:'1d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-4-5-4-5)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------4-7-8-7-8-|
+B|----------------------4-7-8-7-8-----------|
+G|------------4-7-8-7-8---------------------|
+D|--4-7-8-7-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--5-8-9-8-9-------------------------------|||
+------------5-8-9-8-9---------------------|||
+----------------------5-8-9-8-9----------o|||
+--------------------------------5-8-9-8-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Groupe de 5 avec grand écart (1-4-5-4-5). L\'intervalle le plus large — extension maximale.",
+    tip:"C\'est l\'exercice d\'extension le plus exigeant. L\'annulaire et l\'auriculaire doivent vraiment s\'étirer. Patience.",
+  },
+
+  {
+    id:"A5P1dD", cat:"A5", dir:"D", num:'1d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-4-5-4-5)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------8-7-4-7-4-|
+B|----------------------8-7-4-7-4-----------|
+G|------------8-7-4-7-4---------------------|
+D|--8-7-4-7-4-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour ascendant +1
+--9-8-5-8-5-------------------------------|||
+------------9-8-5-8-5---------------------|||
+----------------------9-8-5-8-5----------o|||
+--------------------------------9-8-5-8-5o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Version descendante du grand écart (1-4-5-4-5). Débute du sommet aigu.",
+    tip:"En descente, l\'extension demande une précision encore plus grande. Chaque note doit être propre.",
+  },
+
+  {
+    id:"A5P1dM", cat:"A5", dir:"M", num:'1d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-4-5-4-5)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------4-7-8-7-8-|
+B|----------------------4-7-8-7-8-----------|
+G|------------4-7-8-7-8---------------------|
+D|--4-7-8-7-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--9-8-5-8-5-------------------------------|||
+------------9-8-5-8-5---------------------|||
+----------------------9-8-5-8-5----------o|||
+--------------------------------9-8-5-8-5o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Montée ascendante avec retour descendant. Le grand écart complet en deux sens.",
+    tip:"C\'est le sommet de la série A5 — extension maximale, précision maximale. Vise la limpidité.",
+  },
+
+  {
+    id:"A5P1eU", cat:"A5", dir:"U", num:'1e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-2-3-2-3)", bpm:55, bpmTarget:100,
+    tab:`e|--------------------------------5-6-7-6-7-|
+B|----------------------5-6-7-6-7-----------|
+G|------------5-6-7-6-7---------------------|
+D|--5-6-7-6-7-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--6-7-8-7-8-------------------------------|||
+------------6-7-8-7-8---------------------|||
+----------------------6-7-8-7-8----------o|||
+--------------------------------6-7-8-7-8o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Groupe de 5 avec écart semitone (1-4-5-4-5). Version accessible — un bon point d\'entrée.",
+    tip:"C\'est plus accessible que A5P1d mais demande quand même de l\'extension. Travaille à ton rythme.",
+  },
+
+  {
+    id:"A5P1eD", cat:"A5", dir:"D", num:'1e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-4-5-4-5)", bpm:55, bpmTarget:100,
+    tab:`e|--------------------------------7-6-5-6-5-|
+B|----------------------7-6-5-6-5-----------|
+G|------------7-6-5-6-5---------------------|
+D|--7-6-5-6-5-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour ascendant +1
+--8-7-6-7-6-------------------------------|||
+------------8-7-6-7-6---------------------|||
+----------------------8-7-6-7-6----------o|||
+--------------------------------8-7-6-7-6o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Version descendante avec écart (1-4-5-4-5). Débute du sommet.",
+    tip:"La descente est souvent plus facile que la montée pour l\'extension. Utilise ça à ton avantage.",
+  },
+
+  {
+    id:"A5P1eM", cat:"A5", dir:"M", num:'1e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-2-3-2-3)", bpm:55, bpmTarget:100,
+    tab:`e|--------------------------------5-6-7-6-7-|
+B|----------------------5-6-7-6-7-----------|
+G|------------5-6-7-6-7---------------------|
+D|--5-6-7-6-7-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--8-7-6-7-6-------------------------------|||
+------------8-7-6-7-6---------------------|||
+----------------------8-7-6-7-6----------o|||
+--------------------------------8-7-6-7-6o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Montée ascendante avec retour descendant. L\'écart accessible en deux sens.",
+    tip:"Un bon intermédiaire entre A5P1c et A5P1d. Profites-en pour gagner en confiance.",
+  },
+
+  // ── A5P2 — GROUPE DE 5 (MOTIF ALLER-RETOUR) ──────────────────────────────
+
+  {
+    id:"A5P2aU", cat:"A5", dir:"U", num:'2a', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    name:"Groupe de 5 (1-2-4-2-1)", bpm:55, bpmTarget:100,
+    tab:`e|--------------------------------5-6-8-6-5-|
+B|----------------------5-6-8-6-5-----------|
+G|------------5-6-8-6-5---------------------|
+D|--5-6-8-6-5-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour décalé +1
+--6-7-9-7-6-------------------------------|||
+------------6-7-9-7-6---------------------|||
+----------------------6-7-9-7-6----------o|||
+--------------------------------6-7-9-7-6o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Cellule aller-retour de 5 notes (1-2-4-2-1) : crée un motif symétrique qui redescend au point de départ. Variation mélodique du groupe de 5.",
+    tip:"Contrairement à A5P1a, ce motif revient au même endroit — c'est l'aller-retour mélodique. Sens la symétrie.",
+  },
+
+  {
+    id:"A5P2aD", cat:"A5", dir:"D", num:'2a', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    name:"Groupe de 5 (1-2-4-2-1)", bpm:55, bpmTarget:100,
+    tab:`e|--------------------------------8-6-5-6-8-|
+B|----------------------8-6-5-6-8-----------|
+G|------------8-6-5-6-8---------------------|
+D|--8-6-5-6-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour +1 case
+--9-7-6-7-9-------------------------------|||
+------------9-7-6-7-9---------------------|||
+----------------------9-7-6-7-9----------o|||
+--------------------------------9-7-6-7-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Cellule descendante aller-retour (1-2-4-2-1) : débute du sommet, descend jusqu'au point bas puis remonte au même niveau. Version descendante symétrique.",
+    tip:"Le motif est vraiment symétrique — tu descends et remontes au même point. C'est l'aller-retour mélodique parfait.",
+  },
+
+  {
+    id:"A5P2aM", cat:"A5", dir:"M", num:'2a', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    name:"Groupe de 5 (1-2-4-2-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------5-6-8-6-5-|
+B|----------------------5-6-8-6-5-----------|
+G|------------5-6-8-6-5---------------------|
+D|--5-6-8-6-5-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--9-7-6-7-9-------------------------------|||
+------------9-7-6-7-9---------------------|||
+----------------------9-7-6-7-9----------o|||
+--------------------------------9-7-6-7-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Groupe aller-retour ascendant puis retour descendant décalé. Le motif symétrique en deux directions.",
+    tip:"Maîtrise bien U et D avant de mixer. Le feeling de symétrie du motif doit rester transparent à chaque répétition.",
+  },
+
+  {
+    id:"A5P2bU", cat:"A5", dir:"U", num:'2b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-3-4-3-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------5-7-8-7-5-|
+B|----------------------5-7-8-7-5-----------|
+G|------------5-7-8-7-5---------------------|
+D|--5-7-8-7-5-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--6-8-9-8-6-------------------------------|||
+------------6-8-9-8-6---------------------|||
+----------------------6-8-9-8-6----------o|||
+--------------------------------6-8-9-8-6o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Groupe aller-retour avec écart (1-3-4-3-1). Doigtés élargis, motif reste symétrique.",
+    tip:"Compare avec A5P2a — l'écart change le ressenti mélodique mais conserve la structure aller-retour.",
+  },
+
+  {
+    id:"A5P2bD", cat:"A5", dir:"D", num:'2b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-3-4-3-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------8-7-5-7-8-|
+B|----------------------8-7-5-7-8-----------|
+G|------------8-7-5-7-8---------------------|
+D|--8-7-5-7-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour ascendant +1
+--9-8-6-8-9-------------------------------|||
+------------9-8-6-8-9---------------------|||
+----------------------9-8-6-8-9----------o|||
+--------------------------------9-8-6-8-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Version descendante avec écart (1-3-4-3-1). Débute du sommet avec doigts écartés et revient au point de départ.",
+    tip:"L'écart s'agrandit en descente — la symétrie du retour crée une tension intéressante. Travaille lentement.",
+  },
+
+  {
+    id:"A5P2bM", cat:"A5", dir:"M", num:'2b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-3-4-3-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------5-7-8-7-5-|
+B|----------------------5-7-8-7-5-----------|
+G|------------5-7-8-7-5---------------------|
+D|--5-7-8-7-5-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--9-8-6-8-9-------------------------------|||
+------------9-8-6-8-9---------------------|||
+----------------------9-8-6-8-9----------o|||
+--------------------------------9-8-6-8-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Montée ascendante avec retour descendant. L'écart en deux sens.",
+    tip:"Sens bien la transition de direction — c'est où l'équilibre du motif symétrique s'évalue.",
+  },
+
+  {
+    id:"A5P2cU", cat:"A5", dir:"U", num:'2c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    name:"Groupe de 5 (1-3-5-3-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------4-6-8-6-4-|
+B|----------------------4-6-8-6-4-----------|
+G|------------4-6-8-6-4---------------------|
+D|--4-6-8-6-4-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--5-7-9-7-5-------------------------------|||
+------------5-7-9-7-5---------------------|||
+----------------------5-7-9-7-5----------o|||
+--------------------------------5-7-9-7-5o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Groupe aller-retour avec écart intermédiaire (1-3-5-3-1). Progression vers l'extension.",
+    tip:"L'auriculaire commence à s'étirer. Assure-toi que la symétrie du motif reste audible malgré l'écart.",
+  },
+
+  {
+    id:"A5P2cD", cat:"A5", dir:"D", num:'2c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    name:"Groupe de 5 (1-3-5-3-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------8-6-4-6-8-|
+B|----------------------8-6-4-6-8-----------|
+G|------------8-6-4-6-8---------------------|
+D|--8-6-4-6-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour ascendant +1
+--9-7-5-7-9-------------------------------|||
+------------9-7-5-7-9---------------------|||
+----------------------9-7-5-7-9----------o|||
+--------------------------------9-7-5-7-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Version descendante avec écart intermédiaire (1-3-5-3-1). Débute aigu et revient au point de départ.",
+    tip:"Sens bien comment l'extension affecte la fluidité en descente. La symétrie du retour est clé.",
+  },
+
+  {
+    id:"A5P2cM", cat:"A5", dir:"M", num:'2c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    name:"Groupe de 5 (1-3-5-3-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------4-6-8-6-4-|
+B|----------------------4-6-8-6-4-----------|
+G|------------4-6-8-6-4---------------------|
+D|--4-6-8-6-4-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--9-7-5-7-9-------------------------------|||
+------------9-7-5-7-9---------------------|||
+----------------------9-7-5-7-9----------o|||
+--------------------------------9-7-5-7-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Montée ascendante avec retour descendant. L'écart intermédiaire complet.",
+    tip:"C'est la progression logique de la série — écarts croissants pour développer progressivement l'extension.",
+  },
+
+  {
+    id:"A5P2dU", cat:"A5", dir:"U", num:'2d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-4-5-4-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------4-7-8-7-4-|
+B|----------------------4-7-8-7-4-----------|
+G|------------4-7-8-7-4---------------------|
+D|--4-7-8-7-4-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--5-8-9-8-5-------------------------------|||
+------------5-8-9-8-5---------------------|||
+----------------------5-8-9-8-5----------o|||
+--------------------------------5-8-9-8-5o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Groupe aller-retour avec grand écart (1-4-5-4-1). Extension maximale et symétrie mélodique combinées.",
+    tip:"C'est l'exercice d'extension ultime — exigeant physiquement et mélodiquement. Vise la limpidité.",
+  },
+
+  {
+    id:"A5P2dD", cat:"A5", dir:"D", num:'2d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-4-5-4-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------8-7-4-7-8-|
+B|----------------------8-7-4-7-8-----------|
+G|------------8-7-4-7-8---------------------|
+D|--8-7-4-7-8-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour ascendant +1
+--9-8-5-8-9-------------------------------|||
+------------9-8-5-8-9---------------------|||
+----------------------9-8-5-8-9----------o|||
+--------------------------------9-8-5-8-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Version descendante du grand écart (1-4-5-4-1). Débute aigu avec extension maximale et revient au point de départ.",
+    tip:"En descente, l'extension demande une précision maximale. La symétrie du retour crée un défi physique unique.",
+  },
+
+  {
+    id:"A5P2dM", cat:"A5", dir:"M", num:'2d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-4-5-4-1)", bpm:50, bpmTarget:90,
+    tab:`e|--------------------------------4-7-8-7-4-|
+B|----------------------4-7-8-7-4-----------|
+G|------------4-7-8-7-4---------------------|
+D|--4-7-8-7-4-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--9-8-5-8-9-------------------------------|||
+------------9-8-5-8-9---------------------|||
+----------------------9-8-5-8-9----------o|||
+--------------------------------9-8-5-8-9o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Montée ascendante avec retour descendant. Le grand écart complet aller-retour en deux sens.",
+    tip:"Sommet de la série A5P2 — extension et symétrie mélodique maximales. Vise la transparence.",
+  },
+
+  {
+    id:"A5P2eU", cat:"A5", dir:"U", num:'2e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-2-3-2-1)", bpm:55, bpmTarget:100,
+    tab:`e|--------------------------------5-6-7-6-5-|
+B|----------------------5-6-7-6-5-----------|
+G|------------5-6-7-6-5---------------------|
+D|--5-6-7-6-5-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--6-7-8-7-6-------------------------------|||
+------------6-7-8-7-6---------------------|||
+----------------------6-7-8-7-6----------o|||
+--------------------------------6-7-8-7-6o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Groupe aller-retour compact (1-2-3-2-1). Version accessible avec doigts proches — bon point d'entrée.",
+    tip:"Doigts rapprochés = motif plus serré mélodiquement. Profites-en pour développer la précision avant d'écarter.",
+  },
+
+  {
+    id:"A5P2eD", cat:"A5", dir:"D", num:'2e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-2-3-2-1)", bpm:55, bpmTarget:100,
+    tab:`e|--------------------------------7-6-5-6-7-|
+B|----------------------7-6-5-6-7-----------|
+G|------------7-6-5-6-7---------------------|
+D|--7-6-5-6-7-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour ascendant +1
+--8-7-6-7-8-------------------------------|||
+------------8-7-6-7-8---------------------|||
+----------------------8-7-6-7-8----------o|||
+--------------------------------8-7-6-7-8o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Version descendante avec doigts proches (1-2-3-2-1). Débute du sommet compact et revient au point de départ.",
+    tip:"En descente, les doigts proches facilitent la fluidité et la symétrie. C'est le bon point de départ.",
+  },
+
+  {
+    id:"A5P2eM", cat:"A5", dir:"M", num:'2e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    name:"Groupe de 5 (1-2-3-2-1)", bpm:55, bpmTarget:100,
+    tab:`e|--------------------------------5-6-7-6-5-|
+B|----------------------5-6-7-6-5-----------|
+G|------------5-6-7-6-5---------------------|
+D|--5-6-7-6-5-------------------------------|
+A|------------------------------------------|
+E|------------------------------------------|
+↩ retour descendant +1
+--8-7-6-7-8-------------------------------|||
+------------8-7-6-7-8---------------------|||
+----------------------8-7-6-7-8----------o|||
+--------------------------------8-7-6-7-8o|||
+------------------------------------------|||
+------------------------------------------|||`,
+    desc:"Montée ascendante avec retour descendant. L'aller-retour compact complet.",
+    tip:"C'est le bon point de départ pour A5P2. Maîtrise cela avant de progresser vers les écarts plus larges.",
   },
 
   // ── B6 — MULTI-CORDES ───────────────────────────────────────────────────────
@@ -2337,31 +2879,11 @@ E|----------------------------------|
     tip:"Combine montée symétrique et retour miroir. Change la sensation de pulsation à chaque repetition.",
   },
 
-  // ── A6P?b — SEXTUPLE DESCENDANT ────────────────────────────────────────────────
+  // ── A6P?a — SEXTUPLE STRATOS ──────────────────────────────────────────────
 
   {
-    id:"A6P?bU", cat:"A6", dir:"U", num:'?b', notes:6, difficulty:"Intermédiaire", fingerings:[],
-    name:"Sextuple 8-7-5-4-5-7", bpm:60, bpmTarget:120,
-    tab:`e|--------------------------------------8-7-5-4-5-7-|
-B|--------------------------8-7-5-4-5-7-------------|
-G|--------------8-7-5-4-5-7-------------------------|
-D|--8-7-5-4-5-7-------------------------------------|
-A|--------------------------------------------------|
-E|--------------------------------------------------|
-↩ retour décalé +1
---9-8-6-5-6-8-------------------------------------|||
---------------9-8-6-5-6-8-------------------------|||
---------------------------9-8-6-5-6-8------------o|||
---------------------------------------9-8-6-5-6-8o|||
---------------------------------------------------|||
---------------------------------------------------|||`,
-    desc:"Cellule descendante-remontante 8-7-5-4-5-7 : descend jusqu'au point bas (4) puis remonte. Motif en V sur 6 notes.",
-    tip:"Les sauts de 2 demi-tons créent une asymétrie naturelle. Écoute le V mélodique se dessiner.",
-  },
-
-  {
-    id:"A6P?bD", cat:"A6", dir:"D", num:'?b', notes:6, difficulty:"Intermédiaire", fingerings:[],
-    name:"Sextuple 8-7-5-4-5-7", bpm:60, bpmTarget:120,
+    id:"A6P?aU", cat:"A6", dir:"U", num:'?a', notes:6, difficulty:"Intermédiaire", fingerings:[],
+    name:"Sextuple Stratos", bpm:60, bpmTarget:120,
     tab:`e|--------------------------------------5-4-5-7-8-7-|
 B|--------------------------5-4-5-7-8-7-------------|
 G|--------------5-4-5-7-8-7-------------------------|
@@ -2375,28 +2897,48 @@ E|--------------------------------------------------|
 --------------------------------------6-5-6-8-9-8o|||
 --------------------------------------------------|||
 --------------------------------------------------|||`,
-    desc:"Version descendante du sextuple : commence au bas (5-4), remonte jusqu'en haut (8) puis redescend (7). Motif en V inversé.",
-    tip:"Le V inversé part du grave. La symétrie avec la version U est subtile mais audible.",
+    desc:"Cellule en V remontant (5-4 → 8-7) : commence au bas, descend jusqu'au creux (4) puis remonte. Motif stratosphérique sur 6 notes.",
+    tip:"Le V inversé part du grave et monte vers l'aigu. C'est le mouvement ascendant stratosphérique — sens la trajectoire.",
   },
 
   {
-    id:"A6P?bM", cat:"A6", dir:"M", num:'?b', notes:6, difficulty:"Intermédiaire", fingerings:[],
-    name:"Sextuple 8-7-5-4-5-7", bpm:55, bpmTarget:110,
+    id:"A6P?aD", cat:"A6", dir:"D", num:'?a', notes:6, difficulty:"Intermédiaire", fingerings:[],
+    name:"Sextuple Stratos", bpm:60, bpmTarget:120,
     tab:`e|--------------------------------------8-7-5-4-5-7-|
 B|--------------------------8-7-5-4-5-7-------------|
 G|--------------8-7-5-4-5-7-------------------------|
 D|--8-7-5-4-5-7-------------------------------------|
 A|--------------------------------------------------|
 E|--------------------------------------------------|
-↩ retour inverti +1
---6-5-6-8-9-8-------------------------------------|||
---------------6-5-6-8-9-8-------------------------|||
---------------------------6-5-6-8-9-8------------o|||
---------------------------------------6-5-6-8-9-8o|||
+↩ retour décalé +1
+--9-8-6-5-6-8-------------------------------------|||
+--------------9-8-6-5-6-8-------------------------|||
+--------------------------9-8-6-5-6-8------------o|||
+--------------------------------------9-8-6-5-6-8o|||
 --------------------------------------------------|||
 --------------------------------------------------|||`,
-    desc:"Montée en V (8-7-5-4-5-7) puis retour non-inversé décalé. Le contour change à chaque répétition.",
-    tip:"La montée et le retour ont des directions opposées. Écoute comment la tension se déplace.",
+    desc:"Cellule descendante-remontante (8-7 → 4 → 5-7) : descend jusqu'au creux (4) puis remonte. Motif en V descendant stratosphérique.",
+    tip:"Les sauts de 2 demi-tons créent une asymétrie naturelle. Écoute le V mélodique descendre puis remonter.",
+  },
+
+  {
+    id:"A6P?aM", cat:"A6", dir:"M", num:'?a', notes:6, difficulty:"Intermédiaire", fingerings:[],
+    name:"Sextuple Stratos", bpm:55, bpmTarget:110,
+    tab:`e|--------------------------------------5-4-5-7-8-7-|
+B|--------------------------5-4-5-7-8-7-------------|
+G|--------------5-4-5-7-8-7-------------------------|
+D|--5-4-5-7-8-7-------------------------------------|
+A|--------------------------------------------------|
+E|--------------------------------------------------|
+↩ retour descendant +1
+--9-8-6-5-6-8-------------------------------------|||
+--------------9-8-6-5-6-8-------------------------|||
+--------------------------9-8-6-5-6-8------------o|||
+--------------------------------------9-8-6-5-6-8o|||
+--------------------------------------------------|||
+--------------------------------------------------|||`,
+    desc:"Montée remontante (V ascendant) puis retour descendant décalé. Le motif Stratos complet en deux directions.",
+    tip:"Sens bien la transition entre la montée et la descente — c'est où le motif stratosphérique révèle sa structure.",
   },
 
   // ── A8P?b — OCTONAIRE ALTERNÉ ──────────────────────────────────────────────────
@@ -2595,17 +3137,17 @@ const MODE_LABELS = {U:"Ascendant",D:"Descendant",M:"Mix"};
 const INTERPS = ["Down","Up","Leg"];
 const INTERP_LABELS = {Up:"Pick ↑",Down:"Pick ↓",Leg:"Legato"};
 const TEMPOS = [
-  { key:'lent',  label:'Tempo', range:'20–60',   rangeMin:20, rangeMax:60,  color:'#4a9e6b',
+  { key:'lent',  label:'Tempo', range:'20–80',   rangeMin:20, rangeMax:80,  color:'#4a9e6b',
     icon:`<svg width="22" height="10" viewBox="0 0 22 10" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="4"  cy="5" r="2.8" fill="#4a9e6b"/>
       <circle cx="11" cy="5" r="2.8" fill="#4a9e6b"/>
       <circle cx="18" cy="5" r="2.8" fill="#4a9e6b"/>
     </svg>`},
-  { key:'cool',  label:'Tempo', range:'60–100',  rangeMin:60, rangeMax:100, color:'#c07830',
+  { key:'cool',  label:'Tempo', range:'80–110',  rangeMin:80, rangeMax:110, color:'#c07830',
     icon:`<svg width="22" height="12" viewBox="0 0 22 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M1 6 Q3.5 1.5 6 6 Q8.5 10.5 11 6 Q13.5 1.5 16 6 Q18.5 10.5 21 7" stroke="#c07830" stroke-width="2" stroke-linecap="round" fill="none"/>
     </svg>`},
-  { key:'chaud', label:'Tempo', range:'100–200', rangeMin:100, rangeMax:200, color:'#a03030',
+  { key:'chaud', label:'Tempo', range:'110–200', rangeMin:110, rangeMax:200, color:'#a03030',
     icon:`<svg width="22" height="12" viewBox="0 0 22 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M1 10 L4 2 L7 10 L10 2 L13 10 L16 2 L19 10 L21 6" stroke="#a03030" stroke-width="2" stroke-linejoin="miter" stroke-linecap="square" fill="none"/>
     </svg>`},

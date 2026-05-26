@@ -137,11 +137,37 @@ Premier test du script `deploy.sh` — commit et push vers GitHub Pages en une c
 
 ---
 
+## Session 11 — Le Journal et les Guides d'Étapes
+
+_25 mai 2026_
+
+**Le Journal de pratique :**
+Remplace l'onglet "Guide" qui n'affichait que des notes de version — inutile pour l'utilisateur. Le nouveau **Journal enregistre chaque lecture de pattern** automatiquement : date, heure exacte, nom du pattern, BPM utilisé, mode (Libre/Entraînement), mode Shuffle s'il est activé, mode Pyramide s'il est activé.
+
+Structure : groupage par jour en **accordéons fermés par défaut**, sauf le jour courant qui s'ouvre automatiquement. Chaque jour affiche un résumé compact : nombre de patterns lus, tempo moyen, nombre d'entraînements. Le texte reste dans le bon sens — fixe pour un CSS global qui retournait les accordéons.
+
+**Patterns cliquables :** Un clic sur le nom d'un pattern ouvre directement cet pattern dans l'onglet Patterns. Utile pour retravailler rapidement un pattern noté dans le journal.
+
+Persistance : localStorage `dicoPatternJournal`, structure simple `[{timestamp, patId, patName, bpm, trainMode, pyramideMode, shuffleMode}]`.
+
+**Descriptions d'étapes :**
+Chaque étape du Parcours a maintenant une **description d'intro en italique** qui s'affiche quand on ouvre l'accordéon, juste avant les patterns. C'est un mini-guide pédagogique qui prépare l'élève à ce qu'il va travailler.
+
+- **Étape 1 "La base"** : Les déliateurs, familiarisation avec l'app, attention au sens du médiator.
+- **Étape 2 "L'indépendance"** : Doigtés plus complexes, contrôle qui s'affine, capacité de chaque doigt à agir seul.
+- **Étape 3 "L'extension"** : À définir.
+
+Implémentation : objet `etapeDescs` dans `render.js`, rendu comme un bloc semi-transparent foncé avant les patterns.
+
+**Bug corrigé :** Un CSS global (`details[open] summary span:last-child{transform:rotate(180deg)}`) retournait aussi le texte des accordéons du journal. Solution : surcharge CSS ciblée `transform:none!important` pour les spans du journal.
+
+---
+
 ## Ce qui vient
 
+- Définir la description de l'Étape 3 "L'extension"
 - Analyser les retours élèves et ajuster
 - Ajouter de nouveaux patterns à l'app principale
-- Définir l'Étape 2 du Parcours
 - Construire les catégories B (2 cordes) et C (3 cordes)
 - Trancher sur le modèle économique si les retours sont bons
 - Et un jour : le livre 📖

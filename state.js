@@ -35,6 +35,7 @@ const SETTINGS = {
   stringGroup: 'DGBE',     // 'DGBE' | 'ADGB' | 'EADG'
   previewSound: 'doux',    // 'doux' | 'piano' | 'guitare' | 'auto'
   neckPosition: 'mid',     // 'mid' (case 5, offset 0) | 'high' (case 12, offset 7)
+  showNeckBtn: true,       // afficher/masquer le bouton mid/high dans le header
   clickSubdiv: 4,          // 2 | 3 | 4 | 6 — subdivision du clic
   navHidden: false,        // true = nav masquée (portrait + paysage), togglé par long press logo
   loopExt: 0,              // 0 = base · −1 = retour même niveau · +N = extension pyramide
@@ -56,6 +57,7 @@ function loadSettings() {
     if (s.stringGroup && STRING_SHIFTS[s.stringGroup] !== undefined) SETTINGS.stringGroup = s.stringGroup;
     if (PREVIEW_SOUND_KEYS.includes(s.previewSound)) SETTINGS.previewSound = s.previewSound;
     if (['mid', 'high'].includes(s.neckPosition)) SETTINGS.neckPosition = s.neckPosition;
+    if (s.showNeckBtn !== undefined) SETTINGS.showNeckBtn = s.showNeckBtn;
     if ([2,3,4,6].includes(parseInt(s.clickSubdiv))) SETTINGS.clickSubdiv = parseInt(s.clickSubdiv);
     if (s.navHidden === true) SETTINGS.navHidden = true;
     const le = parseInt(s.loopExt);
@@ -89,6 +91,7 @@ function saveSettings() {
       stringGroup: SETTINGS.stringGroup,
       previewSound: SETTINGS.previewSound,
       neckPosition: SETTINGS.neckPosition,
+      showNeckBtn: SETTINGS.showNeckBtn,
       clickSubdiv: SETTINGS.clickSubdiv,
       navHidden: SETTINGS.navHidden,
       loopExt: SETTINGS.loopExt,
@@ -144,6 +147,10 @@ function addJournalEntry(patId, bpm, trainMode, pyramideMode, shuffleMode) {
   const pat = PATTERNS.find(p => p.id === patId);
   if (!pat) return;
   const now = new Date();
+
+  // Compter les cases cochées (progress = true)
+  const checkedCount = Object.values(state.progress || {}).filter(v => v === true).length;
+
   const entry = {
     timestamp: now.getTime(),
     patId: patId,
@@ -152,6 +159,7 @@ function addJournalEntry(patId, bpm, trainMode, pyramideMode, shuffleMode) {
     trainMode: trainMode || false,
     pyramideMode: pyramideMode || false,
     shuffleMode: shuffleMode || false,
+    checkedCount: checkedCount,  // Nombre de cases cochées au moment de la lecture
   };
   PATTERN_JOURNAL.push(entry);
   savePatternJournal();
