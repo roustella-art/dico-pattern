@@ -36,6 +36,12 @@ const SETTINGS = {
   previewSound: 'doux',    // 'doux' | 'piano' | 'guitare' | 'auto'
   neckPosition: 'mid',     // 'mid' (case 5, offset 0) | 'high' (case 12, offset 7)
   showNeckBtn: true,       // afficher/masquer le bouton mid/high dans le header
+  showShuffleBtn: true,    // afficher bouton Shuffle dans la row 1 du header
+  showTrain: true,         // afficher bouton Train. dans le header
+  showCountin: true,       // afficher bouton Décompte dans le header
+  showClick: true,         // afficher bouton Clic dans le header
+  showMetroSolo: true,     // afficher bouton Métronome solo dans le header
+  showHeaderStats: true,   // afficher stats streak (🔥⚡📅) dans le header
   clickSubdiv: 4,          // 2 | 3 | 4 | 6 — subdivision du clic
   navHidden: false,        // true = nav masquée (portrait + paysage), togglé par long press logo
   loopExt: 0,              // 0 = base · −1 = retour même niveau · +N = extension pyramide
@@ -58,6 +64,12 @@ function loadSettings() {
     if (PREVIEW_SOUND_KEYS.includes(s.previewSound)) SETTINGS.previewSound = s.previewSound;
     if (['mid', 'high'].includes(s.neckPosition)) SETTINGS.neckPosition = s.neckPosition;
     if (s.showNeckBtn !== undefined) SETTINGS.showNeckBtn = s.showNeckBtn;
+    if (s.showShuffleBtn !== undefined) SETTINGS.showShuffleBtn = s.showShuffleBtn;
+    if (s.showTrain !== undefined) SETTINGS.showTrain = s.showTrain;
+    if (s.showCountin !== undefined) SETTINGS.showCountin = s.showCountin;
+    if (s.showClick !== undefined) SETTINGS.showClick = s.showClick;
+    if (s.showMetroSolo !== undefined) SETTINGS.showMetroSolo = s.showMetroSolo;
+    if (s.showHeaderStats !== undefined) SETTINGS.showHeaderStats = s.showHeaderStats;
     if ([2,3,4,6].includes(parseInt(s.clickSubdiv))) SETTINGS.clickSubdiv = parseInt(s.clickSubdiv);
     if (s.navHidden === true) SETTINGS.navHidden = true;
     const le = parseInt(s.loopExt);
@@ -92,6 +104,12 @@ function saveSettings() {
       previewSound: SETTINGS.previewSound,
       neckPosition: SETTINGS.neckPosition,
       showNeckBtn: SETTINGS.showNeckBtn,
+      showShuffleBtn: SETTINGS.showShuffleBtn,
+      showTrain: SETTINGS.showTrain,
+      showCountin: SETTINGS.showCountin,
+      showClick: SETTINGS.showClick,
+      showMetroSolo: SETTINGS.showMetroSolo,
+      showHeaderStats: SETTINGS.showHeaderStats,
       clickSubdiv: SETTINGS.clickSubdiv,
       navHidden: SETTINGS.navHidden,
       loopExt: SETTINGS.loopExt,
