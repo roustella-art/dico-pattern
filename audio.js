@@ -1029,14 +1029,26 @@ function syncSubdivUI() {
   // Chips dans les réglages (fond clair)
   document.querySelectorAll('.subdiv-btn').forEach(b => {
     const active = parseInt(b.dataset.subdiv) === n;
-    b.style.background  = active ? 'var(--green)'         : 'rgba(28,45,51,.07)';
-    b.style.color       = active ? '#fff'                  : 'var(--text2)';
-    b.style.borderColor = active ? 'var(--green)'         : 'rgba(28,45,51,.18)';
-    b.style.fontWeight  = active ? '800'                   : '700';
+    b.style.background  = active ? 'var(--green)'  : 'rgba(28,45,51,.07)';
+    b.style.color       = active ? '#fff'           : 'var(--text2)';
+    b.style.borderColor = active ? 'var(--green)'  : 'rgba(28,45,51,.18)';
+    b.style.fontWeight  = active ? '800'            : '700';
   });
-  // Indicateur discret sur le bouton Clic (n'affiche rien pour 1 = défaut)
-  const ind = document.getElementById('subdiv-ind');
-  if (ind) ind.textContent = n !== 4 ? `÷${n}` : '';
+  // Bouton cycle subdivision dans le header — couleur propre à chaque valeur
+  const SUBDIV_COL = {
+    2: '#1a7fa6',  // teal bleu  — croches
+    3: '#56864A',  // vert       — triolets
+    4: '#C8952A',  // or ambré   — doubles croches (standard)
+    6: '#7B5EA7',  // violet     — sextolets
+  };
+  const cycleBtn = document.getElementById('subdiv-cycle-btn');
+  if (cycleBtn) {
+    const col = SUBDIV_COL[n] || 'rgba(244,238,226,.08)';
+    cycleBtn.textContent    = `÷${n}`;
+    cycleBtn.style.background   = col;
+    cycleBtn.style.borderColor  = col;
+    cycleBtn.style.color        = '#fff';
+  }
 }
 
 // Calcule le décalage temporel d'une note selon le mode shuffle

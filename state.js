@@ -37,6 +37,8 @@ const SETTINGS = {
   neckPosition: 'mid',     // 'mid' (case 5, offset 0) | 'high' (case 12, offset 7)
   showNeckBtn: true,       // afficher/masquer le bouton mid/high dans le header
   showShuffleBtn: true,    // afficher bouton Shuffle dans la row 1 du header
+  showStringBtn: true,     // afficher bouton groupe de cordes dans la row 1 du header
+  showSubdivBtn: true,     // afficher bouton subdivision rythmique dans le header
   showTrain: true,         // afficher bouton Train. dans le header
   showCountin: true,       // afficher bouton Décompte dans le header
   showClick: true,         // afficher bouton Clic dans le header
@@ -65,6 +67,8 @@ function loadSettings() {
     if (['mid', 'high'].includes(s.neckPosition)) SETTINGS.neckPosition = s.neckPosition;
     if (s.showNeckBtn !== undefined) SETTINGS.showNeckBtn = s.showNeckBtn;
     if (s.showShuffleBtn !== undefined) SETTINGS.showShuffleBtn = s.showShuffleBtn;
+    if (s.showStringBtn  !== undefined) SETTINGS.showStringBtn  = s.showStringBtn;
+    if (s.showSubdivBtn !== undefined) SETTINGS.showSubdivBtn = s.showSubdivBtn;
     if (s.showTrain !== undefined) SETTINGS.showTrain = s.showTrain;
     if (s.showCountin !== undefined) SETTINGS.showCountin = s.showCountin;
     if (s.showClick !== undefined) SETTINGS.showClick = s.showClick;
@@ -105,6 +109,8 @@ function saveSettings() {
       neckPosition: SETTINGS.neckPosition,
       showNeckBtn: SETTINGS.showNeckBtn,
       showShuffleBtn: SETTINGS.showShuffleBtn,
+      showStringBtn:  SETTINGS.showStringBtn,
+      showSubdivBtn: SETTINGS.showSubdivBtn,
       showTrain: SETTINGS.showTrain,
       showCountin: SETTINGS.showCountin,
       showClick: SETTINGS.showClick,
