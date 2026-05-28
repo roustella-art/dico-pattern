@@ -286,7 +286,7 @@
           <circle cx="20" cy="13" r="2"   fill="#F4EEE2" opacity=".85"/>
           <circle cx="25" cy="9"  r="2.5" fill="#D4622E"/>
         </svg>
-        <div style="min-width:0">
+        <div id="brand-text" style="min-width:0">
           <h1>Dico Pattern</h1>
           <div class="brand-sub">le dictionnaire de patterns</div>
         </div>
@@ -311,10 +311,8 @@
       <button id="string-group-btn" class="h-icon-btn" onclick="cycleStringGroup()" title="Groupe de cordes — DGBE · ADGB · EADG" style="font-size:9px;font-weight:700;letter-spacing:.3px;min-width:34px">DGBE</button>
       <button id="neck-toggle-btn" class="h-icon-btn" onclick="toggleNeckPosition()" title="Basculer mid/high neck" style="font-size:10px;font-weight:700">mid</button>
       <button class="h-icon-btn" id="gear-btn"
-        onclick="if(!_gearLongFired)openSettings()"
-        ontouchstart="gearPressStart(event)" ontouchend="gearPressEnd(event)" ontouchcancel="gearPressCancel()"
-        onmousedown="gearPressStart(event)" onmouseup="gearPressEnd(event)" onmouseleave="gearPressCancel()"
-        aria-label="Réglages" title="Réglages (appui long → sauvegarder)">
+        onclick="openSettings()"
+        aria-label="Réglages" title="Réglages">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="3"/>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -703,6 +701,126 @@ function isStaticNeckTab(pat) {
   return !!(pat.tabMid && pat.tabHigh);
 }
 
+// Pour les tabs statiques : applique uniquement le string shift (pas le fret offset)
+// Le fret offset est déjà intégré dans tabMid/tabHigh, mais le groupe de cordes reste flexible
+function applyStaticTabTransform(rawTab) {
+  const shift = STRING_SHIFTS[SETTINGS.stringGroup] || 0;
+  return shift !== 0 ? tabApplyStringShift(rawTab, shift) : rawTab;
+}
+
+// ── Sélection de cordes pour les gammes ──────────────────────────────────────
+// activeStrings = [bool×6] dans l'ordre de la tab : [e, B, G, D, A, E]
+function getGammeActiveStrings(patId) {
+  if (!state.gammeActiveStrings || !state.gammeActiveStrings[patId]) {
+    return [true, true, true, true, true, true]; // toutes actives par défaut
+  }
+  return state.gammeActiveStrings[patId];
+}
+
+// Masque les notes des cordes inactives en remplaçant les chiffres par des tirets.
+// Préserve la structure complète de la tab (toutes les lignes restent présentes).
+function applyGammeStringFilter(tabStr, activeStrings) {
+  if (!activeStrings || activeStrings.every(v => v)) return tabStr;
+  const STRING_NAMES = ['e', 'B', 'G', 'D', 'A', 'E'];
+  const lines = tabStr.split('\n');
+  let unlabeledIdx = 0;
+  return lines.map(line => {
+    const trimmed = line.trim();
+    if (trimmed === '') return line;
+    // Ligne avec label de corde : "e |---5---" ou "B|---7---"
+    const labeled = line.match(/^([eEBGDA])\s*\|(.+)/);
+    if (labeled) {
+      const idx = STRING_NAMES.indexOf(labeled[1]);
+      if (idx !== -1 && !activeStrings[idx]) {
+        const pipePos = line.indexOf('|');
+        const prefix = line.substring(0, pipePos + 1);
+        const masked = labeled[2].replace(/\d+/g, m => '-'.repeat(m.length));
+        return prefix + masked;
+      }
+      return line;
+    }
+    // Ligne unlabeled (section retour) — suit l'ordre STRING_NAMES
+    if (/^[-\d]/.test(line) && !trimmed.includes('↩') && !trimmed.includes('retour')) {
+      const idx = unlabeledIdx % 6;
+      unlabeledIdx++;
+      if (!activeStrings[idx]) {
+        return line.replace(/\d+/g, m => '-'.repeat(m.length));
+      }
+      return line;
+    }
+    return line;
+  }).join('\n');
+}
+
+// Toggle une corde (stringIdx : 0=e, 1=B, 2=G, 3=D, 4=A, 5=E)
+function toggleGammeString(patId, stringIdx) {
+  if (!state.gammeActiveStrings) state.gammeActiveStrings = {};
+  if (!state.gammeActiveStrings[patId]) {
+    state.gammeActiveStrings[patId] = [true, true, true, true, true, true];
+  }
+  const current = [...state.gammeActiveStrings[patId]];
+  current[stringIdx] = !current[stringIdx];
+  if (!current.some(v => v)) return; // au moins 1 corde doit rester active
+  state.gammeActiveStrings[patId] = current;
+  saveState();
+  // Stopper l'audio si ce pattern joue
+  if (PREVIEW.patId === patId) previewStop();
+  // Mettre à jour la tab affichée
+  const pre = document.getElementById('tab-pre-' + patId);
+  if (pre) {
+    const pat = PATTERNS.find(p => p.id === patId);
+    if (pat) {
+      const rawTab = getEffectiveTab(getTabForNeckPosition(pat));
+      const filtered = applyGammeStringFilter(rawTab, current);
+      pre.innerHTML = tabWithSymbols(cleanTabDisplay(filtered), PREVIEW.interp);
+    }
+  }
+  // Bouton "Tout" : affiché/masqué selon si toutes les cordes sont actives
+  const allActiveNow = current.every(v => v);
+  const resetBtn = document.getElementById(`gamme-reset-btn-${patId}`);
+  if (resetBtn) resetBtn.style.display = allActiveNow ? 'none' : '';
+  // Mettre à jour l'apparence des boutons
+  ['e','B','G','D','A','E'].forEach((_, i) => {
+    const btn = document.getElementById(`gamme-str-btn-${patId}-${i}`);
+    if (btn) {
+      const active = current[i];
+      btn.style.background  = active ? 'var(--green)'  : 'rgba(0,0,0,0.1)';
+      btn.style.color       = active ? '#fff'           : '#999';
+      btn.style.borderColor = active ? 'var(--green)'  : '#ccc';
+      btn.style.opacity     = '1';
+    }
+  });
+}
+
+// Réactiver toutes les cordes
+function resetGammeStrings(patId) {
+  if (!state.gammeActiveStrings) state.gammeActiveStrings = {};
+  state.gammeActiveStrings[patId] = [true, true, true, true, true, true];
+  saveState();
+  if (PREVIEW.patId === patId) previewStop();
+  const pre = document.getElementById('tab-pre-' + patId);
+  if (pre) {
+    const pat = PATTERNS.find(p => p.id === patId);
+    if (pat) {
+      // Toutes actives → pas de filtre, on restitue la tab complète
+      const rawTab = getEffectiveTab(getTabForNeckPosition(pat));
+      pre.innerHTML = tabWithSymbols(cleanTabDisplay(rawTab), PREVIEW.interp);
+    }
+  }
+  // Masquer le bouton "Tout"
+  const resetBtn = document.getElementById(`gamme-reset-btn-${patId}`);
+  if (resetBtn) resetBtn.style.display = 'none';
+  ['e','B','G','D','A','E'].forEach((_, i) => {
+    const btn = document.getElementById(`gamme-str-btn-${patId}-${i}`);
+    if (btn) {
+      btn.style.background  = 'var(--green)';
+      btn.style.color       = '#fff';
+      btn.style.borderColor = 'var(--green)';
+      btn.style.opacity     = '1';
+    }
+  });
+}
+
 function getEffectiveTab(rawTabStr) {
   return buildLoopExtTab(rawTabStr, SETTINGS.loopExt);
 }
@@ -998,6 +1116,10 @@ function updateHeaderUI() {
     statsEl.style.display = SETTINGS.showHeaderStats ? 'flex' : 'none';
     if (SETTINGS.showHeaderStats) updateHeaderStatsDisplay();
   }
+  // Quand les stats sont visibles, masquer le texte "Dico Pattern / le dictionnaire de patterns"
+  // pour éviter que la Row 1 passe sur deux lignes
+  const brandText = document.getElementById('brand-text');
+  if (brandText) brandText.classList.toggle('hidden', !!SETTINGS.showHeaderStats);
 
   // Bouton groupe de cordes (Row 1) — couleur propre à chaque groupe
   const stringBtn = document.getElementById('string-group-btn');
@@ -1587,12 +1709,23 @@ function openSettings(tab) {
         </div>
       </div>
 
+      <div style="display:flex;margin-top:4px">
+        <button onclick="doExportJSON()"
+          style="flex:1;padding:9px 4px;background:transparent;color:#bbb;border:none;border-radius:10px;font-size:11px;cursor:pointer">
+          ↓ Exporter JSON
+        </button>
+        <button onclick="doImportJSON()"
+          style="flex:1;padding:9px 4px;background:transparent;color:#bbb;border:none;border-radius:10px;font-size:11px;cursor:pointer">
+          ↑ Importer JSON
+        </button>
+      </div>
+
       <button onclick="resetApp()"
         style="width:100%;padding:9px;background:transparent;color:#bbb;border:none;
-          border-radius:10px;font-size:11px;cursor:pointer;margin-top:10px">
+          border-radius:10px;font-size:11px;cursor:pointer;margin-top:6px">
         ⚙️ Reset (debug)
       </button>
-      <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px">v2.6</div>
+      <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px">v2.7</div>
     </div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
@@ -1625,13 +1758,13 @@ function closeSettings() {
 
 function resetApp() {
   if (!confirm(`⚠️ Remettre l'app à zéro ? Progression, notes et réglages seront effacés.`)) return;
-  ['dicoPattern','dicoPatNotes','dicoOnboarded','dicoSettings','dicoSessions','dicoPatTrace'].forEach(k => localStorage.removeItem(k));
+  ['dicoPattern','dicoPatNotes','dicoOnboarded','dicoSettings','dicoSessions','dicoPatTrace','dicoPatternJournal'].forEach(k => localStorage.removeItem(k));
   Object.keys(localStorage).filter(k => k.startsWith('altFing_')).forEach(k => localStorage.removeItem(k));
   location.reload();
 }
 function doExportJSON() {
   try {
-    const KEYS = ['dicoPattern','dicoPatTrace','dicoSessions','dicoPatNotes','dicoSettings'];
+    const KEYS = ['dicoPattern','dicoPatTrace','dicoSessions','dicoPatNotes','dicoSettings','dicoPatternJournal'];
     const data = {};
     KEYS.forEach(k => {
       const v = localStorage.getItem(k);

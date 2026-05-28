@@ -752,11 +752,12 @@ function setPreviewInterp(interp) {
   document.querySelectorAll('[data-tab-id]').forEach(pre => {
     const pat = PATTERNS.find(p => p.id === pre.dataset.tabId);
     if (pat) {
-      // Ne pas transformer: patterns statiques OU patterns classiques en high neck (tabHigh a déjà +7)
+      // Patterns statiques : appliquer uniquement le string shift (fret offset déjà intégré dans tabMid/tabHigh)
       const rawTab = getEffectiveTab(getTabForNeckPosition(pat));
-      const isClassicHighNeck = (pat.tabMid && pat.tabHigh && SETTINGS.neckPosition === 'high');
-      const tabContent = cleanTabDisplay(isStaticNeckTab(pat) || isClassicHighNeck ? rawTab : transformTab(rawTab, pre.dataset.tabId));
-      pre.innerHTML = tabWithSymbols(tabContent, interp);
+      let processed = isStaticNeckTab(pat) ? applyStaticTabTransform(rawTab) : transformTab(rawTab, pre.dataset.tabId);
+      // Gammes (special) : appliquer le filtre de cordes actives
+      if (pat.special) processed = applyGammeStringFilter(processed, getGammeActiveStrings(pat.id));
+      pre.innerHTML = tabWithSymbols(cleanTabDisplay(processed), interp);
     }
   });
 }
@@ -927,61 +928,6 @@ function stopPulseTicker() {
 let _navHidePressTimer = null;
 let _navHideLongFired  = false;
 
-// ─── LONG PRESS SUR L'ENGRENAGE → popup export/import ────────────────────────
-let _gearPressTimer = null;
-let _gearLongFired  = false;
-
-function gearPressStart(e) {
-  _gearLongFired = false;
-  _gearPressTimer = setTimeout(() => {
-    _gearLongFired = true;
-    showGearPopup();
-  }, 480);
-}
-function gearPressEnd(e) {
-  clearTimeout(_gearPressTimer);
-  _gearPressTimer = null;
-  if (_gearLongFired) e.preventDefault(); // annule le onclick si long press
-}
-function gearPressCancel() {
-  clearTimeout(_gearPressTimer);
-  _gearPressTimer = null;
-}
-
-function showGearPopup() {
-  if (document.getElementById('gear-popup')) return;
-  const btn = document.getElementById('gear-btn');
-  const rect = btn ? btn.getBoundingClientRect() : { right: window.innerWidth - 12, top: 50 };
-  const popup = document.createElement('div');
-  popup.id = 'gear-popup';
-  popup.style.cssText = `
-    position:fixed;top:${rect.bottom + 6}px;right:${window.innerWidth - rect.right}px;
-    background:#1F2D33;color:#F4EEE2;border-radius:12px;
-    box-shadow:0 4px 20px rgba(0,0,0,.35);z-index:9999;
-    min-width:180px;overflow:hidden;animation:fadeInDown .15s ease`;
-  popup.innerHTML = `
-    <div style="padding:10px 14px 6px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.5">Sauvegarde</div>
-    <button onclick="event.stopPropagation();doExportJSON();closeGearPopup()"
-      style="display:block;width:100%;text-align:left;padding:11px 16px;background:transparent;color:#F4EEE2;
-        border:none;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.1px">
-      ↓ &nbsp;Télécharger (JSON)
-    </button>
-    <button onclick="event.stopPropagation();doImportJSON();closeGearPopup()"
-      style="display:block;width:100%;text-align:left;padding:11px 16px;background:transparent;color:#F4EEE2;
-        border:none;font-size:13px;font-weight:600;cursor:pointer;border-top:1px solid rgba(244,238,226,.1);letter-spacing:.1px">
-      ↑ &nbsp;Charger (JSON)
-    </button>`;
-  document.body.appendChild(popup);
-  popup.addEventListener('touchstart', e => e.stopPropagation(), true);
-  popup.addEventListener('mousedown',  e => e.stopPropagation(), true);
-  setTimeout(() => document.addEventListener('touchstart', closeGearPopup, { once:true, passive:true }), 50);
-  setTimeout(() => document.addEventListener('mousedown',  closeGearPopup, { once:true }), 50);
-}
-
-function closeGearPopup() {
-  const el = document.getElementById('gear-popup');
-  if (el) el.remove();
-}
 
 function navHidePressStart(e) {
   // Ne pas bloquer les événements normaux (permet de scroller si besoin)
@@ -1129,10 +1075,10 @@ function previewPlay(patId) {
   if (!pat) return;
   // ── Loop étendu : utilise le tab étendu pour l'audio ─────────────────────────
   const effectiveTabStr = getEffectiveTab(getTabForNeckPosition(pat));
-  // Ne pas transformer: patterns statiques (B6P1a/b/c) OU patterns classiques en high neck (tabHigh a déjà +7)
-  const isClassicPatternHighNeck = (pat.tabMid && pat.tabHigh && SETTINGS.neckPosition === 'high');
-  const shouldTransform = !isStaticNeckTab(pat) && !isClassicPatternHighNeck;
-  const tabForParsing = shouldTransform ? transformTab(effectiveTabStr, patId) : effectiveTabStr;
+  // Patterns statiques : appliquer uniquement le string shift (fret offset déjà intégré dans tabMid/tabHigh)
+  // Gammes (special) : appliquer aussi le filtre de cordes actives
+  let tabForParsing = isStaticNeckTab(pat) ? applyStaticTabTransform(effectiveTabStr) : transformTab(effectiveTabStr, patId);
+  if (pat.special) tabForParsing = applyGammeStringFilter(tabForParsing, getGammeActiveStrings(patId));
   const sections = (pat.special) ? parseTabNotesSpecial(tabForParsing) : parseTabNotes(tabForParsing, patId);
   if (!sections.length) return;
   const cycle = sections.flat();
@@ -1201,9 +1147,10 @@ function previewPlay(patId) {
   // ── Curseur tab — version N-sections (fonctionne pour base ET loop étendu) ──
   // Ne pas transformer: patterns statiques (B6P1a/b/c) OU patterns classiques en high neck (tabHigh a déjà +7)
   const effectiveTabForCursor = getEffectiveTab(getTabForNeckPosition(pat));
-  const isClassicPatternHighNeckCursor = (pat.tabMid && pat.tabHigh && SETTINGS.neckPosition === 'high');
-  const shouldTransformCursor = !isStaticNeckTab(pat) && !isClassicPatternHighNeckCursor;
-  const tabForCursor = shouldTransformCursor ? transformTab(effectiveTabForCursor, patId) : effectiveTabForCursor;
+  // Patterns statiques : appliquer uniquement le string shift (fret offset déjà intégré dans tabMid/tabHigh)
+  // Gammes (special) : appliquer aussi le filtre de cordes actives
+  let tabForCursor = isStaticNeckTab(pat) ? applyStaticTabTransform(effectiveTabForCursor) : transformTab(effectiveTabForCursor, patId);
+  if (pat.special) tabForCursor = applyGammeStringFilter(tabForCursor, getGammeActiveStrings(patId));
   const cursorSections = (pat.special) ? parseTabForCursorSpecial(tabForCursor) : parseTabForCursor(tabForCursor, patId);
   if (cursorSections.length > 0) {
     const preEl    = document.getElementById('tab-pre-' + patId);

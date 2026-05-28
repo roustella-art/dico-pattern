@@ -18,6 +18,7 @@ let state = {
   etapeOpen: {},   // accordéon par numéro d'étape
   cardDir: {},   // direction active par groupe, ex: {'A4P1b':'U'}
   dailyChallengeOpen: true,  // accordéon challenge du jour (ouvert par défaut)
+  gammeActiveStrings: {}, // { "gammeP1": [true,true,true,true,true,true] } — [e,B,G,D,A,E]
 };
 
 // ─── SETTINGS (cordes / son / case de départ) ────────────────────────────────
@@ -197,6 +198,9 @@ function loadState() {
     state.pimtDone  = saved.pimtDone  || {};
     state.showHeaderStats = saved.showHeaderStats === true; // false by default
     if (saved.dailyChallengeOpen !== undefined) state.dailyChallengeOpen = saved.dailyChallengeOpen;
+    if (saved.gammeActiveStrings && typeof saved.gammeActiveStrings === 'object') {
+      state.gammeActiveStrings = saved.gammeActiveStrings;
+    }
   } catch(e) { console.warn('loadState:', e); }
   loadPatNotes();
   loadPatTrace();
@@ -212,6 +216,7 @@ function saveState() {
       pimtDone:  state.pimtDone,
       showHeaderStats: state.showHeaderStats,
       dailyChallengeOpen: state.dailyChallengeOpen,
+      gammeActiveStrings: state.gammeActiveStrings,
     }));
   } catch(e) { console.warn('saveState:', e); }
 }

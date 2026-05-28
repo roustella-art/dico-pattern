@@ -255,14 +255,49 @@ function renderPatternGroupBody(pats, key) {
     const p = pats[0];
     const relPat = null;
 
-    // ── Pas de doigtés, juste la tablature ──
-    // Pour les patterns spéciaux, afficher la tab SANS transformTab (pas de string grouping)
+    // ── Sélecteur de cordes (gammes uniquement) ──────────────────────────────
+    // Affichage : E A D G B e (du grave à l'aigu = ordre guitare)
+    // activeStrings = [e=0, B=1, G=2, D=3, A=4, E=5]
+    const activeStrings = getGammeActiveStrings(p.id);
+    const allActive = activeStrings.every(v => v);
+    const STRING_SELECTOR_DEF = [
+      { label:'E', idx:5 },
+      { label:'A', idx:4 },
+      { label:'D', idx:3 },
+      { label:'G', idx:2 },
+      { label:'B', idx:1 },
+      { label:'e', idx:0 },
+    ];
+    const stringSelector = `
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);flex-shrink:0">Cordes</span>
+        <div style="display:flex;gap:4px">
+          ${STRING_SELECTOR_DEF.map(s => {
+            const active = activeStrings[s.idx];
+            return `<button id="gamme-str-btn-${p.id}-${s.idx}"
+              onclick="toggleGammeString('${p.id}', ${s.idx})"
+              style="font-size:11px;font-weight:700;width:26px;height:26px;border-radius:50%;border:1.5px solid;cursor:pointer;transition:all .15s;line-height:1;
+                background:${active ? 'var(--green)' : 'rgba(0,0,0,0.1)'};
+                color:${active ? '#fff' : '#999'};
+                border-color:${active ? 'var(--green)' : '#ccc'};
+                opacity:1">${s.label}</button>`;
+          }).join('')}
+        </div>
+        <button id="gamme-reset-btn-${p.id}" onclick="resetGammeStrings('${p.id}')"
+          style="font-size:10px;padding:2px 10px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;display:${allActive ? 'none' : ''}">
+          Tout</button>
+      </div>`;
+
+    // ── Tab avec filtre de cordes actif ──────────────────────────────────────
+    const rawTabForDisplay = getEffectiveTab(getTabForNeckPosition(p));
+    const filteredTabForDisplay = applyGammeStringFilter(rawTabForDisplay, activeStrings);
     const tabIsPlaying = PREVIEW.patId === p.id;
     const tabBlock = `
       <div style="margin-bottom:10px">
+        ${stringSelector}
         <div class="tab-wrap" style="margin:0" onclick="tabWrapClick('${p.id}')"
           title="Tap → lecture / stop">
-          <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${tabWithSymbols(cleanTabDisplay((isStaticNeckTab(p) || (p.tabMid && p.tabHigh && SETTINGS.neckPosition === 'high')) ? getEffectiveTab(getTabForNeckPosition(p)) : transformTab(getEffectiveTab(getTabForNeckPosition(p)), p.id)), PREVIEW.interp)}</pre>
+          <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${tabWithSymbols(cleanTabDisplay(filteredTabForDisplay), PREVIEW.interp)}</pre>
           <div id="tab-cursor-montee-${p.id}" class="tab-cursor-bar"></div>
           <div id="tab-cursor-retour-${p.id}" class="tab-cursor-bar"></div>
           <div id="tab-play-badge-${p.id}" class="tab-play-badge${tabIsPlaying?' playing':''}">
@@ -422,7 +457,7 @@ function renderPatternGroupBody(pats, key) {
     <div style="margin-bottom:10px">
       <div class="tab-wrap" style="margin:0" onclick="tabWrapClick('${p.id}')"
         title="Tap → lecture / stop">
-        <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${tabWithSymbols(cleanTabDisplay((isStaticNeckTab(p) || (p.tabMid && p.tabHigh && SETTINGS.neckPosition === 'high')) ? getEffectiveTab(getTabForNeckPosition(p)) : transformTab(getEffectiveTab(getTabForNeckPosition(p)), p.id)), PREVIEW.interp)}</pre>
+        <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${tabWithSymbols(cleanTabDisplay(isStaticNeckTab(p) ? applyStaticTabTransform(getEffectiveTab(getTabForNeckPosition(p))) : transformTab(getEffectiveTab(getTabForNeckPosition(p)), p.id)), PREVIEW.interp)}</pre>
         <div id="tab-cursor-montee-${p.id}" class="tab-cursor-bar"></div>
         <div id="tab-cursor-retour-${p.id}" class="tab-cursor-bar"></div>
         <div id="tab-play-badge-${p.id}" class="tab-play-badge${tabIsPlaying?' playing':''}">
@@ -1175,24 +1210,22 @@ function renderJournal() {
     return dateB - dateA;
   });
 
-  // Fonction pour compter les cases cochées (progress) pour une date donnée
-  function countProgressForDay(dayKey) {
-    // Convertir la date au format YYYY-MM-DD pour comparaison
-    const parts = dayKey.split('/');
-    const dayDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    const dayStart = new Date(dayDate.getFullYear(), dayDate.getMonth(), dayDate.getDate());
-    const dayEnd = new Date(dayStart.getTime() + 24 * 60 * 60 * 1000);
-
-    // Compter les clés dans state.progress qui sont true
-    // (assuming progress keys incluent un timestamp ou on compte juste les vraies valeurs)
-    let count = 0;
-    Object.entries(state.progress || {}).forEach(([key, value]) => {
-      if (value === true) count++;
-    });
-    // Note: Ceci compte TOUS les progress, pas juste du jour.
-    // Une meilleure approche serait de tracker la date dans progress ou utiliser PATTERN_JOURNAL
-    return count;
-  }
+  // Calculer le delta de cases cochées par jour (checkedCount cumulatif → incrément quotidien)
+  // On travaille en ordre chronologique ascendant pour accéder au jour précédent
+  const sortedDaysAsc = [...sortedDays].reverse();
+  // Map dayKey → total de cases au dernier play du jour
+  const lastCheckedByDay = {};
+  sortedDaysAsc.forEach(dk => {
+    const dayEntries = byDay[dk];
+    lastCheckedByDay[dk] = dayEntries[dayEntries.length - 1].checkedCount || 0;
+  });
+  // Delta = total fin de jour J - total fin de jour J-1 (min 0 en cas de décoché)
+  const deltaByDay = {};
+  sortedDaysAsc.forEach((dk, i) => {
+    const current = lastCheckedByDay[dk];
+    const prev    = i > 0 ? lastCheckedByDay[sortedDaysAsc[i - 1]] : 0;
+    deltaByDay[dk] = Math.max(0, current - prev);
+  });
 
   let html = `<style>
     .journal-accordion{margin-bottom:10px}
@@ -1240,8 +1273,10 @@ function renderJournal() {
     // Résumé du jour
     const uniquePatterns = Object.keys(byPattern).length;
     const totalPlays = entries.length;
-    // Prendre le nombre de cases cochées de la DERNIÈRE relecture du jour (la plus à jour)
-    const checkedCount = entries.length > 0 ? (entries[entries.length - 1].checkedCount || 0) : 0;
+    const newCases = deltaByDay[dayKey] || 0;
+    const casesStr = newCases > 0
+      ? `+${newCases} case${newCases > 1 ? 's' : ''} •`
+      : '';
 
     html += `
     <div class="journal-accordion">
@@ -1250,7 +1285,7 @@ function renderJournal() {
           <div class="journal-day-summary">
             <span class="journal-day-title">${isToday ? '📅 Aujourd\'hui' : dayKey}</span>
             <span class="journal-day-stats-mini">
-              ✓ ${checkedCount} case${checkedCount > 1 ? 's' : ''} •
+              ${casesStr}
               ${uniquePatterns} pattern${uniquePatterns > 1 ? 's' : ''} •
               ${totalPlays} relecture${totalPlays > 1 ? 's' : ''}
             </span>
