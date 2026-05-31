@@ -396,8 +396,9 @@ function cleanTabDisplay(tabStr) {
 }
 
 // ─── TAB TRANSFORM (groupe de cordes + position du manche) ──────────────────────
-function transformTab(tabStr, patId) {
-  const shift  = STRING_SHIFTS[SETTINGS.stringGroup] || 0;
+function transformTab(tabStr, patId, skipStringShift = false) {
+  // Les gammes (special:true) ignorent le décalage de groupe de cordes — leur tab couvre déjà toutes les cordes
+  const shift  = skipStringShift ? 0 : (STRING_SHIFTS[SETTINGS.stringGroup] || 0);
   const offset = (SETTINGS.neckPosition === 'high') ? 7 : 0;  // mid: 0 (case 5), high: 7 (case 12)
 
   // Vérifier si le pattern a un fretOffset personnalisé
@@ -770,8 +771,9 @@ function toggleGammeString(patId, stringIdx) {
   if (pre) {
     const pat = PATTERNS.find(p => p.id === patId);
     if (pat) {
-      const rawTab = getEffectiveTab(getTabForNeckPosition(pat));
-      const filtered = applyGammeStringFilter(rawTab, current);
+      const rawTab = getGammeActiveTab(pat);
+      const neckTab = transformTab(rawTab, pat.id, true);
+      const filtered = applyGammeStringFilter(neckTab, current);
       pre.innerHTML = tabWithSymbols(cleanTabDisplay(filtered), PREVIEW.interp);
     }
   }
@@ -802,9 +804,9 @@ function resetGammeStrings(patId) {
   if (pre) {
     const pat = PATTERNS.find(p => p.id === patId);
     if (pat) {
-      // Toutes actives → pas de filtre, on restitue la tab complète
-      const rawTab = getEffectiveTab(getTabForNeckPosition(pat));
-      pre.innerHTML = tabWithSymbols(cleanTabDisplay(rawTab), PREVIEW.interp);
+      const rawTab = getGammeActiveTab(pat);
+      const neckTab = transformTab(rawTab, pat.id, true);
+      pre.innerHTML = tabWithSymbols(cleanTabDisplay(neckTab), PREVIEW.interp);
     }
   }
   // Masquer le bouton "Tout"
@@ -819,6 +821,64 @@ function resetGammeStrings(patId) {
       btn.style.opacity     = '1';
     }
   });
+}
+
+// ── Direction active pour les gammes avec hasDirectionTabs ───────────────────
+function getGammeSelectedDir(patId) {
+  const pat = PATTERNS.find(p => p.id === patId);
+  if (!pat || !pat.hasDirectionTabs || !pat.directions) return null;
+  const saved = state.gammeSelectedDir && state.gammeSelectedDir[patId];
+  const keys = Object.keys(pat.directions);
+  return (saved && keys.includes(saved)) ? saved : keys[0];
+}
+
+// Retourne le tab actif (direction sélectionnée ou tab standard)
+function getGammeActiveTab(pat) {
+  if (!pat.hasDirectionTabs || !pat.directions) return getEffectiveTab(getTabForNeckPosition(pat));
+  const dirKey = getGammeSelectedDir(pat.id);
+  return pat.directions[dirKey] || Object.values(pat.directions)[0];
+}
+
+// Changer la direction d'une gamme avec onglets — mise à jour DOM ciblée
+function setGammeDirection(patId, dirKey) {
+  if (!state.gammeSelectedDir) state.gammeSelectedDir = {};
+  state.gammeSelectedDir[patId] = dirKey;
+  saveState();
+  if (PREVIEW.patId === patId) previewStop();
+  const pat = PATTERNS.find(p => p.id === patId);
+  // Mettre à jour la tab affichée
+  const pre = document.getElementById('tab-pre-' + patId);
+  if (pre && pat) {
+    const rawTab = pat.directions[dirKey] || Object.values(pat.directions)[0];
+    const neckTab = transformTab(rawTab, pat.id, true);
+    const filtered = applyGammeStringFilter(neckTab, getGammeActiveStrings(patId));
+    pre.innerHTML = tabWithSymbols(cleanTabDisplay(filtered), PREVIEW.interp);
+  }
+  // Mettre à jour la grille de progression
+  const progEl = document.getElementById('gamme-prog-' + patId);
+  if (progEl && pat) {
+    const { html, progressPercent } = buildGammeProgGrid(pat);
+    progEl.innerHTML = html;
+    // Mettre à jour le % affiché dans l'en-tête de la carte
+    const trainEl = document.getElementById('pat-train-' + patId);
+    if (trainEl) {
+      const pctSpan = trainEl.querySelector('span:last-child');
+      if (pctSpan) pctSpan.textContent = progressPercent > 0 ? progressPercent + '%' : '';
+    }
+  }
+  // Mettre à jour l'apparence des boutons de direction
+  if (pat && pat.directions) {
+    Object.keys(pat.directions).forEach(dk => {
+      const btn = document.getElementById('gamme-dir-btn-' + patId + '-' + dk.replace(/[→↔]/g, '_'));
+      if (btn) {
+        const isActive = dk === dirKey;
+        btn.style.background  = isActive ? 'var(--blue)'   : 'transparent';
+        btn.style.color       = isActive ? '#fff'          : 'var(--text2)';
+        btn.style.borderColor = isActive ? 'var(--blue)'   : 'var(--border)';
+        btn.style.fontWeight  = isActive ? '700'           : '600';
+      }
+    });
+  }
 }
 
 function getEffectiveTab(rawTabStr) {
@@ -2122,50 +2182,56 @@ function wakeLockRelease() {
   }
 }
 
-async function wakeLockReacquire() {
-  // Reacquérir après retour en premier plan (visibilitychange)
-  if (document.visibilityState === 'visible') {
-    await wakeLockRequest();
-    audioContextResume();
-  }
-}
-
-function audioContextResume() {
-  // Reprendre les contextes audio après retour en premier plan (bug iOS)
-  if (document.visibilityState === 'visible') {
-    if (METRO.ctx && METRO.ctx.state === 'suspended') {
-      METRO.ctx.resume().catch(e => console.warn('Metro context resume failed:', e));
-    }
-    if (PREVIEW.ctx && PREVIEW.ctx.state === 'suspended') {
-      PREVIEW.ctx.resume().catch(e => console.warn('Preview context resume failed:', e));
-    }
-  }
-}
-
 function wakeLockResetInactiveTimer() {
-  // Relance le compte à rebours d'inactivité à chaque interaction
   if (_wakeLockInactiveTimer) clearTimeout(_wakeLockInactiveTimer);
-  _wakeLockInactiveTimer = setTimeout(() => {
-    wakeLockRelease(); // laisse l'appareil gérer la veille après 10 min
-  }, WAKELOCK_INACTIVITY_MS);
-  // Si le lock n'est pas encore acquis (premier geste), on l'acquiert
+  _wakeLockInactiveTimer = setTimeout(wakeLockRelease, WAKELOCK_INACTIVITY_MS);
   if (!_wakeLock) wakeLockRequest();
 }
 
-// Acquiert dès le premier touch + reset timer d'inactivité à chaque geste
+// ─── GESTION ARRIÈRE-PLAN / PREMIER PLAN ─────────────────────────────────────
+// Stratégie : stopper proprement au départ (évite la dérive de scheduleCycle),
+// relancer au retour (AudioContext frais, cycle propre).
+let _bgSavedPreviewId = null;
+let _bgSavedMetroId   = null;
+
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState === 'hidden') {
+    // Mise en arrière-plan : mémoriser ce qui joue et tout stopper
+    _bgSavedPreviewId = PREVIEW.patId || null;
+    _bgSavedMetroId   = (METRO.running && METRO.patId) ? METRO.patId : null;
+    if (PREVIEW.patId) previewStop();
+    if (METRO.running) metroStop(false);
+    wakeLockRelease();
+  } else {
+    // Retour au premier plan : reprendre les contextes, puis relancer
+    try {
+      if (METRO.ctx   && METRO.ctx.state !== 'running') await METRO.ctx.resume();
+      if (PREVIEW.ctx && PREVIEW.ctx.state !== 'running') await PREVIEW.ctx.resume();
+    } catch(e) { console.warn('audioResume:', e); }
+    await wakeLockRequest();
+    // Relancer après un court délai (laisse l'AudioContext se stabiliser)
+    if (_bgSavedPreviewId) {
+      const id = _bgSavedPreviewId; _bgSavedPreviewId = null;
+      setTimeout(() => previewPlay(id), 350);
+    } else if (_bgSavedMetroId) {
+      const id = _bgSavedMetroId; _bgSavedMetroId = null;
+      setTimeout(() => metroStart(id), 350);
+    }
+  }
+});
+
+// Fallback BFCache Safari (bouton retour → page restaurée depuis le cache)
+window.addEventListener('pageshow', async (e) => {
+  if (!e.persisted) return;
+  try {
+    if (METRO.ctx   && METRO.ctx.state !== 'running') await METRO.ctx.resume();
+    if (PREVIEW.ctx && PREVIEW.ctx.state !== 'running') await PREVIEW.ctx.resume();
+  } catch(e) { console.warn('audioResume pageshow:', e); }
+});
+
+// Timer d'inactivité wake lock
 document.addEventListener('touchstart', wakeLockResetInactiveTimer, { passive: true });
 document.addEventListener('mousedown',  wakeLockResetInactiveTimer, { passive: true });
-// Reacquiert si l'utilisateur revient sur l'app après l'avoir mise en arrière-plan
-document.addEventListener('visibilitychange', wakeLockReacquire);
-// iOS audio robuste : visibilitychange seul ne suffit pas toujours sur Safari/PWA
-// → ajouter focus (retour depuis app-switcher) et pageshow (BFCache)
-window.addEventListener('focus', audioContextResume);
-window.addEventListener('pageshow', (e) => { if (e.persisted) audioContextResume(); });
-// Résumer aussi sur le premier touch après retour (dernier recours iOS)
-document.addEventListener('touchstart', () => {
-  if (METRO.ctx   && METRO.ctx.state   === 'suspended') METRO.ctx.resume().catch(()=>{});
-  if (PREVIEW.ctx && PREVIEW.ctx.state === 'suspended') PREVIEW.ctx.resume().catch(()=>{});
-}, { passive: true, once: false });
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 loadState();
