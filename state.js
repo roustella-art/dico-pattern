@@ -19,6 +19,7 @@ let state = {
   cardDir: {},   // direction active par groupe, ex: {'A4P1b':'U'}
   dailyChallengeOpen: true,  // accordéon challenge du jour (ouvert par défaut)
   gammeActiveStrings: {}, // { "gammeP1": [true,true,true,true,true,true] } — [e,B,G,D,A,E]
+  gammeSelectedDir: {},  // { "pentaTrans1": "1→2" } — direction active par gamme avec directions multiples
 };
 
 // ─── SETTINGS (cordes / son / case de départ) ────────────────────────────────
@@ -196,10 +197,12 @@ function loadState() {
     state.progress  = saved.progress  || {};
     state.favorites = saved.favorites || {};
     state.pimtDone  = saved.pimtDone  || {};
-    state.showHeaderStats = saved.showHeaderStats === true; // false by default
     if (saved.dailyChallengeOpen !== undefined) state.dailyChallengeOpen = saved.dailyChallengeOpen;
     if (saved.gammeActiveStrings && typeof saved.gammeActiveStrings === 'object') {
       state.gammeActiveStrings = saved.gammeActiveStrings;
+    }
+    if (saved.gammeSelectedDir && typeof saved.gammeSelectedDir === 'object') {
+      state.gammeSelectedDir = saved.gammeSelectedDir;
     }
   } catch(e) { console.warn('loadState:', e); }
   loadPatNotes();
@@ -214,9 +217,9 @@ function saveState() {
       progress:  state.progress,
       favorites: state.favorites,
       pimtDone:  state.pimtDone,
-      showHeaderStats: state.showHeaderStats,
       dailyChallengeOpen: state.dailyChallengeOpen,
       gammeActiveStrings: state.gammeActiveStrings,
+      gammeSelectedDir:   state.gammeSelectedDir,
     }));
   } catch(e) { console.warn('saveState:', e); }
 }
@@ -243,14 +246,25 @@ function getGroupPct(groupKey) {
   const pats = PATTERNS.filter(p => p.cat + 'P' + p.num === groupKey);
   let total = 0, done = 0;
   pats.forEach(p => {
-    // Pour les gammes (special: true), utiliser 'U' ; sinon utiliser la direction du pattern
-    const dirs = p.special ? ['U'] : (p.dir ? [p.dir] : ['U','D','M']);
-    dirs.forEach(d => {
-      INTERPS.forEach(i => TEMPOS.forEach(t => {
-        total++;
-        if (state.progress[getProgressKey(p.id, 1, d, i, t)]) done++;
-      }));
-    });
+    if (p.special && p.hasDirectionTabs && p.directions) {
+      // Gamme avec onglets de direction : une progression par direction
+      Object.keys(p.directions).forEach(dirKey => {
+        const progressId = p.id + '__' + dirKey.replace(/[→↔]/g, '-');
+        INTERPS.forEach(i => TEMPOS.forEach(t => {
+          total++;
+          if (state.progress[getProgressKey(progressId, 1, 'U', i, t)]) done++;
+        }));
+      });
+    } else {
+      // Pour les gammes (special: true), utiliser 'U' ; sinon utiliser la direction du pattern
+      const dirs = p.special ? ['U'] : (p.dir ? [p.dir] : ['U','D','M']);
+      dirs.forEach(d => {
+        INTERPS.forEach(i => TEMPOS.forEach(t => {
+          total++;
+          if (state.progress[getProgressKey(p.id, 1, d, i, t)]) done++;
+        }));
+      });
+    }
   });
   return total ? Math.round(done / total * 100) : 0;
 }

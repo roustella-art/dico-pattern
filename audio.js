@@ -753,8 +753,8 @@ function setPreviewInterp(interp) {
     const pat = PATTERNS.find(p => p.id === pre.dataset.tabId);
     if (pat) {
       // Patterns statiques : appliquer uniquement le string shift (fret offset déjà intégré dans tabMid/tabHigh)
-      const rawTab = getEffectiveTab(getTabForNeckPosition(pat));
-      let processed = isStaticNeckTab(pat) ? applyStaticTabTransform(rawTab) : transformTab(rawTab, pre.dataset.tabId);
+      const rawTab = pat.hasDirectionTabs ? getGammeActiveTab(pat) : getEffectiveTab(getTabForNeckPosition(pat));
+      let processed = isStaticNeckTab(pat) ? applyStaticTabTransform(rawTab) : transformTab(rawTab, pre.dataset.tabId, pat.special);
       // Gammes (special) : appliquer le filtre de cordes actives
       if (pat.special) processed = applyGammeStringFilter(processed, getGammeActiveStrings(pat.id));
       pre.innerHTML = tabWithSymbols(cleanTabDisplay(processed), interp);
@@ -1074,10 +1074,11 @@ function previewPlay(patId) {
   const pat = PATTERNS.find(p => p.id === patId);
   if (!pat) return;
   // ── Loop étendu : utilise le tab étendu pour l'audio ─────────────────────────
-  const effectiveTabStr = getEffectiveTab(getTabForNeckPosition(pat));
+  // Gammes avec directions multiples : utiliser le tab de la direction sélectionnée
+  const effectiveTabStr = (pat.hasDirectionTabs) ? getGammeActiveTab(pat) : getEffectiveTab(getTabForNeckPosition(pat));
   // Patterns statiques : appliquer uniquement le string shift (fret offset déjà intégré dans tabMid/tabHigh)
   // Gammes (special) : appliquer aussi le filtre de cordes actives
-  let tabForParsing = isStaticNeckTab(pat) ? applyStaticTabTransform(effectiveTabStr) : transformTab(effectiveTabStr, patId);
+  let tabForParsing = isStaticNeckTab(pat) ? applyStaticTabTransform(effectiveTabStr) : transformTab(effectiveTabStr, patId, pat.special);
   if (pat.special) tabForParsing = applyGammeStringFilter(tabForParsing, getGammeActiveStrings(patId));
   const sections = (pat.special) ? parseTabNotesSpecial(tabForParsing) : parseTabNotes(tabForParsing, patId);
   if (!sections.length) return;
@@ -1145,11 +1146,11 @@ function previewPlay(patId) {
   startPulseTicker(patStart);
 
   // ── Curseur tab — version N-sections (fonctionne pour base ET loop étendu) ──
-  // Ne pas transformer: patterns statiques (B6P1a/b/c) OU patterns classiques en high neck (tabHigh a déjà +7)
-  const effectiveTabForCursor = getEffectiveTab(getTabForNeckPosition(pat));
+  // Gammes avec directions multiples : utiliser le tab de la direction sélectionnée
+  const effectiveTabForCursor = (pat.hasDirectionTabs) ? getGammeActiveTab(pat) : getEffectiveTab(getTabForNeckPosition(pat));
   // Patterns statiques : appliquer uniquement le string shift (fret offset déjà intégré dans tabMid/tabHigh)
   // Gammes (special) : appliquer aussi le filtre de cordes actives
-  let tabForCursor = isStaticNeckTab(pat) ? applyStaticTabTransform(effectiveTabForCursor) : transformTab(effectiveTabForCursor, patId);
+  let tabForCursor = isStaticNeckTab(pat) ? applyStaticTabTransform(effectiveTabForCursor) : transformTab(effectiveTabForCursor, patId, pat.special);
   if (pat.special) tabForCursor = applyGammeStringFilter(tabForCursor, getGammeActiveStrings(patId));
   const cursorSections = (pat.special) ? parseTabForCursorSpecial(tabForCursor) : parseTabForCursor(tabForCursor, patId);
   if (cursorSections.length > 0) {
