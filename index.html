@@ -2191,44 +2191,69 @@ function wakeLockResetInactiveTimer() {
 }
 
 // ─── GESTION ARRIÈRE-PLAN / PREMIER PLAN ─────────────────────────────────────
-// Stratégie : stopper proprement au départ (évite la dérive de scheduleCycle),
-// relancer au retour (AudioContext frais, cycle propre).
+// Sur iOS, AudioContext.resume() échoue silencieusement sans geste utilisateur.
+// Stratégie : stopper au départ → bannière au retour → sur tap : fermer l'ancien
+// contexte cassé et relancer (previewCtx() crée un contexte neuf dans le geste).
 let _bgSavedPreviewId = null;
 let _bgSavedMetroId   = null;
 
-document.addEventListener('visibilitychange', async () => {
+function showResumePrompt() {
+  if (document.getElementById('resume-prompt')) return;
+  const div = document.createElement('div');
+  div.id = 'resume-prompt';
+  div.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--orange);color:#fff;text-align:center;padding:14px 16px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.2px;box-shadow:0 2px 12px rgba(0,0,0,.3);-webkit-tap-highlight-color:transparent;animation:fadeIn .15s ease';
+  div.textContent = '▶  Appuyer pour reprendre la lecture';
+  div.addEventListener('touchstart', onResumeGesture, { passive: true, once: true });
+  div.addEventListener('click',      onResumeGesture, { once: true });
+  document.body.appendChild(div);
+}
+
+function hideResumePrompt() {
+  const el = document.getElementById('resume-prompt');
+  if (el) el.remove();
+}
+
+async function onResumeGesture() {
+  hideResumePrompt();
+  // Fermer les anciens contextes suspendus — previewCtx()/metroCtx() en créeront
+  // de nouveaux dans ce geste utilisateur (garantis en état 'running' sur iOS)
+  if (PREVIEW.ctx) { try { await PREVIEW.ctx.close(); } catch(e){} PREVIEW.ctx = null; }
+  if (METRO.ctx)   { try { await METRO.ctx.close();   } catch(e){} METRO.ctx   = null; }
+  // Relancer directement dans le geste (pas de setTimeout — doit rester synchrone)
+  if (_bgSavedPreviewId) {
+    const id = _bgSavedPreviewId; _bgSavedPreviewId = null;
+    previewPlay(id);
+  } else if (_bgSavedMetroId) {
+    const id = _bgSavedMetroId; _bgSavedMetroId = null;
+    metroStart(id);
+  }
+  wakeLockRequest();
+}
+
+document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') {
-    // Mise en arrière-plan : mémoriser ce qui joue et tout stopper
     _bgSavedPreviewId = PREVIEW.patId || null;
     _bgSavedMetroId   = (METRO.running && METRO.patId) ? METRO.patId : null;
     if (PREVIEW.patId) previewStop();
     if (METRO.running) metroStop(false);
     wakeLockRelease();
-  } else {
-    // Retour au premier plan : reprendre les contextes, puis relancer
-    try {
-      if (METRO.ctx   && METRO.ctx.state !== 'running') await METRO.ctx.resume();
-      if (PREVIEW.ctx && PREVIEW.ctx.state !== 'running') await PREVIEW.ctx.resume();
-    } catch(e) { console.warn('audioResume:', e); }
-    await wakeLockRequest();
-    // Relancer après un court délai (laisse l'AudioContext se stabiliser)
-    if (_bgSavedPreviewId) {
-      const id = _bgSavedPreviewId; _bgSavedPreviewId = null;
-      setTimeout(() => previewPlay(id), 350);
-    } else if (_bgSavedMetroId) {
-      const id = _bgSavedMetroId; _bgSavedMetroId = null;
-      setTimeout(() => metroStart(id), 350);
-    }
+    hideResumePrompt();
+  } else if (_bgSavedPreviewId || _bgSavedMetroId) {
+    showResumePrompt();
   }
 });
 
-// Fallback BFCache Safari (bouton retour → page restaurée depuis le cache)
-window.addEventListener('pageshow', async (e) => {
-  if (!e.persisted) return;
-  try {
-    if (METRO.ctx   && METRO.ctx.state !== 'running') await METRO.ctx.resume();
-    if (PREVIEW.ctx && PREVIEW.ctx.state !== 'running') await PREVIEW.ctx.resume();
-  } catch(e) { console.warn('audioResume pageshow:', e); }
+// Fallback : visibilitychange ne fire pas toujours en PWA iOS
+// → si on revient sur l'app avec quelque chose en attente, afficher la bannière au premier touch
+document.addEventListener('touchstart', () => {
+  if (!_bgSavedPreviewId && !_bgSavedMetroId) return;
+  if (document.getElementById('resume-prompt')) return;
+  showResumePrompt();
+}, { passive: true });
+
+// BFCache Safari (bouton retour → page restaurée depuis le cache)
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted && (_bgSavedPreviewId || _bgSavedMetroId)) showResumePrompt();
 });
 
 // Timer d'inactivité wake lock
