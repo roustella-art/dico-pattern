@@ -1,5 +1,5 @@
-const CACHE = 'dico-pattern-v15';
-const ASSETS = ['./index.html', './manifest.json'];
+const CACHE = 'dico-pattern-v23';
+const ASSETS = ['./index.html', './manifest.json', './state.js', './data.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));

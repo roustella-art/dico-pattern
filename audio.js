@@ -972,25 +972,33 @@ function setClickSubdiv(n) {
 
 function syncSubdivUI() {
   const n = SETTINGS.clickSubdiv;
-  // Chips dans les réglages (fond clair)
-  document.querySelectorAll('.subdiv-btn').forEach(b => {
-    const active = parseInt(b.dataset.subdiv) === n;
-    b.style.background  = active ? 'var(--green)'  : 'rgba(28,45,51,.07)';
-    b.style.color       = active ? '#fff'           : 'var(--text2)';
-    b.style.borderColor = active ? 'var(--green)'  : 'rgba(28,45,51,.18)';
-    b.style.fontWeight  = active ? '800'            : '700';
-  });
-  // Bouton cycle subdivision dans le header — couleur propre à chaque valeur
   const SUBDIV_COL = {
     2: '#1a7fa6',  // teal bleu  — croches
     3: '#56864A',  // vert       — triolets
     4: '#C8952A',  // or ambré   — doubles croches (standard)
     6: '#7B5EA7',  // violet     — sextolets
   };
+  const SUBDIV_LABELS = {
+    2: '8',      // croche
+    3: '3:8',    // triolet
+    4: '16',     // double croche
+    6: '6:16',   // sextolet
+  };
+  // Chips dans les réglages
+  document.querySelectorAll('.subdiv-btn').forEach(b => {
+    const active = parseInt(b.dataset.subdiv) === n;
+    const col = active ? SUBDIV_COL[n] : 'rgba(28,45,51,.07)';
+    b.style.background  = col;
+    b.style.color       = active ? '#fff' : 'var(--text2)';
+    b.style.borderColor = col;
+    b.style.fontWeight  = active ? '800' : '700';
+  });
+  // Bouton cycle subdivision dans le header — couleur propre à chaque valeur
   const cycleBtn = document.getElementById('subdiv-cycle-btn');
   if (cycleBtn) {
     const col = SUBDIV_COL[n] || 'rgba(244,238,226,.08)';
-    cycleBtn.textContent    = `÷${n}`;
+    const label = SUBDIV_LABELS[n] || `÷${n}`;
+    cycleBtn.textContent    = label;
     cycleBtn.style.background   = col;
     cycleBtn.style.borderColor  = col;
     cycleBtn.style.color        = '#fff';

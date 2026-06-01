@@ -743,7 +743,11 @@ function renderGammes() {
   });
   html += `</div>`;
 
-  Object.entries(gammeGroups).sort((a,b) => a[0].localeCompare(b[0])).forEach(([key, pats]) => {
+  Object.entries(gammeGroups).sort((a,b) => {
+    const na = parseInt(a[1][0].num, 10);
+    const nb = parseInt(b[1][0].num, 10);
+    return na - nb;
+  }).forEach(([key, pats]) => {
     const base = pats[0];
     if (state.diffFilter !== 'all' && base.difficulty !== state.diffFilter) return;
     const isOpen = state.openCards[key];

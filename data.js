@@ -3148,28 +3148,7 @@ E |--5--7----------------------------------|
   },
 
   {
-    id:"aIonien6", cat:"gamme", num:"6", notes:12, difficulty:"Intermédiaire", special:true,
-    name:"A Ionien", bpm:120, bpmTarget:120,
-    tab:`e |--------------------------------------------5--7----|
-B |--------------------------------------7--9----------|
-G |-----------------------------6--7--9----------------|
-D |--------------------6--7--9-------------------------|
-A |-----------5--7--9----------------------------------|
-E |--5--7--9-------------------------------------------|
-↩
-
---9--7--5-------------------------------------------|----||
------------9--7--5----------------------------------|----||
---------------------7--6----------------------------|----||
---------------------------9--7--6-------------------|----||
------------------------------------9--7--5----------|----||
---------------------------------------------9--7----|----||`,
-    desc:"Gamme majeure A Ionien — Montée ascendante puis descente complète en miroir.",
-    tip:"Travailler la montée et la descente séparément avant de les enchaîner.",
-  },
-
-  {
-    id:"pentaTrans1", cat:"gamme", num:"7", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans1", cat:"gamme", num:"6", notes:12, difficulty:"Intermédiaire", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 1↔2", bpm:90, bpmTarget:120,
     directions: {
@@ -3207,7 +3186,7 @@ E |--8--10---------------------------------|
   },
 
   {
-    id:"pentaTrans2", cat:"gamme", num:"8", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans2", cat:"gamme", num:"7", notes:12, difficulty:"Intermédiaire", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 2↔3", bpm:90, bpmTarget:120,
     directions: {
@@ -3245,7 +3224,7 @@ E |--7--9----------------------------------|
   },
 
   {
-    id:"pentaTrans3", cat:"gamme", num:"9", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans3", cat:"gamme", num:"8", notes:12, difficulty:"Intermédiaire", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 3↔4", bpm:90, bpmTarget:120,
     directions: {
@@ -3283,7 +3262,7 @@ E |--7--10---------------------------------|
   },
 
   {
-    id:"pentaTrans4", cat:"gamme", num:"10", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans4", cat:"gamme", num:"9", notes:12, difficulty:"Intermédiaire", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 4↔5", bpm:90, bpmTarget:120,
     directions: {
@@ -3321,7 +3300,7 @@ E |--8--10---------------------------------|
   },
 
   {
-    id:"pentaTrans5", cat:"gamme", num:"11", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans5", cat:"gamme", num:"10", notes:12, difficulty:"Intermédiaire", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 5↔1", bpm:90, bpmTarget:120,
     directions: {
@@ -3356,6 +3335,27 @@ E |--7--10---------------------------------|
     },
     desc:"Transition entre les deux formes pentatoniques : montée shape #5 avec descente shape #1, ou l'inverse.",
     tip:"Alterne les deux directions pour maîtriser le passage fluide entre les deux positions pentatoniques.",
+  },
+
+  {
+    id:"aIonien6", cat:"gamme", num:"11", notes:12, difficulty:"Intermédiaire", special:true,
+    name:"A Ionien", bpm:120, bpmTarget:120,
+    tab:`e |--------------------------------------------5--7----|
+B |--------------------------------------7--9----------|
+G |-----------------------------6--7--9----------------|
+D |--------------------6--7--9-------------------------|
+A |-----------5--7--9----------------------------------|
+E |--5--7--9-------------------------------------------|
+↩
+
+--9--7--5-------------------------------------------|----||
+-----------9--7--5----------------------------------|----||
+--------------------7--6----------------------------|----||
+--------------------------9--7--6-------------------|----||
+-----------------------------------9--7--5----------|----||
+--------------------------------------------9--7----|----||`,
+    desc:"Gamme majeure A Ionien — Montée ascendante puis descente complète en miroir.",
+    tip:"Travailler la montée et la descente séparément avant de les enchaîner.",
   }
 
 ];

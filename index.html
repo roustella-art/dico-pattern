@@ -23,6 +23,40 @@
     --header-bg:#1F2D33;--header-text:#F4EEE2;
     --nav-h:64px;--header-h:56px;
   }
+  @media (prefers-color-scheme:dark){
+    :root{
+      /* Dark mode — fond sombre, texte clair, accents lumineux */
+      --blue:#4dd0e1;--blue-light:#1a4a52;
+      --green:#7ec96f;--green-light:#1a3a1a;
+      --red:#e07070;--orange:#ff9966;--orange-light:#331a0f;
+      --bg:#0f1419;--card:#1a2229;
+      --text:#e8e6e1;--text2:#a8a09a;--text3:#7a7470;
+      --border:#2a3239;--radius:12px;
+      --header-bg:#0a0e13;--header-text:#e8e6e1;
+    }
+  }
+
+  /* Dark mode manual toggle — applique les mêmes variables CSS que prefers-color-scheme:dark */
+  html.dark-mode{
+    --blue:#4dd0e1;--blue-light:#1a4a52;
+    --green:#7ec96f;--green-light:#1a3a1a;
+    --red:#e07070;--orange:#ff9966;--orange-light:#331a0f;
+    --bg:#0f1419;--card:#1a2229;
+    --text:#e8e6e1;--text2:#a8a09a;--text3:#7a7470;
+    --border:#2a3239;--radius:12px;
+    --header-bg:#0a0e13;--header-text:#e8e6e1;
+  }
+
+  /* Light mode manual toggle — applique les mêmes variables CSS que :root pour forcer le light mode */
+  html.light-mode{
+    --blue:#0F4C5C;--blue-light:#D9E5E9;
+    --green:#56864A;--green-light:#E2EBD9;
+    --red:#B0413E;--orange:#D4622E;--orange-light:#FAEDDC;
+    --bg:#F4EEE2;--card:#FFFFFF;
+    --text:#1B1815;--text2:#5C5250;--text3:#7E746A;
+    --border:#E8DFD0;--radius:12px;
+    --header-bg:#1F2D33;--header-text:#F4EEE2;
+  }
   html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text)}
   #app{display:flex;flex-direction:column;height:100dvh;max-width:640px;margin:0 auto}
 
@@ -109,9 +143,9 @@
 
   /* BOTTOM NAV */
   nav{flex-shrink:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom)}
-  nav button{flex:1;border:none;background:none;font-size:10px;color:var(--text2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:color .15s}
+  nav button{flex:1;border:none;background:none;font-size:10px;color:var(--text2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:all .15s;border-bottom:3px solid transparent}
   nav button .ico{font-size:22px;line-height:1}
-  nav button.active{color:var(--blue);font-weight:600}
+  nav button.active{color:var(--blue);font-weight:600;background:var(--blue-light);border-bottom-color:var(--blue);border-radius:8px 8px 0 0}
 
   /* CARDS */
   .card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;overflow:hidden}
@@ -234,14 +268,55 @@
   .settings-modal .seg button.active{background:var(--blue);color:#fff}
   .settings-modal .seg.tabs-settings button.active{background:var(--orange);color:#fff}
   .settings-modal .hint{font-size:11px;color:var(--text2);margin-top:5px;line-height:1.4}
+  /* Footer modale — actions secondaires */
+  .settings-footer{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+  .sf-actions{display:flex;gap:8px}
+  .sf-btn{flex:1;padding:9px 4px;background:var(--bg);color:var(--text2);border:1px solid var(--border);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;transition:all .12s}
+  .sf-btn:active{background:var(--blue-light);border-color:var(--blue);color:var(--blue)}
+  .sf-reset{width:100%;margin-top:8px;padding:8px;background:transparent;color:var(--red);border:1px solid transparent;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;transition:all .12s;opacity:.75}
+  .sf-reset:active{background:rgba(176,65,62,.08);border-color:rgba(176,65,62,.25);opacity:1}
+  .sf-version{text-align:center;font-size:10px;color:var(--text3);margin-top:10px;letter-spacing:.3px}
   /* Boutons +/- pour réglages (volumes, tempos, presets) */
   .control-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px}
   .control-label{font-size:13px;font-weight:600;color:var(--text);flex:1;display:flex;align-items:center;gap:8px}
   .control-label svg{flex-shrink:0;width:20px;height:20px}
   .control-value{font-size:16px;font-weight:700;min-width:48px;text-align:center;padding:2px 6px;border-radius:6px;background:rgba(15,76,92,.06)}
   .control-buttons{display:flex;align-items:center;gap:6px}
-  .control-btn{width:40px;height:40px;padding:0;border:1.5px solid var(--border);border-radius:8px;background:#fff;font-size:20px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;user-select:none}
-  .control-btn:active{background:var(--blue-light);border-color:var(--blue);transform:scale(.94)}
+  .control-btn{width:40px;height:40px;padding:0;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);font-size:20px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;user-select:none}
+  .control-btn:active{background:var(--blue-light);border-color:var(--blue);color:var(--blue);transform:scale(.94)}
+  .control-btn.cb-sm{width:34px;height:34px;font-size:18px;border-radius:8px}
+
+  /* VOLUME — label+valeur en haut, barre de niveau + steppers en bas */
+  .vol-ctrl{margin-bottom:16px}
+  .vol-ctrl:last-child{margin-bottom:0}
+  .vol-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+  .vol-label{font-size:13px;font-weight:600;color:var(--text)}
+  .vol-val{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.2px}
+  .vol-body{display:flex;align-items:center;gap:9px}
+  .vol-bar{flex:1;height:9px;border-radius:5px;background:var(--border);overflow:hidden}
+  .vol-bar-fill{height:100%;border-radius:5px;transition:width .15s ease}
+
+  /* STEPPER GROUPÉ — bloc connecté − valeur + (presets tempo) */
+  .stepper-grp{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:9px;overflow:hidden;flex-shrink:0;background:var(--bg)}
+  .stepper-grp button{width:38px;height:38px;border:none;background:transparent;font-size:19px;font-weight:600;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;padding:0}
+  .stepper-grp button:first-child{border-right:1.5px solid var(--border)}
+  .stepper-grp button:last-child{border-left:1.5px solid var(--border)}
+  .stepper-grp button:active{background:var(--blue-light);color:var(--blue)}
+  .stepper-grp .sg-val{min-width:46px;text-align:center;font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;padding:0 4px}
+
+  /* TOGGLE SWITCH — composant on/off unifié (remplace checkboxes natives + pills) */
+  .toggle-switch{position:relative;flex-shrink:0;width:44px;height:26px;border-radius:13px;border:none;background:var(--border);cursor:pointer;padding:0;transition:background .18s ease}
+  .toggle-switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .18s ease}
+  .toggle-switch.on{background:var(--blue)}
+  .toggle-switch.on::after{transform:translateX(18px)}
+  .toggle-switch.on.tog-green{background:var(--green)}
+  .toggle-switch.on.tog-orange{background:var(--orange)}
+  .toggle-switch:active::after{width:23px}
+  /* Rangée de réglage on/off : libellé + sous-texte à gauche, switch à droite */
+  .switch-row{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+  .switch-row:last-child{border-bottom:none}
+  .switch-row .sr-label{font-size:13px;color:var(--text);font-weight:600}
+  .switch-row .sr-hint{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.35}
 
   /* PROGRESSION ACCORDION */
   .prog-acc{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:10px;background:var(--card)}
@@ -329,7 +404,7 @@
           <span id="header-bpm-val"
           ondblclick="bpmEditStart()"
           ontouchstart="bpmValTouchStart(event)" ontouchend="bpmValTouchEnd()" ontouchmove="bpmValTouchEnd()"
-          style="min-width:30px;text-align:center;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.3px;color:var(--header-text);padding:0 4px;transition:color .2s;cursor:pointer" title="Double-tap → saisir BPM">40</span>
+          style="min-width:30px;text-align:center;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:.3px;color:var(--header-text);padding:0 4px;transition:color .2s;cursor:pointer" title="Double-tap → saisir BPM">60</span>
           <input type="number" id="bpm-edit-input" min="20" max="240" inputmode="numeric" pattern="[0-9]*"
           aria-label="Tempo en BPM (20-240)"
           onkeydown="bpmEditKeydown(event)" onblur="bpmEditCommit()"
@@ -345,7 +420,7 @@
       <button id="header-click-btn" class="click-btn h-toggle"
         onclick="togglePreviewClick()"
         title="Clic métronomique">Clic</button>
-      <button id="subdiv-cycle-btn" class="h-icon-btn large" onclick="cycleClickSubdiv()" title="Subdivision rythmique — ÷2 croches · ÷3 triolets · ÷4 doubles croches · ÷6 sextolets" style="font-size:10px;font-weight:700;letter-spacing:.3px;min-width:30px">÷4</button>
+      <button id="subdiv-cycle-btn" class="h-icon-btn large" onclick="cycleClickSubdiv()" title="Subdivision rythmique — 8 croche · 3:8 triolet · 16 double croche · 6:16 sextolet" style="font-size:10px;font-weight:700;letter-spacing:.3px;min-width:34px">16</button>
       <button id="header-metro-solo-btn" class="h-icon-btn large" onclick="headerMetroSolo()" title="Métronome solo" aria-label="Métronome solo">
         <svg width="12" height="13" viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="10,2 18,20 2,20"/><line x1="10" y1="7" x2="14.5" y2="17"/>
@@ -1041,7 +1116,7 @@ function updateHeaderStatsDisplay() {
 }
 
 // ─── HEADER CONTROLS ─────────────────────────────────────────────────────────
-const HCTRL = { mode:'metro', patId:null, patName:'', bpm:40 };
+const HCTRL = { mode:'metro', patId:null, patName:'', bpm:60 };
 
 function headerPlayToggle() {
   if (HCTRL.mode === 'preview' && HCTRL.patId) {
@@ -1141,7 +1216,7 @@ function syncTrainBtnUI() {
   if (!btn) return;
   if (!SETTINGS.trainMode) {
     btn.style.color = 'rgba(244,238,226,.45)';
-    btn.style.borderColor = 'transparent';
+    btn.style.borderColor = 'rgba(244,238,226,.25)';
     btn.style.background = 'transparent';
   } else if (!SETTINGS.trainPyramide) {
     btn.style.color = '#4dd0e1';
@@ -1489,7 +1564,10 @@ function openSettings(tab) {
     <div class="settings-modal" role="dialog" aria-label="Réglages">
       <div class="modal-head">
         <div>
-          <h2>⚙ Réglages</h2>
+          <h2 style="display:flex;align-items:center;gap:7px">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Réglages
+          </h2>
         </div>
         <button class="settings-close" onclick="closeSettings()" aria-label="Fermer">×</button>
       </div>
@@ -1518,26 +1596,26 @@ function openSettings(tab) {
       <div id="pane-son" style="display:${settingsTab==='son'?'block':'none'}">
         <div class="group">
           <label class="group-label">Volumes</label>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            <div class="control-row">
-              <span class="control-label">
-                Tablature
-              </span>
-              <div class="control-buttons">
-                <button class="control-btn" onclick="adjustVolume('patVolume',-5)">−</button>
-                <span class="control-value" id="pat-vol-val" style="color:var(--blue)">${SETTINGS.patVolume}%</span>
-                <button class="control-btn" onclick="adjustVolume('patVolume',+5)">+</button>
-              </div>
+          <div class="vol-ctrl">
+            <div class="vol-head">
+              <span class="vol-label">Tablature</span>
+              <span class="vol-val" id="pat-vol-val" style="color:var(--blue)">${SETTINGS.patVolume}%</span>
             </div>
-            <div class="control-row">
-              <span class="control-label">
-                Clic métronome
-              </span>
-              <div class="control-buttons">
-                <button class="control-btn" onclick="adjustVolume('clickVolume',-5)">−</button>
-                <span class="control-value" id="click-vol-val" style="color:var(--orange)">${SETTINGS.clickVolume}%</span>
-                <button class="control-btn" onclick="adjustVolume('clickVolume',+5)">+</button>
-              </div>
+            <div class="vol-body">
+              <div class="vol-bar"><div class="vol-bar-fill" id="pat-vol-bar" style="width:${SETTINGS.patVolume}%;background:var(--blue)"></div></div>
+              <button class="control-btn cb-sm" onclick="adjustVolume('patVolume',-5)" aria-label="Baisser volume tablature">−</button>
+              <button class="control-btn cb-sm" onclick="adjustVolume('patVolume',+5)" aria-label="Monter volume tablature">+</button>
+            </div>
+          </div>
+          <div class="vol-ctrl">
+            <div class="vol-head">
+              <span class="vol-label">Clic métronome</span>
+              <span class="vol-val" id="click-vol-val" style="color:var(--orange)">${SETTINGS.clickVolume}%</span>
+            </div>
+            <div class="vol-body">
+              <div class="vol-bar"><div class="vol-bar-fill" id="click-vol-bar" style="width:${SETTINGS.clickVolume}%;background:var(--orange)"></div></div>
+              <button class="control-btn cb-sm" onclick="adjustVolume('clickVolume',-5)" aria-label="Baisser volume clic">−</button>
+              <button class="control-btn cb-sm" onclick="adjustVolume('clickVolume',+5)" aria-label="Monter volume clic">+</button>
             </div>
           </div>
           <div class="hint">Régle l'équilibre entre le son de la tab et le clic du métronome.</div>
@@ -1558,22 +1636,18 @@ function openSettings(tab) {
       <div id="pane-tempo" style="display:${settingsTab==='tempo'?'block':'none'}">
         <div class="group">
           <label class="group-label">Presets tempo</label>
-          <div style="display:flex;flex-direction:column;gap:4px">
-            ${TEMPOS.map(t => `
-            <div class="control-row">
-              <div style="display:flex;align-items:center;gap:6px;flex:1">
-                ${t.icon}
-                <div style="display:flex;flex-direction:column;gap:1px">
-                  <span style="font-size:12px;font-weight:600;color:${t.color}">${t.label}</span>
-                  <span style="font-size:10px;color:var(--text3)">${t.range}</span>
-                </div>
-              </div>
-              <div class="control-buttons">
-                <button class="control-btn" onclick="adjustTempoPreset('${t.key}',-5)">−</button>
-                <span class="control-value" id="preset-${t.key}-val" style="color:${t.color}">${SETTINGS.tempoPresets[t.key]}</span>
-                <button class="control-btn" onclick="adjustTempoPreset('${t.key}',+5)">+</button>
-              </div>
-            </div>`).join('')}
+          <div style="display:flex;flex-direction:column;gap:12px">
+            ${TEMPOS.map(t => '<div class="vol-ctrl" style="margin-bottom:0">'
+              + '<div class="vol-head">'
+              + '<span class="vol-label" style="display:flex;align-items:center;gap:6px">' + t.icon + '<span style="color:' + t.color + '">' + t.range + '</span></span>'
+              + '<span class="vol-val" id="preset-' + t.key + '-val" style="color:' + t.color + '">' + SETTINGS.tempoPresets[t.key] + '</span>'
+              + '</div>'
+              + '<div class="vol-body">'
+              + '<div class="vol-bar"><div class="vol-bar-fill" id="preset-' + t.key + '-bar" style="width:' + Math.max(0, Math.min(100, Math.round((SETTINGS.tempoPresets[t.key] - t.rangeMin) / (t.rangeMax - t.rangeMin) * 100))) + '%;background:' + t.color + '"></div></div>'
+              + '<button class="control-btn cb-sm" onclick="adjustTempoPreset(\'' + t.key + '\',-5)" aria-label="Baisser ' + t.range + '">−</button>'
+              + '<button class="control-btn cb-sm" onclick="adjustTempoPreset(\'' + t.key + '\',+5)" aria-label="Monter ' + t.range + '">+</button>'
+              + '</div></div>'
+            ).join('')}
           </div>
           <div class="hint">Toucher une ligne dans le tableau règle directement le BPM.</div>
         </div>
@@ -1581,20 +1655,20 @@ function openSettings(tab) {
         <div class="group">
           <label class="group-label">Valeur rythmique de référence</label>
           <div style="display:flex;gap:6px">
-            <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdiv(2)" aria-label="2 crochés" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===2 ? 'border-color:var(--green);background:var(--green);color:#fff;' : ''}">
-              <span style="font-size:14px;font-weight:800;line-height:1.1">2</span>
+            <button class="subdiv-btn" data-subdiv="2" onclick="setClickSubdiv(2)" aria-label="Croche – 8" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===2 ? 'border-color:#1a7fa6;background:#1a7fa6;color:#fff;' : ''}">
+              <span style="font-size:14px;font-weight:800;line-height:1.1">8</span>
               <span style="font-size:9px;font-weight:500;opacity:.75">croche</span>
             </button>
-            <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdiv(3)" aria-label="3 triolets" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===3 ? 'border-color:var(--green);background:var(--green);color:#fff;' : ''}">
-              <span style="font-size:14px;font-weight:800;line-height:1.1">3</span>
+            <button class="subdiv-btn" data-subdiv="3" onclick="setClickSubdiv(3)" aria-label="Triolet – 3:8" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===3 ? 'border-color:#56864A;background:#56864A;color:#fff;' : ''}">
+              <span style="font-size:14px;font-weight:800;line-height:1.1">3:8</span>
               <span style="font-size:9px;font-weight:500;opacity:.75">triolet</span>
             </button>
-            <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdiv(4)" aria-label="4 croches" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===4 ? 'border-color:var(--green);background:var(--green);color:#fff;' : ''}">
-              <span style="font-size:14px;font-weight:800;line-height:1.1">4</span>
-              <span style="font-size:9px;font-weight:500;opacity:.75">♬</span>
+            <button class="subdiv-btn" data-subdiv="4" onclick="setClickSubdiv(4)" aria-label="Double croche – 16" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===4 ? 'border-color:#C8952A;background:#C8952A;color:#fff;' : ''}">
+              <span style="font-size:14px;font-weight:800;line-height:1.1">16</span>
+              <span style="font-size:9px;font-weight:500;opacity:.75">double croche</span>
             </button>
-            <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdiv(6)" aria-label="6 sextolets" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===6 ? 'border-color:var(--green);background:var(--green);color:#fff;' : ''}">
-              <span style="font-size:14px;font-weight:800;line-height:1.1">6</span>
+            <button class="subdiv-btn" data-subdiv="6" onclick="setClickSubdiv(6)" aria-label="Sextolet – 6:16" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:8px;border:1.5px solid rgba(28,45,51,.18);background:rgba(28,45,51,.07);color:var(--text2);cursor:pointer;transition:all .12s;${SETTINGS.clickSubdiv===6 ? 'border-color:#7B5EA7;background:#7B5EA7;color:#fff;' : ''}">
+              <span style="font-size:14px;font-weight:800;line-height:1.1">6:16</span>
               <span style="font-size:9px;font-weight:500;opacity:.75">sextolet</span>
             </button>
           </div>
@@ -1603,30 +1677,24 @@ function openSettings(tab) {
 
         <div class="group">
           <label class="group-label">Shuffle / Swing</label>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-            <button onclick="toggleShuffleMode()"
-              style="padding:5px 16px;font-size:12px;font-weight:600;border-radius:8px;border:1px solid;cursor:pointer;
-                background:${SETTINGS.shuffleMode ? 'var(--orange)' : 'transparent'};
-                color:${SETTINGS.shuffleMode ? '#fff' : 'var(--text2)'};
-                border-color:${SETTINGS.shuffleMode ? 'var(--orange)' : 'var(--border)'}">
-              ${SETTINGS.shuffleMode ? '♩ Activé' : 'Désactivé'}
-            </button>
-            ${!SETTINGS.shuffleMode ? '<span style="font-size:11px;color:var(--text3)">Active pour jouer en swing</span>' : ''}
+          <div class="switch-row" style="border-bottom:none;padding-top:0">
+            <div>
+              <div class="sr-label">Mode swing</div>
+              <div class="sr-hint">Interprétation longue-courte (swing 0.67 = triolet)</div>
+            </div>
+            <button class="toggle-switch tog-orange ${SETTINGS.shuffleMode ? 'on' : ''}" role="switch" aria-checked="${!!SETTINGS.shuffleMode}" aria-label="Mode swing" onclick="toggleShuffleMode()"></button>
           </div>
-          <div class="hint">Interprétation longue-courte des notes (swing 0.67 = triolet). La progression est trackée séparément — nouveau défi, nouvelle vision.</div>
+          <div class="hint">La progression est trackée séparément — nouveau défi, nouvelle vision.</div>
         </div>
 
         <div class="group">
           <label class="group-label">Mode Entraînement</label>
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:${SETTINGS.trainMode ? '10px' : '4px'}">
-            <button onclick="toggleTrainMode()"
-              style="padding:5px 16px;font-size:12px;font-weight:600;border-radius:8px;border:1px solid;cursor:pointer;
-                background:${SETTINGS.trainMode ? 'var(--green)' : 'transparent'};
-                color:${SETTINGS.trainMode ? '#fff' : 'var(--text2)'};
-                border-color:${SETTINGS.trainMode ? 'var(--green)' : 'var(--border)'}">
-              ${SETTINGS.trainMode ? '✓ Activé' : 'Désactivé'}
-            </button>
-            ${!SETTINGS.trainMode ? '<span style="font-size:11px;color:var(--text3)">Active pour paramétrer</span>' : ''}
+          <div class="switch-row" style="border-bottom:none;padding-top:0;margin-bottom:${SETTINGS.trainMode ? '6px' : '0'}">
+            <div>
+              <div class="sr-label">Tempo progressif</div>
+              <div class="sr-hint">Augmente le tempo automatiquement au fil des boucles</div>
+            </div>
+            <button class="toggle-switch tog-green ${SETTINGS.trainMode ? 'on' : ''}" role="switch" aria-checked="${!!SETTINGS.trainMode}" aria-label="Mode entraînement" onclick="toggleTrainMode()"></button>
           </div>
           ${SETTINGS.trainMode ? `
           <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px">
@@ -1639,10 +1707,10 @@ function openSettings(tab) {
                 </svg>
                 Tempo de départ
               </span>
-              <div class="control-buttons">
-                <button class="control-btn" onclick="adjustTrainBpm('start',-5)">−</button>
-                <span class="control-value" id="train-bpmstart-val" style="color:#4dd0e1">${SETTINGS.trainBpmStart}</span>
-                <button class="control-btn" onclick="adjustTrainBpm('start',+5)">+</button>
+              <div class="stepper-grp">
+                <button onclick="adjustTrainBpm('start',-5)" aria-label="Baisser tempo de départ">−</button>
+                <span class="sg-val" id="train-bpmstart-val" style="color:#4dd0e1">${SETTINGS.trainBpmStart}</span>
+                <button onclick="adjustTrainBpm('start',+5)" aria-label="Monter tempo de départ">+</button>
               </div>
             </div>
             <div class="control-row">
@@ -1655,10 +1723,10 @@ function openSettings(tab) {
                 </svg>
                 Tempo plafond
               </span>
-              <div class="control-buttons">
-                <button class="control-btn" onclick="adjustTrainBpm('max',-5)">−</button>
-                <span class="control-value" id="train-bpmmax-val" style="color:var(--red)">${SETTINGS.trainBpmMax}</span>
-                <button class="control-btn" onclick="adjustTrainBpm('max',+5)">+</button>
+              <div class="stepper-grp">
+                <button onclick="adjustTrainBpm('max',-5)" aria-label="Baisser tempo plafond">−</button>
+                <span class="sg-val" id="train-bpmmax-val" style="color:var(--red)">${SETTINGS.trainBpmMax}</span>
+                <button onclick="adjustTrainBpm('max',+5)" aria-label="Monter tempo plafond">+</button>
               </div>
             </div>
             <div>
@@ -1673,18 +1741,15 @@ function openSettings(tab) {
                 ${[1,2,3,4,5].map(n => `<button data-val="${n}" class="${SETTINGS.trainLoopEvery===n?'active':''}" onclick="setTrainLoopEvery(${n})">${n}</button>`).join('')}
               </div>
             </div>
-            <div style="margin-top:12px">
-              <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;background:rgba(212,98,46,.06)">
-                <input type="checkbox" id="train-pyramid-check" ${SETTINGS.trainPyramide ? 'checked' : ''} onchange="toggleTrainPyramide()" style="cursor:pointer">
-                <span style="font-size:12px;font-weight:600;color:var(--orange)">Mode pyramide</span>
-              </label>
-              <div class="hint" style="margin-top:6px;font-size:10px">Après atteindre le tempo plafond, le tempo redescend étape par étape jusqu'au tempo de départ.</div>
+            <div class="switch-row" style="margin-top:8px;padding:10px;border-bottom:none;border-radius:8px;background:rgba(212,98,46,.06)">
+              <div>
+                <div class="sr-label" style="color:var(--orange)">Mode pyramide</div>
+                <div class="sr-hint">Au plafond, le tempo redescend jusqu'au départ.</div>
+              </div>
+              <button class="toggle-switch tog-orange ${SETTINGS.trainPyramide ? 'on' : ''}" role="switch" aria-checked="${!!SETTINGS.trainPyramide}" aria-label="Mode pyramide" onclick="toggleTrainPyramide(!SETTINGS.trainPyramide); this.classList.toggle('on'); this.setAttribute('aria-checked', !!SETTINGS.trainPyramide)"></button>
             </div>
           </div>` : ''}
-          <div class="hint">${SETTINGS.trainMode
-            ? `+${SETTINGS.trainBpmStep} BPM toutes les ${SETTINGS.trainLoopEvery} boucle${SETTINGS.trainLoopEvery > 1 ? 's' : ''}. Le tempo repart à ${SETTINGS.trainBpmStart} bpm à chaque nouveau pattern.`
-            : 'Augmente le tempo automatiquement au fil des boucles. Active pour paramétrer.'
-          }</div>
+          ${SETTINGS.trainMode ? `<div class="hint">+${SETTINGS.trainBpmStep} BPM toutes les ${SETTINGS.trainLoopEvery} boucle${SETTINGS.trainLoopEvery > 1 ? 's' : ''}. Le tempo repart à ${SETTINGS.trainBpmStart} bpm à chaque nouveau pattern.</div>` : ''}
         </div>
       </div>
 
@@ -1712,7 +1777,7 @@ function openSettings(tab) {
 
         <div class="group">
           <label class="group-label">Position du manche</label>
-          <div class="filter-seg" style="margin-bottom:8px">
+          <div class="seg" style="margin-bottom:8px">
             <button data-position="mid" onclick="setNeckPosition('mid')"
               class="neck-btn ${SETTINGS.neckPosition === 'mid' ? 'active' : ''}">
               Mid-neck
@@ -1723,6 +1788,17 @@ function openSettings(tab) {
             </button>
           </div>
           <div class="hint">Choisir la section du manche pour jouer.</div>
+        </div>
+
+        <div class="group">
+          <label class="group-label">Mode sombre</label>
+          <div class="switch-row" style="border-bottom:none;padding-top:0">
+            <div>
+              <div class="sr-label">Mode sombre</div>
+              <div class="sr-hint">Fond foncé et texte clair pour une meilleure lecture la nuit</div>
+            </div>
+            <button class="toggle-switch ${SETTINGS.darkMode ? 'on' : ''}" role="switch" aria-checked="${SETTINGS.darkMode ? 'true' : 'false'}" aria-label="Mode sombre" onclick="toggleDarkMode(); this.classList.toggle('on'); this.setAttribute('aria-checked', String(SETTINGS.darkMode))"></button>
+          </div>
         </div>
 
       </div>
@@ -1740,14 +1816,13 @@ function openSettings(tab) {
             { key:'showSubdivBtn',label:'Subdivision rythmique',hint:'Bouton ÷N pour changer la subdivision (croches, triolets, doubles croches, sextolets)' },
             { key:'showMetroSolo',label:'Métronome solo',       hint:'Démarrer le métronome indépendamment' },
           ].map(item => `
-          <div style="display:flex;align-items:center;gap:12px;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div class="switch-row">
             <div>
-              <div style="font-size:12px;color:var(--text);font-weight:500">${item.label}</div>
-              <div style="font-size:11px;color:var(--text3);margin-top:2px">${item.hint}</div>
+              <div class="sr-label">${item.label}</div>
+              <div class="sr-hint">${item.hint}</div>
             </div>
-            <input type="checkbox" ${SETTINGS[item.key] ? 'checked' : ''}
-              onchange="toggleHeaderEl('${item.key}',this.checked)"
-              style="width:18px;height:18px;cursor:pointer;flex-shrink:0">
+            <button class="toggle-switch ${SETTINGS[item.key] ? 'on' : ''}" role="switch" aria-checked="${!!SETTINGS[item.key]}" aria-label="${item.label}"
+              onclick="toggleHeaderEl('${item.key}', !SETTINGS['${item.key}']); this.classList.toggle('on'); this.setAttribute('aria-checked', !!SETTINGS['${item.key}'])"></button>
           </div>`).join('')}
         </div>
 
@@ -1759,35 +1834,25 @@ function openSettings(tab) {
             { key:'showNeckBtn',     label:'Mid / High',         hint:'Basculer la position du manche depuis le header' },
             { key:'showHeaderStats', label:'Stats streak', hint:'Afficher la série, le record et le total (🔥⚡📅)' },
           ].map(item => `
-          <div style="display:flex;align-items:center;gap:12px;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div class="switch-row">
             <div>
-              <div style="font-size:12px;color:var(--text);font-weight:500">${item.label}</div>
-              <div style="font-size:11px;color:var(--text3);margin-top:2px">${item.hint}</div>
+              <div class="sr-label">${item.label}</div>
+              <div class="sr-hint">${item.hint}</div>
             </div>
-            <input type="checkbox" ${SETTINGS[item.key] ? 'checked' : ''}
-              onchange="toggleHeaderEl('${item.key}',this.checked)"
-              style="width:18px;height:18px;cursor:pointer;flex-shrink:0">
+            <button class="toggle-switch ${SETTINGS[item.key] ? 'on' : ''}" role="switch" aria-checked="${!!SETTINGS[item.key]}" aria-label="${item.label}"
+              onclick="toggleHeaderEl('${item.key}', !SETTINGS['${item.key}']); this.classList.toggle('on'); this.setAttribute('aria-checked', !!SETTINGS['${item.key}'])"></button>
           </div>`).join('')}
         </div>
       </div>
 
-      <div style="display:flex;margin-top:4px">
-        <button onclick="doExportJSON()"
-          style="flex:1;padding:9px 4px;background:transparent;color:#bbb;border:none;border-radius:10px;font-size:11px;cursor:pointer">
-          ↓ Exporter JSON
-        </button>
-        <button onclick="doImportJSON()"
-          style="flex:1;padding:9px 4px;background:transparent;color:#bbb;border:none;border-radius:10px;font-size:11px;cursor:pointer">
-          ↑ Importer JSON
-        </button>
+      <div class="settings-footer">
+        <div class="sf-actions">
+          <button class="sf-btn" onclick="doExportJSON()">↓ Exporter JSON</button>
+          <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
+        </div>
+        <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
+        <div class="sf-version">v2.9</div>
       </div>
-
-      <button onclick="resetApp()"
-        style="width:100%;padding:9px;background:transparent;color:#bbb;border:none;
-          border-radius:10px;font-size:11px;cursor:pointer;margin-top:6px">
-        ⚙️ Reset (debug)
-      </button>
-      <div style="text-align:center;font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px">v2.8</div>
     </div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', html);
@@ -2017,11 +2082,28 @@ function setTrainLoopEvery(n) {
   refreshSettingsSeg('seg-train-every', String(n));
 }
 
-function toggleTrainPyramide() {
-  const check = document.getElementById('train-pyramid-check');
-  if (!check) return;
-  SETTINGS.trainPyramide = check.checked;
+function toggleTrainPyramide(value) {
+  SETTINGS.trainPyramide = (value !== undefined) ? value : !SETTINGS.trainPyramide;
   saveSettings();
+}
+
+function toggleDarkMode() {
+  SETTINGS.darkMode = !SETTINGS.darkMode;
+  saveSettings();
+  applyDarkMode();
+}
+
+function applyDarkMode() {
+  const html = document.documentElement;
+  if (SETTINGS.darkMode) {
+    html.style.colorScheme = 'dark';
+    html.classList.add('dark-mode');
+    html.classList.remove('light-mode');
+  } else {
+    html.style.colorScheme = 'light';
+    html.classList.remove('dark-mode');
+    html.classList.add('light-mode');
+  }
 }
 
 function toggleDailyChallenge() {
@@ -2073,11 +2155,15 @@ function adjustVolume(type, delta) {
     if (PREVIEW.masterGain) PREVIEW.masterGain.gain.value = SETTINGS.patVolume * 0.02;
     const lbl = document.getElementById('pat-vol-val');
     if (lbl) lbl.textContent = SETTINGS.patVolume + '%';
+    const bar = document.getElementById('pat-vol-bar');
+    if (bar) bar.style.width = SETTINGS.patVolume + '%';
   } else if (type === 'clickVolume') {
     SETTINGS.clickVolume = Math.max(0, Math.min(100, SETTINGS.clickVolume + delta));
     saveSettings();
     const lbl = document.getElementById('click-vol-val');
     if (lbl) lbl.textContent = SETTINGS.clickVolume + '%';
+    const bar = document.getElementById('click-vol-bar');
+    if (bar) bar.style.width = SETTINGS.clickVolume + '%';
   }
 }
 
@@ -2090,6 +2176,8 @@ function adjustTempoPreset(key, delta) {
   const lbl = document.getElementById('preset-' + key + '-val');
   _tempoModified = true;
   if (lbl) lbl.textContent = newVal;
+  const bar = document.getElementById('preset-' + key + '-bar');
+  if (bar) bar.style.width = Math.max(0, Math.min(100, Math.round((newVal - TEMPO.rangeMin) / (TEMPO.rangeMax - TEMPO.rangeMin) * 100))) + '%';
 }
 
 function adjustTrainBpm(which, delta) {
@@ -2262,6 +2350,7 @@ document.addEventListener('mousedown',  wakeLockResetInactiveTimer, { passive: t
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 loadState();
+applyDarkMode();            // applique le dark mode si activé dans les settings
 render();
 updateHeaderUI();           // met à jour le header (visibility du bouton mid/high, etc.)
 updateHeaderStatsDisplay(); // affiche les stats dans le header si activé
