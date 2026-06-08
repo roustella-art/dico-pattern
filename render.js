@@ -258,7 +258,14 @@ function renderParcours() {
 
 // ── GRILLE DE PROGRESSION — constructeur de lignes partagé ──────────────────
 // Retourne { gridRows, totalCells, doneCells }
-function buildProgGridRows(progressId, dir, dirColor) {
+// Retourne l'interprétation valide pour ce pattern (respects customInterps si présent)
+function getValidInterpForPat(pat) {
+  if (!pat.customInterps) return PREVIEW.interp;
+  if (pat.customInterps.includes(PREVIEW.interp)) return PREVIEW.interp;
+  return pat.customInterps[0];  // Fallback à la première interprétation disponible
+}
+
+function buildProgGridRows(progressId, dir, dirColor, interpsToUse = INTERPS) {
   let gridRows = '', totalCells = 0, doneCells = 0;
   TEMPOS.forEach(tempo => {
     gridRows += `<tr>
@@ -269,7 +276,7 @@ function buildProgGridRows(progressId, dir, dirColor) {
         </div>
         <span style="font-size:10px;color:${tempo.color};font-weight:700;display:block">${SETTINGS.tempoPresets[tempo.key]} <span style="font-size:8px;font-weight:500">bpm</span></span>
       </td>`;
-    INTERPS.forEach(interp => {
+    interpsToUse.forEach(interp => {
       const k = getProgressKey(progressId, 1, dir, interp, tempo);
       const done = !!state.progress[k];
       totalCells++;
@@ -286,23 +293,40 @@ function buildProgGridRows(progressId, dir, dirColor) {
 // Retourne { html, progressPercent }
 function buildGammeProgGrid(p) {
   const selectedDir = p.hasDirectionTabs ? getGammeSelectedDir(p.id) : null;
-  const progressId = (p.hasDirectionTabs && selectedDir)
-    ? p.id + '__' + selectedDir.replace(/[→↔]/g, '-')
-    : p.id;
+  const selectedGroup = p.stringGroups ? getTriadeStringGroup(p.id) : null;
+
+  // Créer un progressId distinct pour chaque direction/groupe
+  let progressId = p.id;
+  if (p.hasDirectionTabs && selectedDir) {
+    progressId = p.id + '__' + selectedDir.replace(/[→↔]/g, '-');
+  } else if (p.stringGroups && selectedGroup) {
+    progressId = p.id + '__' + selectedGroup;
+  }
+
   const dirColor = '#56864A';
 
-  const { gridRows, totalCells, doneCells } = buildProgGridRows(progressId, 'U', dirColor);
+  // Utiliser customInterps si présent, sinon utiliser INTERPS global
+  const interpsToUse = p.customInterps || INTERPS;
+  const interpLabels = p.customInterps
+    ? { Down: 'Pick ↓', Up: 'Pick ↑', Sweep: 'Sweep' }
+    : INTERP_LABELS;
+
+  const { gridRows, totalCells, doneCells } = buildProgGridRows(progressId, 'U', dirColor, interpsToUse);
   const progressPercent = totalCells > 0 ? Math.round((doneCells / totalCells) * 100) : 0;
 
-  const dirLabel = (p.hasDirectionTabs && selectedDir)
-    ? `<span style="font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px">${selectedDir}</span>`
-    : '';
+  // Badge de direction OU badge de groupe
+  let badgeLabel = '';
+  if (p.hasDirectionTabs && selectedDir) {
+    badgeLabel = `<span style="font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px">${selectedDir}</span>`;
+  } else if (p.stringGroups && selectedGroup) {
+    badgeLabel = `<span style="font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px">${selectedGroup}</span>`;
+  }
 
   const html = `<div class="prog-grid" style="margin-bottom:10px">
     <table><thead><tr>
-      <th style="width:68px;background:var(--blue);vertical-align:middle">${dirLabel}</th>
-      ${INTERPS.map(i => `<th data-interp-th="${i}" onclick="setPreviewInterp('${i}')"
-        style="cursor:pointer;transition:all .15s;${PREVIEW.interp===i ? 'background:var(--orange);color:#fff;' : 'background:var(--blue);color:rgba(255,255,255,.75);'}">${INTERP_LABELS[i]}</th>`).join('')}
+      <th style="width:68px;background:var(--blue);vertical-align:middle">${badgeLabel}</th>
+      ${interpsToUse.map(i => `<th data-interp-th="${i}" onclick="setPreviewInterp('${i}')"
+        style="cursor:pointer;transition:all .15s;${PREVIEW.interp===i ? 'background:var(--orange);color:#fff;' : 'background:var(--blue);color:rgba(255,255,255,.75);'}">${interpLabels[i]}</th>`).join('')}
     </tr></thead>
     <tbody style="background:transparent">${gridRows}</tbody></table></div>`;
 
@@ -336,6 +360,28 @@ function renderPatternGroupBody(pats, key) {
                 color:${isActive ? '#fff' : 'var(--text2)'};
                 border-color:${isActive ? 'var(--blue)' : 'var(--border)'}">
               ${dk}
+            </button>`;
+          }).join('')}
+        </div>`;
+    }
+
+    // ── Sélecteur de groupes de cordes (triades avec stringGroups) ───────────
+    let stringGroupsHtml = '';
+    if (p.stringGroups && Object.keys(p.stringGroups).length > 1) {
+      const selectedGroup = getTriadeStringGroup(p.id);
+      const groupKeys = Object.keys(p.stringGroups);
+      stringGroupsHtml = `
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          ${groupKeys.map(gk => {
+            const isActive = gk === selectedGroup;
+            const btnId = 'triade-group-btn-' + p.id + '-' + gk;
+            return `<button id="${btnId}"
+              onclick="setTriadeStringGroup('${p.id}', '${gk}')"
+              style="flex:1;font-size:13px;font-weight:${isActive?'700':'600'};padding:7px 8px;border-radius:8px;border:2px solid;cursor:pointer;transition:all .15s;text-align:center;
+                background:${isActive ? 'var(--blue)' : 'transparent'};
+                color:${isActive ? '#fff' : 'var(--text2)'};
+                border-color:${isActive ? 'var(--blue)' : 'var(--border)'}">
+              ${gk}
             </button>`;
           }).join('')}
         </div>`;
@@ -375,16 +421,31 @@ function renderPatternGroupBody(pats, key) {
       </div>`;
 
     // ── Tab avec filtre de cordes actif ──────────────────────────────────────
-    const rawTabForDisplay = p.hasDirectionTabs ? getGammeActiveTab(p) : getEffectiveTab(getTabForNeckPosition(p));
-    const neckTabForDisplay = transformTab(rawTabForDisplay, p.id, true); // neck offset (mid/high), sans string shift
-    const filteredTabForDisplay = applyGammeStringFilter(neckTabForDisplay, activeStrings);
+    let rawTabForDisplay;
+    if (p.hasDirectionTabs) {
+      rawTabForDisplay = getGammeActiveTab(p);
+    } else if (p.stringGroups) {
+      rawTabForDisplay = getTriadeActiveTab(p);
+    } else {
+      rawTabForDisplay = getEffectiveTab(getTabForNeckPosition(p));
+    }
+
+    let neckTabForDisplay = rawTabForDisplay;
+    if (!p.disableHighNeck) {
+      neckTabForDisplay = transformTab(rawTabForDisplay, p.id, true); // neck offset (mid/high), sans string shift
+    }
+
+    // Filtrer les cordes uniquement pour les gammes sans stringGroups
+    const filteredTabForDisplay = p.stringGroups
+      ? neckTabForDisplay
+      : applyGammeStringFilter(neckTabForDisplay, activeStrings);
     const tabIsPlaying = PREVIEW.patId === p.id;
     const tabBlock = `
       <div style="margin-bottom:10px">
         ${stringSelector}
         <div class="tab-wrap" style="margin:0" onclick="tabWrapClick('${p.id}')"
           title="Tap → lecture / stop">
-          <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${tabWithSymbols(cleanTabDisplay(filteredTabForDisplay), PREVIEW.interp)}</pre>
+          <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${tabWithSymbols(cleanTabDisplay(filteredTabForDisplay), getValidInterpForPat(p))}</pre>
           <div id="tab-cursor-montee-${p.id}" class="tab-cursor-bar"></div>
           <div id="tab-cursor-retour-${p.id}" class="tab-cursor-bar"></div>
           <div id="tab-play-badge-${p.id}" class="tab-play-badge${tabIsPlaying?' playing':''}">
@@ -425,6 +486,7 @@ function renderPatternGroupBody(pats, key) {
     return `
       <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
         ${dirTabsHtml}
+        ${stringGroupsHtml}
         <div id="pat-train-${p.id}" style="font-size:13px;color:var(--text2);opacity:.7;padding:0 1px 6px;letter-spacing:.1px;display:flex;justify-content:space-between;align-items:center">
           <span>— pattern spécial —</span>
           <span style="font-weight:600;color:var(--blue);font-size:12px">${progressPercent > 0 ? progressPercent+'%' : ''}</span>
@@ -743,7 +805,11 @@ function renderGammes() {
   });
   html += `</div>`;
 
-  Object.entries(gammeGroups).sort((a,b) => a[0].localeCompare(b[0])).forEach(([key, pats]) => {
+  Object.entries(gammeGroups).sort((a,b) => {
+    const na = parseInt(a[1][0].num, 10);
+    const nb = parseInt(b[1][0].num, 10);
+    return na - nb;
+  }).forEach(([key, pats]) => {
     const base = pats[0];
     if (state.diffFilter !== 'all' && base.difficulty !== state.diffFilter) return;
     const isOpen = state.openCards[key];

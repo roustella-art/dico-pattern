@@ -20,6 +20,7 @@ let state = {
   dailyChallengeOpen: true,  // accordéon challenge du jour (ouvert par défaut)
   gammeActiveStrings: {}, // { "gammeP1": [true,true,true,true,true,true] } — [e,B,G,D,A,E]
   gammeSelectedDir: {},  // { "pentaTrans1": "1→2" } — direction active par gamme avec directions multiples
+  triadeStringGroup: {},  // { "triadeDim1": "GBe" } — groupe de cordes actif par triade
 };
 
 // ─── SETTINGS (cordes / son / case de départ) ────────────────────────────────
@@ -37,15 +38,15 @@ const SETTINGS = {
   stringGroup: 'DGBE',     // 'DGBE' | 'ADGB' | 'EADG'
   previewSound: 'doux',    // 'doux' | 'piano' | 'guitare' | 'auto'
   neckPosition: 'mid',     // 'mid' (case 5, offset 0) | 'high' (case 12, offset 7)
-  showNeckBtn: true,       // afficher/masquer le bouton mid/high dans le header
-  showShuffleBtn: true,    // afficher bouton Shuffle dans la row 1 du header
-  showStringBtn: true,     // afficher bouton groupe de cordes dans la row 1 du header
-  showSubdivBtn: true,     // afficher bouton subdivision rythmique dans le header
-  showTrain: true,         // afficher bouton Train. dans le header
+  showNeckBtn: false,      // afficher/masquer le bouton mid/high dans le header
+  showShuffleBtn: false,   // afficher bouton Shuffle dans la row 1 du header
+  showStringBtn: false,    // afficher bouton groupe de cordes dans la row 1 du header
+  showSubdivBtn: false,    // afficher bouton subdivision rythmique dans le header
+  showTrain: false,        // afficher bouton Train. dans le header
   showCountin: true,       // afficher bouton Décompte dans le header
   showClick: true,         // afficher bouton Clic dans le header
-  showMetroSolo: true,     // afficher bouton Métronome solo dans le header
-  showHeaderStats: true,   // afficher stats streak (🔥⚡📅) dans le header
+  showMetroSolo: false,    // afficher bouton Métronome solo dans le header
+  showHeaderStats: false,  // afficher stats streak (🔥⚡📅) dans le header
   clickSubdiv: 4,          // 2 | 3 | 4 | 6 — subdivision du clic
   navHidden: false,        // true = nav masquée (portrait + paysage), togglé par long press logo
   loopExt: 0,              // 0 = base · −1 = retour même niveau · +N = extension pyramide
@@ -59,6 +60,7 @@ const SETTINGS = {
   patVolume: 75,             // 0–100 → gain tablature (75 ≈ ×1.5)
   clickVolume: 60,           // 0–100 → gain clic métronome (60 ≈ ×0.36)
   shuffleMode: false,        // mode shuffle/swing (facteur fixe 0.67 = triolet)
+  darkMode: false,           // true = mode sombre activé manuellement
 };
 
 function loadSettings() {
@@ -94,6 +96,7 @@ function loadSettings() {
     const cv = parseInt(s.clickVolume);
     if (!isNaN(cv) && cv >= 0 && cv <= 100) SETTINGS.clickVolume = cv;
     if (s.shuffleMode === true) SETTINGS.shuffleMode = true;
+    if (s.darkMode === true) SETTINGS.darkMode = true;
     if (s.tempoPresets && typeof s.tempoPresets === 'object') {
       ['lent','cool','chaud'].forEach(k => {
         const v = parseInt(s.tempoPresets[k]);
@@ -130,6 +133,7 @@ function saveSettings() {
       patVolume: SETTINGS.patVolume,
       clickVolume: SETTINGS.clickVolume,
       shuffleMode: SETTINGS.shuffleMode,
+      darkMode: SETTINGS.darkMode,
     }));
   } catch(e) { console.warn('saveSettings:', e); }
 }
@@ -204,6 +208,9 @@ function loadState() {
     if (saved.gammeSelectedDir && typeof saved.gammeSelectedDir === 'object') {
       state.gammeSelectedDir = saved.gammeSelectedDir;
     }
+    if (saved.triadeStringGroup && typeof saved.triadeStringGroup === 'object') {
+      state.triadeStringGroup = saved.triadeStringGroup;
+    }
   } catch(e) { console.warn('loadState:', e); }
   loadPatNotes();
   loadPatTrace();
@@ -220,6 +227,7 @@ function saveState() {
       dailyChallengeOpen: state.dailyChallengeOpen,
       gammeActiveStrings: state.gammeActiveStrings,
       gammeSelectedDir:   state.gammeSelectedDir,
+      triadeStringGroup:  state.triadeStringGroup,
     }));
   } catch(e) { console.warn('saveState:', e); }
 }
@@ -250,7 +258,18 @@ function getGroupPct(groupKey) {
       // Gamme avec onglets de direction : une progression par direction
       Object.keys(p.directions).forEach(dirKey => {
         const progressId = p.id + '__' + dirKey.replace(/[→↔]/g, '-');
-        INTERPS.forEach(i => TEMPOS.forEach(t => {
+        const interpsToUse = p.customInterps || INTERPS;
+        interpsToUse.forEach(i => TEMPOS.forEach(t => {
+          total++;
+          if (state.progress[getProgressKey(progressId, 1, 'U', i, t)]) done++;
+        }));
+      });
+    } else if (p.special && p.stringGroups) {
+      // Gamme spécialisée avec groupes de cordes (triades) : une progression par groupe
+      Object.keys(p.stringGroups).forEach(groupKey => {
+        const progressId = p.id + '__' + groupKey;
+        const interpsToUse = p.customInterps || INTERPS;
+        interpsToUse.forEach(i => TEMPOS.forEach(t => {
           total++;
           if (state.progress[getProgressKey(progressId, 1, 'U', i, t)]) done++;
         }));
@@ -258,8 +277,9 @@ function getGroupPct(groupKey) {
     } else {
       // Pour les gammes (special: true), utiliser 'U' ; sinon utiliser la direction du pattern
       const dirs = p.special ? ['U'] : (p.dir ? [p.dir] : ['U','D','M']);
+      const interpsToUse = p.customInterps || INTERPS;
       dirs.forEach(d => {
-        INTERPS.forEach(i => TEMPOS.forEach(t => {
+        interpsToUse.forEach(i => TEMPOS.forEach(t => {
           total++;
           if (state.progress[getProgressKey(p.id, 1, d, i, t)]) done++;
         }));

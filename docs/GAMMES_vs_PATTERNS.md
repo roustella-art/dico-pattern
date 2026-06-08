@@ -476,6 +476,161 @@ Le badge se met à jour automatiquement à chaque changement de direction (via `
 
 ---
 
+## Gamme spécialisée : Triades Diminuées V2 (`customInterps`, `disableHighNeck`, `stringGroups`)
+
+**Cas d'usage :** Une gamme multi-groupe avec interprétations customisées (Down, Up, Sweep) et groupes de cordes sélectionnables. Utilisée pour les arpègements sur différentes positions (GBe, DGB, ADG, EAD) sans transposition high-neck.
+
+### Structure du code
+
+```javascript
+{
+  id: "triadeDim1",
+  cat: "gamme",
+  num: "13",
+  special: true,
+  disableHighNeck: true,                    // ← Désactive la transposition high-neck
+  customInterps: ["Down", "Up", "Sweep"],   // ← Remplace ["Down", "Up", "Leg"]
+  difficulty: "Avancé",
+  name: "Triades Diminuées V2",
+  bpm: 120,
+  stringGroups: {
+    "GBe": `...tab pour cordes e, B, G...`,
+    "DGB": `...tab pour cordes B, G, D...`,
+    "ADG": `...tab pour cordes D, A, G...`,
+    "EAD": `...tab pour cordes E, A, D...`
+  }
+  // ❌ PAS de `tab` — remplacée par `stringGroups`
+}
+```
+
+### Interface et fonctionnalités
+
+1. **Sélection de groupes de cordes** (à côté des onglets de direction, le cas échéant)
+   - 4 boutons pleine largeur : `GBe · DGB · ADG · EAD`
+   - **Actif** → fond `var(--blue)`, texte blanc
+   - **Inactif** → transparent, texte `var(--text2)`
+   - Cliquer change le groupe → tab + tuning visuelle mise à jour, sans re-render global
+
+2. **Interprétations customisées (Sweep)**
+   - Affiche les flèches de picking du fichier ASCII (`.n` = ↓ bleu, `.V` = ↑ orange)
+   - Grille de progression avec colonnes **Pick ↓ · Pick ↑ · Sweep** (au lieu de Pick ↓ · Pick ↑ · Legato)
+   - Même badge de direction/groupe dans le `th` que les autres gammes
+
+3. **Tuning standard EADGBe préservée**
+   - Chaque groupe affiche toujours les 6 cordes dans le même ordre : `e, B, G, D, A, E`
+   - Seuls les frets changent selon le groupe
+   - `disableHighNeck: true` → pas de transposition d'affichage (pour éviter la confusion pédagogique)
+
+### État persistant
+
+```javascript
+// Dans state.triadeStringGroup (localStorage)
+{
+  "triadeDim1": "GBe"   // groupe actif par gamme multi-groupe
+}
+```
+
+### Fonctions clés
+
+| Fonction | Fichier | Rôle |
+|----------|---------|------|
+| `getTriadeStringGroup(patId)` | `index.html` | Retourne le groupe actif (premier par défaut) |
+| `getTriadeActiveTab(pat)` | `index.html` | Retourne le tab du groupe sélectionné |
+| `setTriadeStringGroup(patId, groupKey)` | `index.html` | Change le groupe + met à jour tab, grille et boutons |
+| `getValidInterp(pat)` | `index.html` | Retourne une interprétation valide pour ce pattern (utilise `customInterps` si présent) |
+| `getValidInterpForPat(p)` | `render.js` | Variante pour le contexte de rendu |
+
+### Propriétés spéciales
+
+**`disableHighNeck: true`**
+- Désactive la transposition `+7` frets en high-neck
+- Utile quand la pédagogie exige une tuning visuelle strictement EADGBe
+- Pipeline audio/affichage contournent `transformTab()` pour cette propriété
+
+**`customInterps: ["Down", "Up", "Sweep"]`**
+- Remplace le `INTERPS` global pour CE pattern uniquement
+- La grille de progression utilise ces labels au lieu de (Down, Up, Leg)
+- `tabWithSymbols()` et `setPreviewInterp()` respectent ce tableau
+
+**`stringGroups: { "GBe": ..., "DGB": ..., ... }`**
+- Stocke N variantes du tab (dans ce cas, 4 groupes de cordes)
+- Structure identique à `directions` (pattern → multi-variant)
+- Chaque groupe a un **progressId distinct** pour une progression indépendante
+- Format progressId : `patId + '__' + groupKey`
+
+### Affichage des flèches de picking pour Sweep
+
+Les flèches (`n` = pick down, `V` = pick up) sont encodées dans le tab avec des lignes de spacing :
+
+```
+     n     n  n  V     V  V  n     n  n  V     V  V
+e |-----------4--7--4-----------------7--10-7----------|
+...
+↩
+  n     n  n  V     V  V  n     n  n  V     V  V
+-----------10-13-10----------------7--10-7----------|
+...
+```
+
+Quand **Sweep** est sélectionné :
+1. `tabWithSymbols()` détecte les lignes de picking (`isPickLine()` = `/^\s*[nV\s]+$/ && /[nV]/`)
+2. Convertit les caractères en symboles colorés :
+   - `n` → **↓** bleu (`var(--blue)`)
+   - `V` → **↑** orange (`var(--orange)`)
+3. Affiche les flèches AVANT chaque bloc de cordes (montée ET descente)
+
+Pour les autres interprétations (Down, Up), les flèches sont masquées et les symboles générés automatiquement selon le rythme.
+
+### Progression par groupe
+
+Chaque groupe a sa propre progression indépendante, agrégée dans le % global de la carte :
+
+```javascript
+// Format de la clé :
+progressId = patId + '__' + groupKey
+
+// Exemples :
+"triadeDim1__GBe__1__U__Down__lent"
+"triadeDim1__DGB__1__U__Down__lent"
+"triadeDim1__ADG__1__U__Down__lent"
+"triadeDim1__EAD__1__U__Down__lent"
+```
+
+Le badge dans le `th` affiche le groupe actif pour clarifier quelle progression est remplie.
+
+### Pipeline complet
+
+```
+Affichage tab :
+  pat.stringGroups[groupKey] → transformTab() [si disableHighNeck=false] → tabWithSymbols() [avec flèches pour Sweep] → pre.innerHTML
+
+Audio (previewPlay) :
+  pat.stringGroups[groupKey] → transformTab() [si disableHighNeck=false] → parseTabNotesSpecial → cycle
+
+Curseur (previewPlay) :
+  pat.stringGroups[groupKey] → transformTab() [si disableHighNeck=false] → parseTabForCursorSpecial → steps
+
+Rafraîchissement interp (setPreviewInterp) :
+  Utilise customInterps si présent pour l'affichage des symboles
+```
+
+### Mise à jour DOM ciblée au changement de groupe
+
+`setTriadeStringGroup()` met à jour sans `render()` global :
+- `document.getElementById('tab-pre-' + patId)` → tab rechargée
+- `document.getElementById('gamme-prog-' + patId)` → grille régénérée
+- `document.getElementById('pat-train-' + patId)` → % progression rechargé
+- Boutons du groupe → styles mis à jour
+
+### Règle de nommage des IDs de bouton de groupe
+
+```javascript
+btnId = 'triade-group-btn-' + patId + '-' + groupKey
+// "GBe" → id="triade-group-btn-triadeDim1-GBe"
+```
+
+---
+
 **🎯 TL;DR:**
 - **Pattern** = exercice technique, multiple directions, doigtés
 - **Gamme** = pattern spécial, `special:true`, `cat:"gamme"`, note-par-note, 2 mesures

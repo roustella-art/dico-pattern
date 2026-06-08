@@ -254,6 +254,7 @@
   .settings-overlay{position:fixed;inset:0;z-index:1000;background:rgba(15,25,55,.85);display:flex;align-items:flex-start;justify-content:center;padding:24px 14px;overflow-y:auto;animation:fadeIn .18s ease}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes fadeInDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeInOut{0%{opacity:0;transform:scale(.9)};20%{opacity:1;transform:scale(1)};80%{opacity:1;transform:scale(1)};100%{opacity:0;transform:scale(.9)}}
   .settings-modal{background:#fff;border-radius:18px;padding:18px 20px 22px;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);position:relative}
   .settings-modal .modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
   .settings-modal h2{font-size:18px;font-weight:800;color:var(--blue);letter-spacing:-.2px}
@@ -447,6 +448,7 @@
 
 <script src="data.js"></script>
 <script src="state.js"></script>
+<script src="onboarding.js"></script>
 <script src="audio.js"></script>
 <script src="render.js"></script>
 <script>
@@ -947,6 +949,72 @@ function setGammeDirection(patId, dirKey) {
       const btn = document.getElementById('gamme-dir-btn-' + patId + '-' + dk.replace(/[→↔]/g, '_'));
       if (btn) {
         const isActive = dk === dirKey;
+        btn.style.background  = isActive ? 'var(--blue)'   : 'transparent';
+        btn.style.color       = isActive ? '#fff'          : 'var(--text2)';
+        btn.style.borderColor = isActive ? 'var(--blue)'   : 'var(--border)';
+        btn.style.fontWeight  = isActive ? '700'           : '600';
+      }
+    });
+  }
+}
+
+function getTriadeStringGroup(patId) {
+  const pat = PATTERNS.find(p => p.id === patId);
+  if (!pat || !pat.stringGroups) return null;
+  const saved = state.triadeStringGroup && state.triadeStringGroup[patId];
+  const keys = Object.keys(pat.stringGroups);
+  return (saved && keys.includes(saved)) ? saved : keys[0];
+}
+
+function getTriadeActiveTab(pat) {
+  if (!pat.stringGroups) return pat.tab;
+  const groupKey = getTriadeStringGroup(pat.id);
+  return pat.stringGroups[groupKey] || Object.values(pat.stringGroups)[0];
+}
+
+function getValidInterp(pat) {
+  if (!pat.customInterps) return PREVIEW.interp;
+  if (pat.customInterps.includes(PREVIEW.interp)) return PREVIEW.interp;
+  return pat.customInterps[0];  // Fallback à la première interprétation disponible
+}
+
+function setTriadeStringGroup(patId, groupKey) {
+  if (!state.triadeStringGroup) state.triadeStringGroup = {};
+  state.triadeStringGroup[patId] = groupKey;
+  saveState();
+  if (PREVIEW.patId === patId) previewStop();
+  const pat = PATTERNS.find(p => p.id === patId);
+  // Mettre à jour la tab affichée
+  const pre = document.getElementById('tab-pre-' + patId);
+  if (pre && pat) {
+    const rawTab = getTriadeActiveTab(pat);
+    let neckTab = rawTab;
+    if (!pat.disableHighNeck) {
+      neckTab = transformTab(rawTab, pat.id, true);
+    }
+    const filtered = neckTab;  // Pas de filtrage de cordes pour les triades
+    pre.innerHTML = tabWithSymbols(cleanTabDisplay(filtered), getValidInterp(pat));
+  }
+  // Live refresh de la progression
+  if (pat) {
+    const progEl = document.getElementById('gamme-prog-' + patId);
+    if (progEl) {
+      const { html, progressPercent } = buildGammeProgGrid(pat);
+      progEl.innerHTML = html;
+      // Mettre à jour le % affiché dans l'en-tête de la carte
+      const trainEl = document.getElementById('pat-train-' + patId);
+      if (trainEl) {
+        const pctSpan = trainEl.querySelector('span:last-child');
+        if (pctSpan) pctSpan.textContent = progressPercent > 0 ? progressPercent + '%' : '';
+      }
+    }
+  }
+  // Mettre à jour l'apparence des boutons de groupe
+  if (pat && pat.stringGroups) {
+    Object.keys(pat.stringGroups).forEach(gk => {
+      const btn = document.getElementById('triade-group-btn-' + patId + '-' + gk);
+      if (btn) {
+        const isActive = gk === groupKey;
         btn.style.background  = isActive ? 'var(--blue)'   : 'transparent';
         btn.style.color       = isActive ? '#fff'          : 'var(--text2)';
         btn.style.borderColor = isActive ? 'var(--blue)'   : 'var(--border)';
@@ -1851,7 +1919,7 @@ function openSettings(tab) {
           <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
         </div>
         <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
-        <div class="sf-version">v2.9</div>
+        <div class="sf-version">v2.9.1</div>
       </div>
     </div>
   </div>`;
@@ -1885,7 +1953,7 @@ function closeSettings() {
 
 function resetApp() {
   if (!confirm(`⚠️ Remettre l'app à zéro ? Progression, notes et réglages seront effacés.`)) return;
-  ['dicoPattern','dicoPatNotes','dicoOnboarded','dicoSettings','dicoSessions','dicoPatTrace','dicoPatternJournal'].forEach(k => localStorage.removeItem(k));
+  ['dicoPattern','dicoPatNotes','dicoOnboarded','dicoSettings','dicoSessions','dicoPatTrace','dicoPatternJournal','dico-onboarding-done','dico-onboarding-level','dico-cache-version'].forEach(k => localStorage.removeItem(k));
   Object.keys(localStorage).filter(k => k.startsWith('altFing_')).forEach(k => localStorage.removeItem(k));
   location.reload();
 }
@@ -2350,6 +2418,7 @@ document.addEventListener('mousedown',  wakeLockResetInactiveTimer, { passive: t
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 loadState();
+showOnboarding();           // affiche le questionnaire de niveau à la première utilisation
 applyDarkMode();            // applique le dark mode si activé dans les settings
 render();
 updateHeaderUI();           // met à jour le header (visibility du bouton mid/high, etc.)
@@ -2378,6 +2447,37 @@ document.addEventListener("toggle", (event) => {
     metroStop();
   }
 }, false);
+
+// ── Vérification de mise à jour PWA ────────────────────────────────────────────
+// Charge version.json pour vérifier s'il y a une nouvelle version
+// Si la version change, efface le cache et force un refresh
+async function checkForUpdate() {
+  try {
+    const resp = await fetch('./version.json?t=' + Date.now(), { cache: 'no-store' });
+    const versionData = await resp.json();
+    const savedVersion = localStorage.getItem('dico-cache-version');
+
+    if (savedVersion !== versionData.cacheVersion) {
+      console.log('🔄 Nouvelle version détectée, vidage du cache...');
+      // Vider tous les caches
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(cacheNames.map(name => caches.delete(name)));
+      }
+      // Sauvegarder la nouvelle version
+      localStorage.setItem('dico-cache-version', versionData.cacheVersion);
+      // Force un reload complet
+      window.location.reload(true);
+    }
+  } catch (e) {
+    console.warn('Erreur lors de la vérification de mise à jour:', e);
+  }
+}
+
+// Vérifier la mise à jour au chargement et toutes les 5 minutes
+checkForUpdate();
+setInterval(checkForUpdate, 5 * 60 * 1000);
+
 // PWA Service Worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(()=>{});

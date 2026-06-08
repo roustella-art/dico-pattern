@@ -647,12 +647,26 @@ function spdButtons() {
 function tabWithSymbols(tabStr, interp) {
   const lines = tabStr.split('\n');
   const isStrLine = l => /^[eEBGDA]\s*\|/.test(l) || /^[-\d]/.test(l);
+  const isPickLine = l => /^\s*[nV\s]+$/.test(l) && /[nV]/.test(l);  // Ligne avec flèches de picking
   const STR_ORDER = ['e','B','G','D','A','E'];
   const output = [];
   let i = 0;
   let globalIdx = 0;
 
   while (i < lines.length) {
+    // Vérifier si c'est une ligne de flèches de picking (pour Sweep)
+    if (isPickLine(lines[i])) {
+      if (interp === 'Sweep') {
+        // Convertir n → ↓ bleu et V → ↑ orange
+        let pickLine = lines[i];
+        pickLine = pickLine.replace(/n/g, '<span style="color:var(--blue);font-weight:700">↓</span>');
+        pickLine = pickLine.replace(/V/g, '<span style="color:var(--orange);font-weight:700">↑</span>');
+        output.push(pickLine);
+      }
+      i++;
+      continue;
+    }
+
     if (isStrLine(lines[i])) {
       // ── Collecter le bloc ──────────────────────────────────────────────────
       const block = [];
@@ -688,20 +702,24 @@ function tabWithSymbols(tabStr, interp) {
 
       let sym = ' '.repeat(contentLen);
       let prevStr = null;
-      beats.forEach((col, j) => {
-        // Corde principale à ce temps (ordre d'affichage de la tab)
-        const primaryStr = byCol[col].sort(
-          (a, b) => (STR_ORDER.indexOf(a) + 99) % 99 - (STR_ORDER.indexOf(b) + 99) % 99
-        )[0];
 
-        let s = ' ';
-        if (interp === 'Up')   s = (globalIdx + j) % 2 === 0 ? '↑' : '↓';
-        if (interp === 'Down') s = (globalIdx + j) % 2 === 0 ? '↓' : '↑';
-        if (interp === 'Leg')  s = primaryStr !== prevStr ? '↓' : ' ';
+      // Pour Sweep, ne pas générer les symboles (ils sont affichés comme une ligne séparée)
+      if (interp !== 'Sweep') {
+        beats.forEach((col, j) => {
+          // Corde principale à ce temps (ordre d'affichage de la tab)
+          const primaryStr = byCol[col].sort(
+            (a, b) => (STR_ORDER.indexOf(a) + 99) % 99 - (STR_ORDER.indexOf(b) + 99) % 99
+          )[0];
 
-        prevStr = primaryStr;
-        if (col < sym.length) sym = sym.substring(0, col) + s + sym.substring(col + 1);
-      });
+          let s = ' ';
+          if (interp === 'Up')   s = (globalIdx + j) % 2 === 0 ? '↑' : '↓';
+          if (interp === 'Down') s = (globalIdx + j) % 2 === 0 ? '↓' : '↑';
+          if (interp === 'Leg')  s = primaryStr !== prevStr ? '↓' : ' ';
+
+          prevStr = primaryStr;
+          if (col < sym.length) sym = sym.substring(0, col) + s + sym.substring(col + 1);
+        });
+      }
 
       output.push(' '.repeat(prefixLen) + sym);
       globalIdx += beats.length;
@@ -746,17 +764,47 @@ function setPreviewInterp(interp) {
     th.style.background = active ? 'var(--orange)' : 'var(--blue)';
     th.style.color      = active ? '#fff' : 'rgba(255,255,255,.75)';
     th.style.boxShadow  = 'none';
-    th.textContent      = INTERP_LABELS[th.dataset.interpTh];
+    // Utiliser les labels customInterps si présents
+    const interpKey = th.dataset.interpTh;
+    let label = INTERP_LABELS[interpKey];
+    if (label === undefined) {
+      // Fallback pour les interprétations custom
+      if (interpKey === 'Sweep') label = 'Sweep';
+      else if (interpKey === 'Down') label = 'Pick ↓';
+      else if (interpKey === 'Up') label = 'Pick ↑';
+      else label = interpKey;
+    }
+    th.textContent = label;
   });
   // Rafraîchir toutes les tabs visibles sans re-render
   document.querySelectorAll('[data-tab-id]').forEach(pre => {
     const pat = PATTERNS.find(p => p.id === pre.dataset.tabId);
     if (pat) {
       // Patterns statiques : appliquer uniquement le string shift (fret offset déjà intégré dans tabMid/tabHigh)
-      const rawTab = pat.hasDirectionTabs ? getGammeActiveTab(pat) : getEffectiveTab(getTabForNeckPosition(pat));
-      let processed = isStaticNeckTab(pat) ? applyStaticTabTransform(rawTab) : transformTab(rawTab, pre.dataset.tabId, pat.special);
-      // Gammes (special) : appliquer le filtre de cordes actives
-      if (pat.special) processed = applyGammeStringFilter(processed, getGammeActiveStrings(pat.id));
+      // Gammes avec directions : utiliser le tab de la direction sélectionnée
+      // Triades avec groupes : utiliser le tab du groupe sélectionné
+      let rawTab;
+      if (pat.hasDirectionTabs) {
+        rawTab = getGammeActiveTab(pat);
+      } else if (pat.stringGroups) {
+        rawTab = getTriadeActiveTab(pat);
+      } else {
+        rawTab = getEffectiveTab(getTabForNeckPosition(pat));
+      }
+
+      let processed;
+      if (pat.disableHighNeck) {
+        processed = rawTab;
+      } else if (isStaticNeckTab(pat)) {
+        processed = applyStaticTabTransform(rawTab);
+      } else {
+        processed = transformTab(rawTab, pre.dataset.tabId, pat.special);
+      }
+
+      // Gammes (special) sans stringGroups : appliquer le filtre de cordes actives
+      if (pat.special && !pat.stringGroups) {
+        processed = applyGammeStringFilter(processed, getGammeActiveStrings(pat.id));
+      }
       pre.innerHTML = tabWithSymbols(cleanTabDisplay(processed), interp);
     }
   });
@@ -972,25 +1020,33 @@ function setClickSubdiv(n) {
 
 function syncSubdivUI() {
   const n = SETTINGS.clickSubdiv;
-  // Chips dans les réglages (fond clair)
-  document.querySelectorAll('.subdiv-btn').forEach(b => {
-    const active = parseInt(b.dataset.subdiv) === n;
-    b.style.background  = active ? 'var(--green)'  : 'rgba(28,45,51,.07)';
-    b.style.color       = active ? '#fff'           : 'var(--text2)';
-    b.style.borderColor = active ? 'var(--green)'  : 'rgba(28,45,51,.18)';
-    b.style.fontWeight  = active ? '800'            : '700';
-  });
-  // Bouton cycle subdivision dans le header — couleur propre à chaque valeur
   const SUBDIV_COL = {
     2: '#1a7fa6',  // teal bleu  — croches
     3: '#56864A',  // vert       — triolets
     4: '#C8952A',  // or ambré   — doubles croches (standard)
     6: '#7B5EA7',  // violet     — sextolets
   };
+  const SUBDIV_LABELS = {
+    2: '8',      // croche
+    3: '3:8',    // triolet
+    4: '16',     // double croche
+    6: '6:16',   // sextolet
+  };
+  // Chips dans les réglages
+  document.querySelectorAll('.subdiv-btn').forEach(b => {
+    const active = parseInt(b.dataset.subdiv) === n;
+    const col = active ? SUBDIV_COL[n] : 'rgba(28,45,51,.07)';
+    b.style.background  = col;
+    b.style.color       = active ? '#fff' : 'var(--text2)';
+    b.style.borderColor = col;
+    b.style.fontWeight  = active ? '800' : '700';
+  });
+  // Bouton cycle subdivision dans le header — couleur propre à chaque valeur
   const cycleBtn = document.getElementById('subdiv-cycle-btn');
   if (cycleBtn) {
     const col = SUBDIV_COL[n] || 'rgba(244,238,226,.08)';
-    cycleBtn.textContent    = `÷${n}`;
+    const label = SUBDIV_LABELS[n] || `÷${n}`;
+    cycleBtn.textContent    = label;
     cycleBtn.style.background   = col;
     cycleBtn.style.borderColor  = col;
     cycleBtn.style.color        = '#fff';
@@ -1075,11 +1131,31 @@ function previewPlay(patId) {
   if (!pat) return;
   // ── Loop étendu : utilise le tab étendu pour l'audio ─────────────────────────
   // Gammes avec directions multiples : utiliser le tab de la direction sélectionnée
-  const effectiveTabStr = (pat.hasDirectionTabs) ? getGammeActiveTab(pat) : getEffectiveTab(getTabForNeckPosition(pat));
+  // Triades avec groupes de cordes : utiliser le tab du groupe sélectionné
+  let effectiveTabStr;
+  if (pat.hasDirectionTabs) {
+    effectiveTabStr = getGammeActiveTab(pat);
+  } else if (pat.stringGroups) {
+    effectiveTabStr = getTriadeActiveTab(pat);
+  } else {
+    effectiveTabStr = getEffectiveTab(getTabForNeckPosition(pat));
+  }
+
   // Patterns statiques : appliquer uniquement le string shift (fret offset déjà intégré dans tabMid/tabHigh)
   // Gammes (special) : appliquer aussi le filtre de cordes actives
-  let tabForParsing = isStaticNeckTab(pat) ? applyStaticTabTransform(effectiveTabStr) : transformTab(effectiveTabStr, patId, pat.special);
-  if (pat.special) tabForParsing = applyGammeStringFilter(tabForParsing, getGammeActiveStrings(patId));
+  // Triades : pas de filtrage, pas de high-neck si disableHighNeck est true
+  let tabForParsing;
+  if (pat.disableHighNeck) {
+    tabForParsing = effectiveTabStr;
+  } else if (isStaticNeckTab(pat)) {
+    tabForParsing = applyStaticTabTransform(effectiveTabStr);
+  } else {
+    tabForParsing = transformTab(effectiveTabStr, patId, pat.special);
+  }
+
+  if (pat.special && !pat.stringGroups) {
+    tabForParsing = applyGammeStringFilter(tabForParsing, getGammeActiveStrings(patId));
+  }
   const sections = (pat.special) ? parseTabNotesSpecial(tabForParsing) : parseTabNotes(tabForParsing, patId);
   if (!sections.length) return;
   const cycle = sections.flat();
@@ -1147,11 +1223,31 @@ function previewPlay(patId) {
 
   // ── Curseur tab — version N-sections (fonctionne pour base ET loop étendu) ──
   // Gammes avec directions multiples : utiliser le tab de la direction sélectionnée
-  const effectiveTabForCursor = (pat.hasDirectionTabs) ? getGammeActiveTab(pat) : getEffectiveTab(getTabForNeckPosition(pat));
+  // Triades avec groupes de cordes : utiliser le tab du groupe sélectionné
+  let effectiveTabForCursor;
+  if (pat.hasDirectionTabs) {
+    effectiveTabForCursor = getGammeActiveTab(pat);
+  } else if (pat.stringGroups) {
+    effectiveTabForCursor = getTriadeActiveTab(pat);
+  } else {
+    effectiveTabForCursor = getEffectiveTab(getTabForNeckPosition(pat));
+  }
+
   // Patterns statiques : appliquer uniquement le string shift (fret offset déjà intégré dans tabMid/tabHigh)
   // Gammes (special) : appliquer aussi le filtre de cordes actives
-  let tabForCursor = isStaticNeckTab(pat) ? applyStaticTabTransform(effectiveTabForCursor) : transformTab(effectiveTabForCursor, patId, pat.special);
-  if (pat.special) tabForCursor = applyGammeStringFilter(tabForCursor, getGammeActiveStrings(patId));
+  // Triades : pas de filtrage, pas de high-neck si disableHighNeck est true
+  let tabForCursor;
+  if (pat.disableHighNeck) {
+    tabForCursor = effectiveTabForCursor;
+  } else if (isStaticNeckTab(pat)) {
+    tabForCursor = applyStaticTabTransform(effectiveTabForCursor);
+  } else {
+    tabForCursor = transformTab(effectiveTabForCursor, patId, pat.special);
+  }
+
+  if (pat.special && !pat.stringGroups) {
+    tabForCursor = applyGammeStringFilter(tabForCursor, getGammeActiveStrings(patId));
+  }
   const cursorSections = (pat.special) ? parseTabForCursorSpecial(tabForCursor) : parseTabForCursor(tabForCursor, patId);
   if (cursorSections.length > 0) {
     const preEl    = document.getElementById('tab-pre-' + patId);
