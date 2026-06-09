@@ -1919,7 +1919,7 @@ function openSettings(tab) {
           <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
         </div>
         <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
-        <div class="sf-version">v2.9.1</div>
+        <div class="sf-version">v2.9.2</div>
       </div>
     </div>
   </div>`;
@@ -2582,25 +2582,6 @@ function toggleFavorite(key, event) {
   const btn = event.target.closest('button');
   if (btn) btn.innerHTML = heartSVG(!!state.favorites[key]);
 }
-
-function togglePimtDone(pimtKey, btn) {
-  // S'assurer que state.pimtDone existe
-  if (!state.pimtDone) {
-    state.pimtDone = {};
-  }
-  // Toggle l'état du doigté
-  state.pimtDone[pimtKey] = !state.pimtDone[pimtKey];
-  saveState();
-  // Mise à jour du bouton immédiatement
-  if (btn && btn.tagName === 'BUTTON') {
-    const done = !!state.pimtDone[pimtKey];
-    btn.style.background = done ? 'var(--green)' : 'transparent';
-    btn.style.color = done ? '#fff' : 'var(--text2)';
-    btn.style.borderColor = done ? 'var(--green)' : 'var(--border)';
-    btn.textContent = done ? '✓ Maîtrisé' : 'À travailler';
-  }
-}
-
 
 function toggleParcoursCell(key, btn, color) {
   state.progress[key] = !state.progress[key];
