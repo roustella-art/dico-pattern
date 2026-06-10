@@ -13,7 +13,6 @@ let state = {
   openCards: {},
   progress: {},
   favorites: {},
-  pimtDone: {},  // doigtés pimenter complétés (pattern.id + '__pimN')
   parcoursOpen: null,
   etapeOpen: {},   // accordéon par numéro d'étape
   cardDir: {},   // direction active par groupe, ex: {'A4P1b':'U'}
@@ -21,6 +20,7 @@ let state = {
   gammeActiveStrings: {}, // { "gammeP1": [true,true,true,true,true,true] } — [e,B,G,D,A,E]
   gammeSelectedDir: {},  // { "pentaTrans1": "1→2" } — direction active par gamme avec directions multiples
   triadeStringGroup: {},  // { "triadeDim1": "GBe" } — groupe de cordes actif par triade
+  rhythmicStringSelect: {}, // { "rhythmic-test": "A" } — corde sélectionnée pour les patterns stringSelector
 };
 
 // ─── SETTINGS (cordes / son / case de départ) ────────────────────────────────
@@ -63,6 +63,10 @@ const SETTINGS = {
   darkMode: false,           // true = mode sombre activé manuellement
 };
 
+/**
+ * Charge les paramètres sauvegardés depuis localStorage
+ * Avec validation stricte pour chaque clé
+ */
 function loadSettings() {
   try {
     const s = JSON.parse(localStorage.getItem('dicoSettings') || '{}');
@@ -106,6 +110,9 @@ function loadSettings() {
   } catch(e) { console.warn('loadSettings:', e); }
 }
 
+/**
+ * Sauvegarde les paramètres actuels vers localStorage
+ */
 function saveSettings() {
   try {
     localStorage.setItem('dicoSettings', JSON.stringify({
@@ -140,10 +147,18 @@ function saveSettings() {
 
 let PAT_NOTES = {};
 
+/**
+ * Charge les notes de patterns depuis localStorage
+ */
 function loadPatNotes() {
   try { PAT_NOTES = JSON.parse(localStorage.getItem('dicoPatNotes') || '{}'); } catch(e) { PAT_NOTES = {}; }
 }
 
+/**
+ * Sauvegarde une note pour un pattern
+ * @param {string} patId - ID du pattern
+ * @param {string} text - Contenu de la note
+ */
 function savePatNote(patId, text) {
   PAT_NOTES[patId] = text;
   try { localStorage.setItem('dicoPatNotes', JSON.stringify(PAT_NOTES)); } catch(e) { console.warn('savePatNote:', e); }
@@ -153,10 +168,16 @@ function savePatNote(patId, text) {
 // Mémorise par pattern : dernier jeu · BPM max atteint · total de boucles jouées
 let PAT_TRACE = {};
 
+/**
+ * Charge les traces de jeu des patterns depuis localStorage
+ */
 function loadPatTrace() {
   try { PAT_TRACE = JSON.parse(localStorage.getItem('dicoPatTrace') || '{}'); } catch(e) { PAT_TRACE = {}; }
 }
 
+/**
+ * Sauvegarde les traces de jeu des patterns
+ */
 function savePatTrace() {
   try { localStorage.setItem('dicoPatTrace', JSON.stringify(PAT_TRACE)); } catch(e) { console.warn('savePatTrace:', e); }
 }
@@ -165,14 +186,28 @@ function savePatTrace() {
 // Enregistre chaque lecture de pattern avec timestamp, tempo, mode
 let PATTERN_JOURNAL = [];
 
+/**
+ * Charge l'historique de jeu depuis localStorage
+ */
 function loadPatternJournal() {
   try { PATTERN_JOURNAL = JSON.parse(localStorage.getItem('dicoPatternJournal') || '[]'); } catch(e) { PATTERN_JOURNAL = []; }
 }
 
+/**
+ * Sauvegarde l'historique de jeu
+ */
 function savePatternJournal() {
   try { localStorage.setItem('dicoPatternJournal', JSON.stringify(PATTERN_JOURNAL)); } catch(e) { console.warn('savePatternJournal:', e); }
 }
 
+/**
+ * Enregistre une nouvelle lecture de pattern dans le journal
+ * @param {string} patId - ID du pattern joué
+ * @param {number} bpm - Tempo à la lecture
+ * @param {boolean} trainMode - Mode train/progression activé
+ * @param {boolean} pyramideMode - Mode pyramide activé
+ * @param {boolean} shuffleMode - Mode shuffle/swing activé
+ */
 function addJournalEntry(patId, bpm, trainMode, pyramideMode, shuffleMode) {
   const pat = PATTERNS.find(p => p.id === patId);
   if (!pat) return;
@@ -195,12 +230,14 @@ function addJournalEntry(patId, bpm, trainMode, pyramideMode, shuffleMode) {
   savePatternJournal();
 }
 
+/**
+ * Charge l'état complet depuis localStorage (progress, favoris, préférences de onglets)
+ */
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem('dicoPattern') || '{}');
     state.progress  = saved.progress  || {};
     state.favorites = saved.favorites || {};
-    state.pimtDone  = saved.pimtDone  || {};
     if (saved.dailyChallengeOpen !== undefined) state.dailyChallengeOpen = saved.dailyChallengeOpen;
     if (saved.gammeActiveStrings && typeof saved.gammeActiveStrings === 'object') {
       state.gammeActiveStrings = saved.gammeActiveStrings;
@@ -211,6 +248,9 @@ function loadState() {
     if (saved.triadeStringGroup && typeof saved.triadeStringGroup === 'object') {
       state.triadeStringGroup = saved.triadeStringGroup;
     }
+    if (saved.rhythmicStringSelect && typeof saved.rhythmicStringSelect === 'object') {
+      state.rhythmicStringSelect = saved.rhythmicStringSelect;
+    }
   } catch(e) { console.warn('loadState:', e); }
   loadPatNotes();
   loadPatTrace();
@@ -218,26 +258,44 @@ function loadState() {
   loadSettings();
 }
 
+/**
+ * Sauvegarde l'état complet vers localStorage
+ */
 function saveState() {
   try {
     localStorage.setItem('dicoPattern', JSON.stringify({
       progress:  state.progress,
       favorites: state.favorites,
-      pimtDone:  state.pimtDone,
       dailyChallengeOpen: state.dailyChallengeOpen,
-      gammeActiveStrings: state.gammeActiveStrings,
-      gammeSelectedDir:   state.gammeSelectedDir,
-      triadeStringGroup:  state.triadeStringGroup,
+      gammeActiveStrings:    state.gammeActiveStrings,
+      gammeSelectedDir:      state.gammeSelectedDir,
+      triadeStringGroup:     state.triadeStringGroup,
+      rhythmicStringSelect:  state.rhythmicStringSelect,
     }));
   } catch(e) { console.warn('saveState:', e); }
 }
 
+/**
+ * Génère une clé unique pour tracker la progression d'un pattern
+ * Format: patId__fing__mode__interp__tempoKey[__sh (si shuffle)]
+ * @param {string} patId - ID du pattern
+ * @param {number} fing - Numéro de doigtage (1)
+ * @param {string} mode - Direction : 'U' | 'D' | 'M'
+ * @param {string} interp - Clé interprétation : 'Down' | 'Up' | 'Sweep' etc
+ * @param {string|Object} tempo - Clé tempo ou objet tempo {key: string}
+ * @returns {string} Clé de progression unique
+ */
 function getProgressKey(patId, fing, mode, interp, tempo) {
   const t = typeof tempo === 'object' ? tempo.key : tempo;
   const sh = SETTINGS.shuffleMode ? '__sh' : '';
   return `${patId}__${fing}__${mode}__${interp}__${t}${sh}`;
 }
 
+/**
+ * Calcule le pourcentage de progression d'un pattern
+ * @param {string} patId - ID du pattern
+ * @returns {number} Pourcentage de 0 à 100
+ */
 function getPatternPct(patId) {
   const pat = PATTERNS.find(p => p.id === patId);
   const mode = pat ? pat.dir : 'U';
@@ -249,7 +307,12 @@ function getPatternPct(patId) {
   return total > 0 ? Math.round(done / total * 100) : 0;
 }
 
-// % global d'un groupe (toutes directions confondues)
+/**
+ * Calcule le pourcentage de progression global d'un groupe (toutes directions confondues)
+ * Gère les cas spéciaux (gammes avec directions tabs, groupes de cordes)
+ * @param {string} groupKey - Clé du groupe (ex: 'A4P1')
+ * @returns {number} Pourcentage de 0 à 100
+ */
 function getGroupPct(groupKey) {
   const pats = PATTERNS.filter(p => p.cat + 'P' + p.num === groupKey);
   let total = 0, done = 0;

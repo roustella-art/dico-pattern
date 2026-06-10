@@ -9,12 +9,21 @@
 // ─── METRONOME ────────────────────────────────────────────────────────────────
 const METRO = { ctx:null, running:false, bpm:60, nextBeat:0, timer:null, patId:null };
 
+/**
+ * Crée ou récupère le Web Audio Context du métronome
+ * Résume automatiquement s'il est suspendu (iOS handling)
+ * @returns {AudioContext} Contexte audio
+ */
 function metroCtx() {
   if (!METRO.ctx) METRO.ctx = new (window.AudioContext || window.webkitAudioContext)();
   if (METRO.ctx.state === 'suspended') METRO.ctx.resume();
   return METRO.ctx;
 }
 
+/**
+ * Génère un clic de métronome (son 880Hz + flash visuel)
+ * @param {number} time - Temps du contexte audio pour planifier le son
+ */
 function metroClick(time) {
   const ctx = METRO.ctx;
   const osc = ctx.createOscillator();
@@ -38,6 +47,9 @@ function metroClick(time) {
   }, ahead);
 }
 
+/**
+ * Planifie les prochains clics du métronome (appelé en boucle par setInterval)
+ */
 function metroSchedule() {
   const ctx = METRO.ctx;
   while (METRO.nextBeat < ctx.currentTime + 0.15) {
@@ -46,6 +58,10 @@ function metroSchedule() {
   }
 }
 
+/**
+ * Démarre le métronome pour un pattern ou en global
+ * @param {string} patId - ID du pattern ou 'global'
+ */
 function metroStart(patId) {
   if (PREVIEW.patId) previewStop();
   metroStop(false);
@@ -64,6 +80,10 @@ function metroStart(patId) {
   metroRefreshBtn(patId, true);
 }
 
+/**
+ * Arrête le métronome
+ * @param {boolean} refresh - Si true, met à jour l'UI du bouton
+ */
 function metroStop(refresh=true) {
   if (METRO.timer) { clearInterval(METRO.timer); METRO.timer = null; }
   const old = METRO.patId;
@@ -76,11 +96,20 @@ function metroStop(refresh=true) {
   }
 }
 
+/**
+ * Bascule le métronome on/off pour un pattern
+ * @param {string} patId - ID du pattern ou 'global'
+ */
 function metroToggle(patId) {
   if (METRO.running && METRO.patId === patId) metroStop();
   else metroStart(patId);
 }
 
+/**
+ * Modifie le BPM du métronome
+ * @param {string} patId - ID du pattern
+ * @param {number} delta - Changement en BPM (ex: +5 ou -5)
+ */
 function metroBpmChange(patId, delta) {
   const inp = document.getElementById('metro-bpm-' + patId);
   if (!inp) return;
@@ -89,6 +118,11 @@ function metroBpmChange(patId, delta) {
   if (METRO.running && METRO.patId === patId) METRO.bpm = v;
 }
 
+/**
+ * Met à jour l'affichage du bouton métronome après démarrage/arrêt
+ * @param {string} patId - ID du pattern ou 'global'
+ * @param {boolean} running - Si true, bouton affiche "Stop", sinon "Start"
+ */
 function metroRefreshBtn(patId, running) {
   if (patId === 'global') { syncHeaderPlay(); return; }
   const btn = document.getElementById('metro-btn-' + patId);
@@ -97,10 +131,19 @@ function metroRefreshBtn(patId, running) {
   btn.style.background = running ? 'var(--red)' : 'var(--green)';
 }
 
+/**
+ * Met à jour l'UI du métronome après rendu (restaure état du bouton si en cours)
+ */
 function metroPostRender() {
   if (METRO.running && METRO.patId) metroRefreshBtn(METRO.patId, true);
 }
 
+/**
+ * Bascule le statut "travaillé" d'un doigtage pour un pattern
+ * @param {string} patId - ID du pattern
+ * @param {number} idx - Index du doigtage
+ * @param {HTMLElement} btn - Élément bouton à mettre à jour
+ */
 function toggleAltFing(patId, idx, btn) {
   const key = `altFing_${patId}_${idx}`;
   const next = localStorage.getItem(key) !== '1';
@@ -113,8 +156,13 @@ function toggleAltFing(patId, idx, btn) {
 
 // ─── PREVIEW AUDIO ────────────────────────────────────────────────────────────
 const OPEN_MIDI = {e:64, B:59, G:55, D:50, A:45, E:40};
-const PREVIEW = { ctx:null, masterGain:null, patId:null, timer:null, clickTimer:null, pulseTimer:null, bpm:40, interp:'Up', countIn:true, click:true, settingsOpen:false, cycleIdx:0, cursorTimeouts:[], clickNotes:4, cycleT0:0 };
+const PREVIEW = { ctx:null, masterGain:null, patId:null, timer:null, clickTimer:null, pulseTimer:null, bpm:40, interp:'Down', countIn:true, click:true, settingsOpen:false, cycleIdx:0, cursorTimeouts:[], clickNotes:4, cycleT0:0 };
 
+/**
+ * Crée ou récupère le Web Audio Context pour la prévisualisation des patterns
+ * Résume automatiquement s'il est suspendu (iOS handling)
+ * @returns {AudioContext} Contexte audio
+ */
 function previewCtx() {
   if (!PREVIEW.ctx) PREVIEW.ctx = new (window.AudioContext||window.webkitAudioContext)();
   if (PREVIEW.ctx.state === 'suspended') PREVIEW.ctx.resume();
@@ -249,7 +297,24 @@ function extractLineNotes(content, baseMidi, notes, strKey) {
       const col = i;
       let num = '';
       while (i < content.length && /\d/.test(content[i])) num += content[i++];
-      notes.push({ col, midi: baseMidi + parseInt(num), str: strKey });
+      let playFret = parseInt(num);
+      let bendTarget = null;
+      if (i < content.length && content[i] === 'b') {
+        // Bend normal : "14b" → attaque à 14, glisse vers 16 ; "14b16" → glisse vers fret 16
+        i++; // skip 'b'
+        let targetNum = '';
+        while (i < content.length && /\d/.test(content[i])) targetNum += content[i++];
+        const targetFret = targetNum.length > 0 ? parseInt(targetNum) : playFret + 2;
+        bendTarget = baseMidi + targetFret;
+      } else if (i < content.length && content[i] === 'r') {
+        // Pré-bend release : "14r" → attaque déjà à 16 (pré-bendée), redescend vers 14
+        i++; // skip 'r'
+        bendTarget = baseMidi + playFret;       // cible = fret écrit (la note de release)
+        playFret   = playFret + 2;              // pitch de départ = fret+2 (pré-bendée)
+      }
+      const noteEntry = { col, midi: baseMidi + playFret, str: strKey };
+      if (bendTarget !== null) noteEntry.bendTarget = bendTarget;
+      notes.push(noteEntry);
     } else { i++; }
   }
 }
@@ -281,12 +346,83 @@ function parseSection(lines) {
   let lastCol = -1;
   for (const n of notes) {
     if (n.col === lastCol) {
-      grouped[grouped.length-1].notes.push(n.midi);
-      if (n.isAttack) grouped[grouped.length-1].isAttack = true;
+      const last = grouped[grouped.length-1];
+      last.notes.push(n.midi);
+      if (n.isAttack) last.isAttack = true;
+      if (n.bendTarget !== undefined) last.bendTargets[last.notes.length - 1] = n.bendTarget;
     } else {
-      grouped.push({ notes:[n.midi], isAttack:n.isAttack });
+      const entry = { notes:[n.midi], isAttack:n.isAttack, bendTargets:{} };
+      if (n.bendTarget !== undefined) entry.bendTargets[0] = n.bendTarget;
+      grouped.push(entry);
       lastCol = n.col;
     }
+  }
+  return grouped;
+}
+
+// ── VERSION AVEC DURÉES RÉELLES (interprète les espacements comme durées) ──
+function parseSectionWithDurations(lines) {
+  const notes = [];
+  let unlabeledIdx = 0;
+  let lineLength = 0; // Longueur réelle de la tab (sans terminateurs) pour calculer la durée de la dernière note
+
+  // Toujours STRING_ORDER standard : la transformation amont gère le décalage de cordes
+  for (const line of lines) {
+    const labeled = line.match(/^([eEBGDA])\s*\|(.+)/);
+    if (labeled) {
+      const content = labeled[2];
+      // Mesurer la longueur sans les terminateurs || en fin de ligne
+      const stripped = content.replace(/\|+\s*$/, '');
+      lineLength = Math.max(lineLength, stripped.length);
+      const strKey = labeled[1];
+      const baseMidi = OPEN_MIDI[strKey];
+      if (baseMidi !== undefined) extractLineNotes(content, baseMidi, notes, strKey);
+    } else if (/^[-\d]/.test(line)) {
+      const stripped = line.replace(/\|+\s*$/, '');
+      lineLength = Math.max(lineLength, stripped.length);
+      const str = STRING_ORDER[unlabeledIdx];
+      if (str && OPEN_MIDI[str] !== undefined) extractLineNotes(line, OPEN_MIDI[str], notes, str);
+      unlabeledIdx++;
+    }
+  }
+
+  notes.sort((a, b) => a.col - b.col);
+
+  // Marquer les attaques
+  let prevStr = null;
+  notes.forEach(n => { n.isAttack = n.str !== prevStr; prevStr = n.str; });
+
+  // Grouper par colonne ET calculer la distance jusqu'à la prochaine colonne
+  const grouped = [];
+  let lastCol = -1;
+  for (let i = 0; i < notes.length; i++) {
+    const n = notes[i];
+    if (n.col === lastCol) {
+      const last = grouped[grouped.length-1];
+      last.notes.push(n.midi);
+      if (n.isAttack) last.isAttack = true;
+      if (n.bendTarget !== undefined) last.bendTargets[last.notes.length - 1] = n.bendTarget;
+    } else {
+      // Trouver la distance jusqu'à la prochaine colonne différente
+      let nextCol = Infinity;
+      for (let j = i + 1; j < notes.length; j++) {
+        if (notes[j].col !== n.col) {
+          nextCol = notes[j].col;
+          break;
+        }
+      }
+      // Dernière note : utiliser la longueur réelle de la ligne pour calculer la distance restante
+      const distance = nextCol === Infinity ? (lineLength - n.col) : (nextCol - n.col);
+      const entry = { notes:[n.midi], isAttack:n.isAttack, duration: Math.max(1, distance), bendTargets:{} };
+      if (n.bendTarget !== undefined) entry.bendTargets[0] = n.bendTarget;
+      grouped.push(entry);
+      lastCol = n.col;
+    }
+  }
+  // Silence initial : si la première note ne commence pas à col 0,
+  // insérer un silence pour que le métronome soit entendu seul sur le 1er temps
+  if (grouped.length > 0 && notes.length > 0 && notes[0].col > 0) {
+    grouped.unshift({ notes: [], isAttack: false, duration: notes[0].col, bendTargets: {} });
   }
   return grouped;
 }
@@ -308,6 +444,23 @@ function parseTabNotes(tabStr, patId) {
   }
   if (current.length) sections.push(current);
   return sections.map(parseSection).filter(s => s.length > 0);
+}
+
+function parseTabNotesWithDurations(tabStr, patId) {
+  // Même logique que parseTabNotes mais avec durées réelles
+  const allLines = tabStr.split('\n');
+  const sections = [];
+  let current = [];
+  for (const line of allLines) {
+    if (line.includes('↩') || line.includes('retour')) {
+      if (current.length) sections.push(current);
+      current = [];
+    } else {
+      current.push(line);
+    }
+  }
+  if (current.length) sections.push(current);
+  return sections.map(parseSectionWithDurations).filter(s => s.length > 0);
 }
 
 // Special parsing function that doesn't group notes by column
@@ -371,7 +524,7 @@ function getActiveSound() {
   return ['doux','piano','guitare'][(PREVIEW.cycleIdx || 0) % 3];
 }
 
-function pluckNote(ctx, masterGain, freq, time, gainMult = 1.0) {
+function pluckNote(ctx, masterGain, freq, time, gainMult = 1.0, freqEnd = null, bendDur = null) {
   const env  = ctx.createGain();
   const filt = ctx.createBiquadFilter();
   filt.type = 'lowpass';
@@ -399,6 +552,10 @@ function pluckNote(ctx, masterGain, freq, time, gainMult = 1.0) {
       const g = ctx.createGain();
       o.type = 'sine';
       o.frequency.value = freq * h.mult;
+      if (freqEnd !== null && bendDur !== null) {
+        o.frequency.setValueAtTime(freq * h.mult, time);
+        o.frequency.exponentialRampToValueAtTime(freqEnd * h.mult, time + bendDur);
+      }
       o.connect(g); g.connect(filt);
       g.gain.setValueAtTime(0.0001, time);
       g.gain.linearRampToValueAtTime(h.g * gainMult, time + 0.003);
@@ -415,6 +572,10 @@ function pluckNote(ctx, masterGain, freq, time, gainMult = 1.0) {
     const osc = ctx.createOscillator();
     osc.type = 'sawtooth';
     osc.frequency.value = freq;
+    if (freqEnd !== null && bendDur !== null) {
+      osc.frequency.setValueAtTime(freq, time);
+      osc.frequency.exponentialRampToValueAtTime(freqEnd, time + bendDur);
+    }
     const lp = ctx.createBiquadFilter();
     lp.type = 'lowpass';
     lp.frequency.value = Math.min(freq * 5, 4000);
@@ -436,6 +597,12 @@ function pluckNote(ctx, masterGain, freq, time, gainMult = 1.0) {
     const o2 = ctx.createOscillator();
     o1.type = 'triangle'; o1.frequency.value = freq;
     o2.type = 'sine';     o2.frequency.value = freq * 2;
+    if (freqEnd !== null && bendDur !== null) {
+      o1.frequency.setValueAtTime(freq, time);
+      o1.frequency.exponentialRampToValueAtTime(freqEnd, time + bendDur);
+      o2.frequency.setValueAtTime(freq * 2, time);
+      o2.frequency.exponentialRampToValueAtTime(freqEnd * 2, time + bendDur);
+    }
     filt.frequency.value = Math.min(freq * 9, 7000); filt.Q.value = 0.8;
     o1.connect(filt); o2.connect(filt);
     env.gain.setValueAtTime(0.001, time);
@@ -643,8 +810,41 @@ function spdButtons() {
   return presets + sep + custom;
 }
 
+// ─── CORRECTION G-B (transposition) ─────────────────────────────────────────
+// Quand un pattern stringShift est transposé sur G, les notes de A → B
+// conservent la même frette, mais l'intervalle G-B = 4 demi-tons (pas 5).
+// On ajoute donc +1 à toutes les notes de la ligne B.
+// À appliquer après transposeShiftTab quand targetStr === 'G'.
+function applyGBShiftCorrection(tabStr) {
+  return tabStr.split('\n').map(line => {
+    const m = line.match(/^(B\s*\|)(.+)/);
+    if (!m) return line;
+    const corrected = m[2].replace(/\d+/g, n => String(parseInt(n) + 1));
+    return m[1] + corrected;
+  }).join('\n');
+}
+
+// Wrapper : applique la correction G-B si le pattern le nécessite
+// patId doit être dans GB_SHIFT_PATTERN_IDS et targetStr doit être 'G'
+const GB_SHIFT_PATTERN_IDS = ['rhythmic-test', 'rhythmic-2'];
+
+function transposeShiftTabWithGBFix(tabStr, targetStr, patId) {
+  const transposed = typeof transposeShiftTab === 'function'
+    ? transposeShiftTab(tabStr, targetStr)
+    : tabStr;
+  if (targetStr === 'G' && GB_SHIFT_PATTERN_IDS.includes(patId)) {
+    return applyGBShiftCorrection(transposed);
+  }
+  return transposed;
+}
+
+// Compatibilité : applyGBDisplayCorrection redirige vers la nouvelle logique (no-op par défaut)
+function applyGBDisplayCorrection(tabStr) { return tabStr; }
+
 // ─── SYMBOLES MÉDIATOR ────────────────────────────────────────────────────────
-function tabWithSymbols(tabStr, interp) {
+function tabWithSymbols(tabStr, interp, opts = {}) {
+  const rhythmicRes      = opts.rhythmicResolution  || null; // si défini : picking positionnel (16th grid)
+  const beatPicking      = opts.rhythmicBeatPicking  || false; // si vrai : bas sur temps, haut sur contre-temps
   const lines = tabStr.split('\n');
   const isStrLine = l => /^[eEBGDA]\s*\|/.test(l) || /^[-\d]/.test(l);
   const isPickLine = l => /^\s*[nV\s]+$/.test(l) && /[nV]/.test(l);  // Ligne avec flèches de picking
@@ -712,8 +912,22 @@ function tabWithSymbols(tabStr, interp) {
           )[0];
 
           let s = ' ';
-          if (interp === 'Up')   s = (globalIdx + j) % 2 === 0 ? '↑' : '↓';
-          if (interp === 'Down') s = (globalIdx + j) % 2 === 0 ? '↓' : '↑';
+          if (rhythmicRes !== null) {
+            const sixteenthIdx = Math.floor(col / rhythmicRes);
+            if (beatPicking) {
+              // Picking temps/contre-temps : bas sur les temps (16ème idx % 4 < 2), haut sur les contre-temps
+              const onBeat = (sixteenthIdx % 4) < 2;
+              if (interp === 'Down') s = onBeat ? '↓' : '↑';
+              if (interp === 'Up')   s = onBeat ? '↑' : '↓';
+            } else {
+              // Picking positionnel : alterne par double-croche (grille 16th)
+              if (interp === 'Up')   s = sixteenthIdx % 2 === 0 ? '↑' : '↓';
+              if (interp === 'Down') s = sixteenthIdx % 2 === 0 ? '↓' : '↑';
+            }
+          } else {
+            if (interp === 'Up')   s = (globalIdx + j) % 2 === 0 ? '↑' : '↓';
+            if (interp === 'Down') s = (globalIdx + j) % 2 === 0 ? '↓' : '↑';
+          }
           if (interp === 'Leg')  s = primaryStr !== prevStr ? '↓' : ' ';
 
           prevStr = primaryStr;
@@ -805,7 +1019,7 @@ function setPreviewInterp(interp) {
       if (pat.special && !pat.stringGroups) {
         processed = applyGammeStringFilter(processed, getGammeActiveStrings(pat.id));
       }
-      pre.innerHTML = tabWithSymbols(cleanTabDisplay(processed), interp);
+      pre.innerHTML = tabWithSymbols(cleanTabDisplay(processed), interp, pat.rhythmicResolution ? { rhythmicResolution: pat.rhythmicResolution, ...(pat.rhythmicBeatPicking ? { rhythmicBeatPicking: true } : {}) } : {});
     }
   });
 }
@@ -846,6 +1060,7 @@ function trainBpmIncrement(nextCycleT) {
     PREVIEW._trainPyramidePhase = 1; // 1 = montée, -1 = descente
   }
 
+  const oldBpm = PREVIEW.bpm;
   let newBpm = PREVIEW.bpm;
 
   if (SETTINGS.trainPyramide) {
@@ -871,6 +1086,16 @@ function trainBpmIncrement(nextCycleT) {
   if (newBpm === PREVIEW.bpm) return; // pas de changement
   PREVIEW.bpm = newBpm;
   HCTRL.bpm   = newBpm;
+  // Re-ancrer le timing rythmique sur le nouveau BPM
+  // Sans ça, _rhythmicLoopDuration reste calé sur le BPM initial → décalage cumulatif à chaque palier
+  if (PREVIEW._rhythmicLoopDuration && PREVIEW._rhythmicPatStart !== null && nextCycleT) {
+    const ratio = oldBpm / newBpm;
+    PREVIEW._rhythmicLoopDuration *= ratio;
+    if (PREVIEW._rhythmicCumulativeTimes) {
+      PREVIEW._rhythmicCumulativeTimes = PREVIEW._rhythmicCumulativeTimes.map(t => t * ratio);
+    }
+    PREVIEW._rhythmicPatStart = nextCycleT - PREVIEW.sessionLoops * PREVIEW._rhythmicLoopDuration;
+  }
   // Feedback visuel : header BPM flashe en orange
   const hbpm = document.getElementById('header-bpm-val');
   if (hbpm) {
@@ -1060,7 +1285,7 @@ function noteOffset(i, sx) {
   return Math.floor(i / 2) * 2 * sx + (i % 2 === 0 ? 0 : 2 * 0.67 * sx);
 }
 
-function scheduleCycle(ctx, cycle, t0, patId) {
+function scheduleCycle(ctx, cycle, t0, patId, rhythmicResolution = 1) {
   if (!PREVIEW.masterGain) return; // déjà stoppé
   // La subdivision détermine la vitesse de lecture : n notes par temps
   // n=4 (double croche) = vitesse standard, n=2 = moitié vitesse, n=6 = 1.5× vitesse
@@ -1068,27 +1293,73 @@ function scheduleCycle(ctx, cycle, t0, patId) {
   // Recaler t0 si le setTimeout a tardé (évite la dérive de tempo)
   const safeT0 = Math.max(t0, ctx.currentTime + 0.01);
   PREVIEW.cycleT0 = safeT0; // mémorise le début du cycle courant pour sync click
-  cycle.forEach(({ notes, isAttack }, i) => {
-    const gainMult = PREVIEW.interp === 'Leg'
-      ? (isAttack ? 1.5 : 0.62)
-      : 1.0;
-    notes.forEach(midi => {
-      pluckNote(ctx, PREVIEW.masterGain, freq440(midi), safeT0 + noteOffset(i, sixteenth), gainMult);
+
+  // Vérifier si le cycle a des durées réelles (rhythmicTiming)
+  const hasRhythmicTiming = cycle.length > 0 && cycle[0].duration !== undefined;
+
+  if (hasRhythmicTiming) {
+    // Mode timing rhythmique : chaque note a sa propre durée basée sur l'espacement
+    // rhythmicResolution = facteur de division (ex: 4 si la tab est écrite 4x plus fin que les 16th notes)
+    let currentTime = 0;
+    cycle.forEach(({ notes, isAttack, duration, bendTargets }, i) => {
+      const gainMult = PREVIEW.interp === 'Leg'
+        ? (isAttack ? 1.5 : 0.62)
+        : 1.0;
+      const noteDur = (duration || 1) * sixteenth / rhythmicResolution;
+      notes.forEach((midi, idx) => {
+        const bendMidi = bendTargets && bendTargets[idx] !== undefined ? bendTargets[idx] : null;
+        const freqEnd  = bendMidi !== null ? freq440(bendMidi) : null;
+        // Bend montant : rapide (50% durée, max 0.25s) — Release descendant : lent (durée pleine de la note)
+        const isRelease = freqEnd !== null && freq440(midi) > freqEnd;
+        const bendDur   = freqEnd !== null
+          ? (isRelease ? noteDur : Math.min(noteDur * 0.5, 0.25))
+          : null;
+        pluckNote(ctx, PREVIEW.masterGain, freq440(midi), safeT0 + currentTime, gainMult, freqEnd, bendDur);
+      });
+      // Durée = espacement jusqu'à la prochaine note (en multiples de sixteenth, divisé par rhythmicResolution)
+      currentTime += noteDur;
     });
-  });
-  // Incrémente les compteurs de cycles
-  PREVIEW.cycleIdx     = (PREVIEW.cycleIdx    || 0) + 1;
-  PREVIEW.sessionLoops = (PREVIEW.sessionLoops || 0) + 1;
-  const nextT0 = safeT0 + cycle.length * sixteenth;
-  const delay  = Math.max(0, (nextT0 - ctx.currentTime - 0.08) * 1000);
-  PREVIEW.timer = setTimeout(() => {
-    if (PREVIEW.patId !== patId || !PREVIEW.masterGain) return;
-    // Training : check APRÈS N boucles entendues (pas au lancement du 1er cycle)
-    if (SETTINGS.trainMode && PREVIEW.sessionLoops % SETTINGS.trainLoopEvery === 0) {
-      trainBpmIncrement(nextT0); // nextT0 = frontière du prochain cycle → resync click
-    }
-    scheduleCycle(ctx, cycle, nextT0, patId);
-  }, delay);
+    PREVIEW.cycleIdx     = (PREVIEW.cycleIdx    || 0) + 1;
+    PREVIEW.sessionLoops = (PREVIEW.sessionLoops || 0) + 1;
+    // Ancrage absolu : patStart + N × loopDuration — élimine la dérive d'accumulation des timers
+    const nextT0 = (PREVIEW._rhythmicPatStart !== null && PREVIEW._rhythmicLoopDuration)
+      ? PREVIEW._rhythmicPatStart + PREVIEW.sessionLoops * PREVIEW._rhythmicLoopDuration
+      : safeT0 + currentTime; // fallback: utiliser le temps accumulé
+    const delay  = Math.max(0, (nextT0 - ctx.currentTime - 0.08) * 1000);
+    PREVIEW.timer = setTimeout(() => {
+      if (PREVIEW.patId !== patId || !PREVIEW.masterGain) return;
+      if (SETTINGS.trainMode && PREVIEW.sessionLoops % SETTINGS.trainLoopEvery === 0) {
+        trainBpmIncrement(nextT0);
+      }
+      scheduleCycle(ctx, cycle, nextT0, patId, rhythmicResolution);
+    }, delay);
+  } else {
+    // Mode timing standard (équidistant)
+    cycle.forEach(({ notes, isAttack, bendTargets }, i) => {
+      const gainMult = PREVIEW.interp === 'Leg'
+        ? (isAttack ? 1.5 : 0.62)
+        : 1.0;
+      notes.forEach((midi, idx) => {
+        const bendMidi = bendTargets && bendTargets[idx] !== undefined ? bendTargets[idx] : null;
+        const freqEnd  = bendMidi !== null ? freq440(bendMidi) : null;
+        const bendDur  = freqEnd !== null ? Math.min(sixteenth * 0.5, 0.2) : null;
+        pluckNote(ctx, PREVIEW.masterGain, freq440(midi), safeT0 + noteOffset(i, sixteenth), gainMult, freqEnd, bendDur);
+      });
+    });
+    // Incrémente les compteurs de cycles
+    PREVIEW.cycleIdx     = (PREVIEW.cycleIdx    || 0) + 1;
+    PREVIEW.sessionLoops = (PREVIEW.sessionLoops || 0) + 1;
+    const nextT0 = safeT0 + cycle.length * sixteenth;
+    const delay  = Math.max(0, (nextT0 - ctx.currentTime - 0.08) * 1000);
+    PREVIEW.timer = setTimeout(() => {
+      if (PREVIEW.patId !== patId || !PREVIEW.masterGain) return;
+      // Training : check APRÈS N boucles entendues (pas au lancement du 1er cycle)
+      if (SETTINGS.trainMode && PREVIEW.sessionLoops % SETTINGS.trainLoopEvery === 0) {
+        trainBpmIncrement(nextT0); // nextT0 = frontière du prochain cycle → resync click
+      }
+      scheduleCycle(ctx, cycle, nextT0, patId);
+    }, delay);
+  }
 }
 
 function freq440(midi) { return 440 * Math.pow(2, (midi - 69) / 12); }
@@ -1137,6 +1408,17 @@ function previewPlay(patId) {
     effectiveTabStr = getGammeActiveTab(pat);
   } else if (pat.stringGroups) {
     effectiveTabStr = getTriadeActiveTab(pat);
+  } else if (pat.stringSelector) {
+    // Pattern transposable : shift multi-cordes (stringShift) ou mono-corde
+    const strKey = getRhythmicStringSelect(patId);
+    effectiveTabStr = pat.stringShift
+      ? transposeShiftTab(pat.tab, strKey)
+      : transposeSingleStringTab(pat.tab, strKey);
+    // Correction G-B : intervalle de 4 demi-tons au lieu de 5
+    if (pat.stringShift && strKey === 'G' && GB_SHIFT_PATTERN_IDS.includes(patId)) {
+      effectiveTabStr = applyGBShiftCorrection(effectiveTabStr);
+    }
+    if (SETTINGS.neckPosition === 'high') effectiveTabStr = applyHighNeckToTab(effectiveTabStr);
   } else {
     effectiveTabStr = getEffectiveTab(getTabForNeckPosition(pat));
   }
@@ -1145,7 +1427,8 @@ function previewPlay(patId) {
   // Gammes (special) : appliquer aussi le filtre de cordes actives
   // Triades : pas de filtrage, pas de high-neck si disableHighNeck est true
   let tabForParsing;
-  if (pat.disableHighNeck) {
+  if (pat.disableHighNeck || pat.stringSelector) {
+    // stringSelector : transposition + high-neck déjà appliqués dans effectiveTabStr
     tabForParsing = effectiveTabStr;
   } else if (isStaticNeckTab(pat)) {
     tabForParsing = applyStaticTabTransform(effectiveTabStr);
@@ -1156,7 +1439,15 @@ function previewPlay(patId) {
   if (pat.special && !pat.stringGroups) {
     tabForParsing = applyGammeStringFilter(tabForParsing, getGammeActiveStrings(patId));
   }
-  const sections = (pat.special) ? parseTabNotesSpecial(tabForParsing) : parseTabNotes(tabForParsing, patId);
+  // Utiliser parseTabNotesWithDurations si rhythmicTiming est activé
+  let sections;
+  if (pat.rhythmicTiming) {
+    sections = parseTabNotesWithDurations(tabForParsing, patId);
+  } else if (pat.special) {
+    sections = parseTabNotesSpecial(tabForParsing);
+  } else {
+    sections = parseTabNotes(tabForParsing, patId);
+  }
   if (!sections.length) return;
   const cycle = sections.flat();
   if (!cycle.length) return;
@@ -1217,7 +1508,30 @@ function previewPlay(patId) {
     }
   }
   const patStart = t0 + (PREVIEW.countIn ? 4 * countInQuarter : 0);
-  scheduleCycle(ctx, cycle, patStart, patId);
+  const rhythmicResolution = pat.rhythmicResolution || 1;
+
+  // Pré-calcul pour patterns rhythmicTiming : ancrage absolu + timing curseur exact
+  if (pat.rhythmicTiming && cycle.length > 0 && cycle[0].duration !== undefined) {
+    const sx0 = 60 / (PREVIEW.bpm * (PREVIEW.clickNotes || 4));
+    let acc = 0;
+    // _rhythmicCumulativeTimes : une entrée par note jouée (items vides = silences = exclus)
+    // L'index i dans ce tableau correspond à steps[i] dans le curseur
+    PREVIEW._rhythmicCumulativeTimes = [];
+    cycle.forEach(item => {
+      if (item.notes && item.notes.length > 0) {
+        PREVIEW._rhythmicCumulativeTimes.push(acc);
+      }
+      acc += (item.duration || 1) * sx0 / rhythmicResolution;
+    });
+    PREVIEW._rhythmicLoopDuration = acc;
+    PREVIEW._rhythmicPatStart = patStart;
+  } else {
+    PREVIEW._rhythmicPatStart = null;
+    PREVIEW._rhythmicLoopDuration = null;
+    PREVIEW._rhythmicCumulativeTimes = null;
+  }
+
+  scheduleCycle(ctx, cycle, patStart, patId, rhythmicResolution);
   if (PREVIEW.click) startClickLoop(patStart);
   startPulseTicker(patStart);
 
@@ -1229,6 +1543,17 @@ function previewPlay(patId) {
     effectiveTabForCursor = getGammeActiveTab(pat);
   } else if (pat.stringGroups) {
     effectiveTabForCursor = getTriadeActiveTab(pat);
+  } else if (pat.stringSelector) {
+    // Même pipeline que l'audio : transposition corde + high-neck
+    const strKey2 = getRhythmicStringSelect(patId);
+    let t = pat.stringShift
+      ? transposeShiftTab(pat.tab, strKey2)
+      : transposeSingleStringTab(pat.tab, strKey2);
+    if (pat.stringShift && strKey2 === 'G' && GB_SHIFT_PATTERN_IDS.includes(patId)) {
+      t = applyGBShiftCorrection(t);
+    }
+    if (SETTINGS.neckPosition === 'high') t = applyHighNeckToTab(t);
+    effectiveTabForCursor = t;
   } else {
     effectiveTabForCursor = getEffectiveTab(getTabForNeckPosition(pat));
   }
@@ -1237,7 +1562,8 @@ function previewPlay(patId) {
   // Gammes (special) : appliquer aussi le filtre de cordes actives
   // Triades : pas de filtrage, pas de high-neck si disableHighNeck est true
   let tabForCursor;
-  if (pat.disableHighNeck) {
+  if (pat.disableHighNeck || pat.stringSelector) {
+    // stringSelector : déjà traité dans effectiveTabForCursor (pas de transformTab)
     tabForCursor = effectiveTabForCursor;
   } else if (isStaticNeckTab(pat)) {
     tabForCursor = applyStaticTabTransform(effectiveTabForCursor);
@@ -1312,7 +1638,11 @@ function previewPlay(patId) {
           const sx = 60 / (PREVIEW.bpm * (PREVIEW.clickNotes || 4));
 
           steps.forEach((step, i) => {
-            const delay = Math.max(0, (t0Cursor + noteOffset(i, sx) - ctx.currentTime) * 1000);
+            // Rhythmic timing : utiliser les offsets réels au lieu des intervalles équidistants
+            const timeOffset = (PREVIEW._rhythmicCumulativeTimes && PREVIEW._rhythmicCumulativeTimes[i] !== undefined)
+              ? PREVIEW._rhythmicCumulativeTimes[i]
+              : noteOffset(i, sx);
+            const delay = Math.max(0, (t0Cursor + timeOffset - ctx.currentTime) * 1000);
             const tid = setTimeout(() => {
               if (PREVIEW.patId !== patId) return;
               const bar = document.getElementById('tab-cursor-montee-' + patId);
@@ -1344,8 +1674,8 @@ function previewPlay(patId) {
             PREVIEW.cursorTimeouts.push(tid);
           });
 
-          // Relancer le cycle suivant — durée calculée avec le BPM courant
-          const nextT = t0Cursor + totalSteps * sx;
+          // Relancer le cycle suivant — durée réelle pour rhythmicTiming, sinon équidistant
+          const nextT = t0Cursor + (PREVIEW._rhythmicLoopDuration || (totalSteps * sx));
           const reschedDelay = Math.max(0, (nextT - ctx.currentTime - 0.05) * 1000);
           const rt = setTimeout(() => scheduleCursorCycle(nextT), reschedDelay);
           PREVIEW.cursorTimeouts.push(rt);
