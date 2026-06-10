@@ -10,6 +10,10 @@
 // ─── RENDER ───────────────────────────────────────────────────────────────────
 let journalSubTab = 'journal'; // 'journal' | 'stats'
 
+/**
+ * Change le sous-onglet du journal et redessine
+ * @param {string} tab - Onglet cible : 'journal' | 'stats'
+ */
 function setJournalSubTab(tab) {
   journalSubTab = tab;
   render();
@@ -18,6 +22,10 @@ function setJournalSubTab(tab) {
   if (el) el.scrollTop = 0;
 }
 
+/**
+ * Redessine le contenu principal selon l'onglet actif (state.tab)
+ * Routes vers renderParcours(), renderPatterns(), renderGammes(), renderProgress(), ou renderJournalPage()
+ */
 function render() {
   const el = document.getElementById('content');
   if      (state.tab === 'patterns') el.innerHTML = renderPatterns();
@@ -31,6 +39,12 @@ function render() {
 
 
 // ── CHALLENGE ALÉATOIRE QUOTIDIEN ──
+
+/**
+ * Génère 2 patterns aléatoires quotidiens, cachés par jour
+ * Priorité : patterns non découverts, puis progression croissante
+ * @returns {Array<Object>} Tableau de 2 patterns max sélectionnés
+ */
 function getDailyRandomPatterns() {
   const today = new Date().toISOString().slice(0, 10);
   let cache = {};
@@ -83,6 +97,11 @@ function getDailyRandomPatterns() {
 }
 
 // ── PARCOURS TAB ──
+
+/**
+ * Redessine l'onglet Parcours avec apprentissage structuré par étapes
+ * @returns {string} HTML du contenu Parcours
+ */
 function renderParcours() {
   const etapeNames = { 1: 'La base', 2: "L'indépendance", 3: "L'extension" };
   const etapeDescs = {
@@ -257,8 +276,27 @@ function renderParcours() {
 }
 
 // ── GRILLE DE PROGRESSION — constructeur de lignes partagé ──────────────────
-// Retourne { gridRows, totalCells, doneCells }
-function buildProgGridRows(progressId, dir, dirColor) {
+
+/**
+ * Détermine l'interprétation valide pour un pattern (respecte customInterps si présent)
+ * @param {Object} pat - Pattern object
+ * @returns {string} Clé d'interprétation valide
+ */
+function getValidInterpForPat(pat) {
+  if (!pat.customInterps) return PREVIEW.interp;
+  if (pat.customInterps.includes(PREVIEW.interp)) return PREVIEW.interp;
+  return pat.customInterps[0];  // Fallback à la première interprétation disponible
+}
+
+/**
+ * Construit les lignes HTML d'une grille de progression (tempos × interprétations)
+ * @param {string} progressId - ID unique de progression
+ * @param {string} dir - Direction : 'U' | 'D' | 'M'
+ * @param {string} dirColor - Couleur CSS pour les cellules complétées
+ * @param {Array<string>} interpsToUse - Interprétations à afficher (défaut: INTERPS global)
+ * @returns {Object} {gridRows: string, totalCells: number, doneCells: number}
+ */
+function buildProgGridRows(progressId, dir, dirColor, interpsToUse = INTERPS) {
   let gridRows = '', totalCells = 0, doneCells = 0;
   TEMPOS.forEach(tempo => {
     gridRows += `<tr>
@@ -269,7 +307,7 @@ function buildProgGridRows(progressId, dir, dirColor) {
         </div>
         <span style="font-size:10px;color:${tempo.color};font-weight:700;display:block">${SETTINGS.tempoPresets[tempo.key]} <span style="font-size:8px;font-weight:500">bpm</span></span>
       </td>`;
-    INTERPS.forEach(interp => {
+    interpsToUse.forEach(interp => {
       const k = getProgressKey(progressId, 1, dir, interp, tempo);
       const done = !!state.progress[k];
       totalCells++;
@@ -283,26 +321,48 @@ function buildProgGridRows(progressId, dir, dirColor) {
 }
 
 // ── GRILLE DE PROGRESSION GAMME — fonction réutilisable (render + live refresh) ──
-// Retourne { html, progressPercent }
+
+/**
+ * Construit la grille de progression pour une gamme/pattern spécial
+ * @param {Object} p - Pattern object (gamme ou pattern avec directions)
+ * @returns {Object} {html: string, progressPercent: number}
+ */
 function buildGammeProgGrid(p) {
   const selectedDir = p.hasDirectionTabs ? getGammeSelectedDir(p.id) : null;
-  const progressId = (p.hasDirectionTabs && selectedDir)
-    ? p.id + '__' + selectedDir.replace(/[→↔]/g, '-')
-    : p.id;
+  const selectedGroup = p.stringGroups ? getTriadeStringGroup(p.id) : null;
+
+  // Créer un progressId distinct pour chaque direction/groupe
+  let progressId = p.id;
+  if (p.hasDirectionTabs && selectedDir) {
+    progressId = p.id + '__' + selectedDir.replace(/[→↔]/g, '-');
+  } else if (p.stringGroups && selectedGroup) {
+    progressId = p.id + '__' + selectedGroup;
+  }
+
   const dirColor = '#56864A';
 
-  const { gridRows, totalCells, doneCells } = buildProgGridRows(progressId, 'U', dirColor);
+  // Utiliser customInterps si présent, sinon utiliser INTERPS global
+  const interpsToUse = p.customInterps || INTERPS;
+  const interpLabels = p.customInterps
+    ? { Down: 'Pick ↓', Up: 'Pick ↑', Sweep: 'Sweep' }
+    : INTERP_LABELS;
+
+  const { gridRows, totalCells, doneCells } = buildProgGridRows(progressId, 'U', dirColor, interpsToUse);
   const progressPercent = totalCells > 0 ? Math.round((doneCells / totalCells) * 100) : 0;
 
-  const dirLabel = (p.hasDirectionTabs && selectedDir)
-    ? `<span style="font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px">${selectedDir}</span>`
-    : '';
+  // Badge de direction OU badge de groupe
+  let badgeLabel = '';
+  if (p.hasDirectionTabs && selectedDir) {
+    badgeLabel = `<span style="font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px">${selectedDir}</span>`;
+  } else if (p.stringGroups && selectedGroup) {
+    badgeLabel = `<span style="font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px">${selectedGroup}</span>`;
+  }
 
   const html = `<div class="prog-grid" style="margin-bottom:10px">
     <table><thead><tr>
-      <th style="width:68px;background:var(--blue);vertical-align:middle">${dirLabel}</th>
-      ${INTERPS.map(i => `<th data-interp-th="${i}" onclick="setPreviewInterp('${i}')"
-        style="cursor:pointer;transition:all .15s;${PREVIEW.interp===i ? 'background:var(--orange);color:#fff;' : 'background:var(--blue);color:rgba(255,255,255,.75);'}">${INTERP_LABELS[i]}</th>`).join('')}
+      <th style="width:68px;background:var(--blue);vertical-align:middle">${badgeLabel}</th>
+      ${interpsToUse.map(i => `<th data-interp-th="${i}" onclick="setPreviewInterp('${i}')"
+        style="cursor:pointer;transition:all .15s;${PREVIEW.interp===i ? 'background:var(--orange);color:#fff;' : 'background:var(--blue);color:rgba(255,255,255,.75);'}">${interpLabels[i]}</th>`).join('')}
     </tr></thead>
     <tbody style="background:transparent">${gridRows}</tbody></table></div>`;
 
@@ -336,6 +396,28 @@ function renderPatternGroupBody(pats, key) {
                 color:${isActive ? '#fff' : 'var(--text2)'};
                 border-color:${isActive ? 'var(--blue)' : 'var(--border)'}">
               ${dk}
+            </button>`;
+          }).join('')}
+        </div>`;
+    }
+
+    // ── Sélecteur de groupes de cordes (triades avec stringGroups) ───────────
+    let stringGroupsHtml = '';
+    if (p.stringGroups && Object.keys(p.stringGroups).length > 1) {
+      const selectedGroup = getTriadeStringGroup(p.id);
+      const groupKeys = Object.keys(p.stringGroups);
+      stringGroupsHtml = `
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          ${groupKeys.map(gk => {
+            const isActive = gk === selectedGroup;
+            const btnId = 'triade-group-btn-' + p.id + '-' + gk;
+            return `<button id="${btnId}"
+              onclick="setTriadeStringGroup('${p.id}', '${gk}')"
+              style="flex:1;font-size:13px;font-weight:${isActive?'700':'600'};padding:7px 8px;border-radius:8px;border:2px solid;cursor:pointer;transition:all .15s;text-align:center;
+                background:${isActive ? 'var(--blue)' : 'transparent'};
+                color:${isActive ? '#fff' : 'var(--text2)'};
+                border-color:${isActive ? 'var(--blue)' : 'var(--border)'}">
+              ${gk}
             </button>`;
           }).join('')}
         </div>`;
@@ -375,16 +457,31 @@ function renderPatternGroupBody(pats, key) {
       </div>`;
 
     // ── Tab avec filtre de cordes actif ──────────────────────────────────────
-    const rawTabForDisplay = p.hasDirectionTabs ? getGammeActiveTab(p) : getEffectiveTab(getTabForNeckPosition(p));
-    const neckTabForDisplay = transformTab(rawTabForDisplay, p.id, true); // neck offset (mid/high), sans string shift
-    const filteredTabForDisplay = applyGammeStringFilter(neckTabForDisplay, activeStrings);
+    let rawTabForDisplay;
+    if (p.hasDirectionTabs) {
+      rawTabForDisplay = getGammeActiveTab(p);
+    } else if (p.stringGroups) {
+      rawTabForDisplay = getTriadeActiveTab(p);
+    } else {
+      rawTabForDisplay = getEffectiveTab(getTabForNeckPosition(p));
+    }
+
+    let neckTabForDisplay = rawTabForDisplay;
+    if (!p.disableHighNeck) {
+      neckTabForDisplay = transformTab(rawTabForDisplay, p.id, true); // neck offset (mid/high), sans string shift
+    }
+
+    // Filtrer les cordes uniquement pour les gammes sans stringGroups
+    const filteredTabForDisplay = p.stringGroups
+      ? neckTabForDisplay
+      : applyGammeStringFilter(neckTabForDisplay, activeStrings);
     const tabIsPlaying = PREVIEW.patId === p.id;
     const tabBlock = `
       <div style="margin-bottom:10px">
         ${stringSelector}
         <div class="tab-wrap" style="margin:0" onclick="tabWrapClick('${p.id}')"
           title="Tap → lecture / stop">
-          <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${tabWithSymbols(cleanTabDisplay(filteredTabForDisplay), PREVIEW.interp)}</pre>
+          <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${tabWithSymbols(cleanTabDisplay(filteredTabForDisplay), getValidInterpForPat(p), p.rhythmicResolution ? { rhythmicResolution: p.rhythmicResolution, ...(p.rhythmicBeatPicking ? { rhythmicBeatPicking: true } : {}) } : {})}</pre>
           <div id="tab-cursor-montee-${p.id}" class="tab-cursor-bar"></div>
           <div id="tab-cursor-retour-${p.id}" class="tab-cursor-bar"></div>
           <div id="tab-play-badge-${p.id}" class="tab-play-badge${tabIsPlaying?' playing':''}">
@@ -425,6 +522,7 @@ function renderPatternGroupBody(pats, key) {
     return `
       <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
         ${dirTabsHtml}
+        ${stringGroupsHtml}
         <div id="pat-train-${p.id}" style="font-size:13px;color:var(--text2);opacity:.7;padding:0 1px 6px;letter-spacing:.1px;display:flex;justify-content:space-between;align-items:center">
           <span>— pattern spécial —</span>
           <span style="font-weight:600;color:var(--blue);font-size:12px">${progressPercent > 0 ? progressPercent+'%' : ''}</span>
@@ -443,44 +541,6 @@ function renderPatternGroupBody(pats, key) {
   state.cardDir[key] = activeDir;
   const p = pats.find(x => x.dir === activeDir);
   const relPat = p.related ? PATTERNS.find(r => r.id === p.related + activeDir) : null;
-
-  // ── Doigtés (basés sur la direction active) ──────────────────────────────────
-  const d1 = p.fingerings ? p.fingerings[0] : null;
-  const d1hand = d1 ? `
-    <div>
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:6px">Doigté principal</div>
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:start">
-        <span style="color:var(--text2);font-weight:700;font-size:11px;white-space:nowrap;padding-top:1px">↑ Up</span>
-        <span style="font-size:12px;color:var(--text);line-height:1.6">${expandFingering(d1)}</span>
-        <span style="color:var(--text2);font-weight:700;font-size:11px;white-space:nowrap;padding-top:1px">↓ Down</span>
-        <span style="font-size:12px;color:var(--text);line-height:1.6">${expandFingering(reverseFingering(d1))}</span>
-      </div>
-    </div>` : '';
-  const altFingerings = p.fingerings ? p.fingerings.slice(1).filter(Boolean) : [];
-  const altFingeringsInner = altFingerings.length ? altFingerings.map((f, i) => {
-    const fingIdx = i + 2;
-    const pimtKey = p.id + '__pim' + fingIdx;
-    const done = !!(state.pimtDone && state.pimtDone[pimtKey]);
-    return `
-    <div style="margin-bottom:${i < altFingerings.length - 1 ? '12' : '0'}px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-        <div style="font-size:10px;font-weight:700;color:var(--text2)">Doigté ${fingIdx}</div>
-        <button onclick="togglePimtDone('${pimtKey}', this)"
-          style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;border:1.5px solid;cursor:pointer;transition:all .15s;
-            background:${done?'var(--green)':'transparent'};
-            color:${done?'#fff':'var(--text2)'};
-            border-color:${done?'var(--green)':'var(--border)'}">
-          ${done ? '✓ Maîtrisé' : 'À travailler'}
-        </button>
-      </div>
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:start">
-        <span style="color:var(--text2);font-weight:700;font-size:11px;white-space:nowrap;padding-top:1px">↑ Up</span>
-        <span style="font-size:11px;color:var(--text);line-height:1.6">${expandFingering(f)}</span>
-        <span style="color:var(--text2);font-weight:700;font-size:11px;white-space:nowrap;padding-top:1px">↓ Down</span>
-        <span style="font-size:11px;color:var(--text);line-height:1.6">${expandFingering(reverseFingering(f))}</span>
-      </div>
-    </div>`;
-  }).join('') : '';
 
   // ── Sélecteur de direction — boutons pleine largeur aux couleurs du tableau ──
   const DIR_BTN_COLORS = {
@@ -511,11 +571,50 @@ function renderPatternGroupBody(pats, key) {
 
   // ── Tab (direction active) ────────────────────────────────────────────────────
   const tabIsPlaying = PREVIEW.patId === p.id;
+
+  // Sélecteur de corde (patterns stringSelector)
+  const strSelectorHtml = p.stringSelector ? (() => {
+    const selectedStr = getRhythmicStringSelect(p.id);
+    return `<div style="display:flex;gap:4px;margin-bottom:8px">
+      ${['E','A','D','G','B','e'].map(s => {
+        const active = s === selectedStr;
+        return `<button id="rhythmic-str-btn-${p.id}-${s}"
+          onclick="setRhythmicStringSelect('${p.id}','${s}')"
+          style="flex:1;font-size:12px;font-weight:${active?'700':'600'};padding:5px 4px;border-radius:8px;
+            border:2px solid;cursor:pointer;transition:all .15s;text-align:center;
+            background:${active?'var(--blue)':'transparent'};
+            color:${active?'#fff':'var(--text2)'};
+            border-color:${active?'var(--blue)':'var(--border)'}">${s}</button>`;
+      }).join('')}
+    </div>`;
+  })() : '';
+
+  // Tab à afficher : transposée si stringSelector, sinon pipeline normal
+  let _displayTab;
+  if (p.stringSelector) {
+    const strKey = getRhythmicStringSelect(p.id);
+    let baseTab = p.stringShift
+      ? transposeShiftTab(p.tab, strKey)
+      : transposeSingleStringTab(p.tab, strKey);
+    // Correction G-B : intervalle de 4 demi-tons au lieu de 5
+    if (p.stringShift && strKey === 'G' && GB_SHIFT_PATTERN_IDS.includes(p.id)) {
+      baseTab = applyGBShiftCorrection(baseTab);
+    }
+    _displayTab = baseTab;
+    if (SETTINGS.neckPosition === 'high') _displayTab = applyHighNeckToTab(_displayTab);
+  } else {
+    _displayTab = isStaticNeckTab(p)
+      ? applyStaticTabTransform(getEffectiveTab(getTabForNeckPosition(p)))
+      : transformTab(getEffectiveTab(getTabForNeckPosition(p)), p.id, p.special);
+  }
+  const displayTabContent = tabWithSymbols(cleanTabDisplay(_displayTab), PREVIEW.interp, p.rhythmicResolution ? { rhythmicResolution: p.rhythmicResolution, ...(p.rhythmicBeatPicking ? { rhythmicBeatPicking: true } : {}) } : {});
+
   const tabBlock = `
     <div style="margin-bottom:10px">
+      ${strSelectorHtml}
       <div class="tab-wrap" style="margin:0" onclick="tabWrapClick('${p.id}')"
         title="Tap → lecture / stop">
-        <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${tabWithSymbols(cleanTabDisplay(isStaticNeckTab(p) ? applyStaticTabTransform(getEffectiveTab(getTabForNeckPosition(p))) : transformTab(getEffectiveTab(getTabForNeckPosition(p)), p.id, p.special)), PREVIEW.interp)}</pre>
+        <pre data-tab-id="${p.id}" id="tab-pre-${p.id}" style="font-size:12px">${displayTabContent}</pre>
         <div id="tab-cursor-montee-${p.id}" class="tab-cursor-bar"></div>
         <div id="tab-cursor-retour-${p.id}" class="tab-cursor-bar"></div>
         <div id="tab-play-badge-${p.id}" class="tab-play-badge${tabIsPlaying?' playing':''}">
@@ -531,7 +630,8 @@ function renderPatternGroupBody(pats, key) {
   const DIR_BG      = {U:'rgba(44,100,240,0.07)', D:'rgba(210,180,30,0.08)', M:'rgba(200,60,110,0.07)'};
   const dirColor    = DIR_COLORS[activeDir] || '#56864A';
   const dirBgColor  = DIR_BG[activeDir] || 'transparent';
-  const { gridRows } = buildProgGridRows(p.id, p.dir, dirColor);
+  const interpsToUse = p.customInterps || INTERPS;
+  const { gridRows } = buildProgGridRows(p.id, p.dir, dirColor, interpsToUse);
   const thStyle = i => PREVIEW.interp===i
     ? 'background:var(--orange);color:#fff;'
     : 'background:var(--blue);color:rgba(255,255,255,.75);';
@@ -540,7 +640,7 @@ function renderPatternGroupBody(pats, key) {
   const progGrid = `<div class="prog-grid" style="margin-bottom:10px">
     <table><thead><tr>
       <th style="width:68px;background:var(--blue);vertical-align:middle">${dirBadge}</th>
-      ${INTERPS.map(i=>`<th data-interp-th="${i}" onclick="setPreviewInterp('${i}')"
+      ${interpsToUse.map(i=>`<th data-interp-th="${i}" onclick="setPreviewInterp('${i}')"
         style="cursor:pointer;transition:all .15s;${thStyle(i)}">${INTERP_LABELS[i]}</th>`).join('')}
     </tr></thead>
     <tbody style="background:${dirBgColor}">${gridRows}</tbody></table></div>`;
@@ -555,51 +655,16 @@ function renderPatternGroupBody(pats, key) {
         </button>
       </div>` : '';
 
-  const drawerContent = `
-    <div style="padding:12px 0 2px;display:flex;flex-direction:column;gap:10px">
-
-      ${(d1hand || altFingeringsInner) ? `
-      <div style="display:flex;flex-direction:column;gap:8px">
-        ${d1hand ? d1hand : ''}
-        ${altFingeringsInner ? `
-        <details id="pimt-${p.id}" class="pimt">
-          <summary style="font-size:11px;font-weight:700;color:var(--orange);cursor:pointer;
-            padding:6px 10px;background:#FFF5EC;border-radius:8px;border:1px solid #F5C9A0;
-            list-style:none;display:flex;align-items:center;justify-content:space-between;user-select:none">
-            <span>🌶️ Pimenter</span>
-            <span class="pimt-arrow" style="font-size:9px;opacity:.7">▶</span>
-          </summary>
-          <div style="padding:8px 10px 10px;background:#FFFAF5;border:1px solid #F5C9A0;border-top:none;border-radius:0 0 8px 8px">
-            ${altFingeringsInner}
-          </div>
-        </details>` : ''}
-      </div>` : ''}
-
+  // ── Notes section : directement accessible sans accordéon ──
+  const notesSection = `
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
       ${relBtn}
-
       <textarea placeholder="Notes personnelles…"
         style="width:100%;min-height:52px;padding:8px 10px;font-size:12px;font-family:-apple-system,sans-serif;
           color:var(--text);background:#fafaf8;border:1px solid var(--border);border-radius:8px;
           resize:vertical;outline:none;line-height:1.5"
         onblur="savePatNote('${key}',this.value)">${PAT_NOTES[key]||PAT_NOTES[p.id]||''}</textarea>
-
     </div>`;
-
-  const infoDrawer = `
-    <details id="drawer-${key}" class="info-drawer" style="margin-bottom:2px">
-      <summary style="font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;
-        padding:7px 10px;background:#f8f7f4;border-radius:8px;border:1px solid var(--border);
-        list-style:none;display:flex;align-items:center;justify-content:space-between;user-select:none">
-        <span style="display:flex;align-items:center;gap:6px">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          Doigté &amp; notes
-        </span>
-        <span style="font-size:9px;opacity:.5">▼</span>
-      </summary>
-      ${drawerContent}
-    </details>`;
 
   // ── ENTÊTE : boutons direction pleine largeur ──────────────────────────────
   const codeBase = p.cat + 'P' + p.num;
@@ -615,7 +680,7 @@ function renderPatternGroupBody(pats, key) {
       ${tabBlock}
       <div style="font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px;padding-left:1px">Remplis le tableau</div>
       ${progGrid}
-      ${infoDrawer}
+      ${notesSection}
     </div>`;
 }
 
@@ -644,6 +709,10 @@ function dirLabel(d) {
   return {U:'⬆ Ascendant',D:'⬇ Descendant',M:'↕ Mix'}[d] || d;
 }
 
+/**
+ * Redessine l'onglet Patterns avec filtrage par catégorie et difficulté
+ * @returns {string} HTML du contenu Patterns
+ */
 function renderPatterns() {
   const filters = ['all','A2','A3','A4','A5','A6','B8','B6'];
   const filterLabels = {all:'Tous',A2:'A2 — 2 notes',A3:'A3 — 3 notes',A4:'A4 — 4 notes',A5:'A5 — 5 notes',A6:'A6 — triade ×2',B8:'B8 — 2 cordes ×8',B6:'B6 — multi-cordes'};
@@ -717,6 +786,11 @@ function renderPatterns() {
 }
 
 // ── GAMMES TAB ──
+
+/**
+ * Redessine l'onglet Gammes avec grilles de progression par gamme
+ * @returns {string} HTML du contenu Gammes
+ */
 function renderGammes() {
   const gammeGroups = {};
   PATTERNS.filter(p => p.cat === 'gamme').forEach(p => {
@@ -821,6 +895,10 @@ function toggleParcours(key) {
   }
 }
 
+/**
+ * Met à jour le % de progression d'un groupe (sans couleur)
+ * @param {string} groupKey - Clé du groupe (ex: 'A4P1')
+ */
 function refreshDirPctsNoColor(groupKey) {
   // Met à jour la progress bar et le % global avec 3 teintes pour la progress bar
   const gPct = getGroupPct(groupKey);
@@ -839,6 +917,10 @@ function refreshDirPctsNoColor(groupKey) {
   }
 }
 
+/**
+ * Met à jour le % de progression d'un groupe par direction (avec couleur 3-teintes)
+ * @param {string} groupKey - Clé du groupe (ex: 'A4P1')
+ */
 function refreshDirPcts(groupKey) {
   const pats = PATTERNS.filter(p => p.cat + 'P' + p.num === groupKey);
 
@@ -900,6 +982,11 @@ function refreshSpecialProgressPercent(patId) {
 }
 
 // ─── SUIVI SÉANCES ────────────────────────────────────────────────────────────
+
+/**
+ * Enregistre une séance pour aujourd'hui (une fois par jour maximum)
+ * Met à jour le compteur journalier en temps réel si showHeaderStats est activé
+ */
 function logSession() {
   const today = new Date().toISOString().slice(0,10);
   let sessions = [];
@@ -912,10 +999,19 @@ function logSession() {
   }
 }
 
+/**
+ * Récupère la liste des jours avec séances (format ISO: YYYY-MM-DD)
+ * @returns {Array<string>} Liste des dates
+ */
 function getSessions() {
   try { return JSON.parse(localStorage.getItem('dicoSessions') || '[]'); } catch(e) { return []; }
 }
 
+/**
+ * Calcule les streaks courant et record à partir de la liste des séances
+ * @param {Array<string>} sessions - Liste des dates au format ISO (YYYY-MM-DD)
+ * @returns {Object} {current: number, record: number}
+ */
 function computeStreak(sessions) {
   if (!sessions.length) return { current: 0, record: 0 };
   const set = new Set(sessions);
@@ -939,6 +1035,12 @@ function computeStreak(sessions) {
   return { current, record };
 }
 
+/**
+ * Construit les cellules de calendrier mensuel pour les séances
+ * Réutilisable par renderSessionCalendar() et renderCalendarAccordion()
+ * @param {Array<string>} sessions - Liste des dates au format ISO (YYYY-MM-DD)
+ * @returns {string} HTML des cellules de calendrier
+ */
 function buildCalendarCells(sessions) {
   const now = new Date();
   const year = now.getFullYear(), month = now.getMonth();
@@ -968,6 +1070,10 @@ function buildCalendarCells(sessions) {
   return cells;
 }
 
+/**
+ * Redessine le calendrier des séances du mois avec calcul de streak
+ * @returns {string} HTML du calendrier
+ */
 function renderSessionCalendar() {
   const sessions = getSessions();
   const { current, record } = computeStreak(sessions);
@@ -1032,6 +1138,11 @@ function setDiffFilter(d) {
 
 
 // ── Calendrier rétractable (utilisé dans Mes séances) ──
+
+/**
+ * Redessine le calendrier rétractable des séances (pour la section progress)
+ * @returns {string} HTML du calendrier accordéon
+ */
 function renderCalendarAccordion() {
   const sessions = getSessions();
   const now = new Date();
@@ -1050,6 +1161,11 @@ function renderCalendarAccordion() {
   </details>`;
 }
 // ── PROGRESSION TAB ──
+
+/**
+ * Redessine l'onglet Progress avec calendrier et vue globale par groupe
+ * @returns {string} HTML du contenu Progress
+ */
 function renderGlobalProgress() {
   // Grouper par cat+num pour ne compter qu'une fois par groupe (comme les cartes)
   const groups = {};
@@ -1189,11 +1305,19 @@ function renderGlobalProgress() {
   return html;
 }
 
+/**
+ * Sélectionne un pattern et navigue vers son groupe
+ * @param {string} id - ID du pattern
+ */
 function selectPatAndGo(id) {
   const pat = PATTERNS.find(p => p.id === id);
   if (pat) goToPattern(pat.cat + 'P' + pat.num);
 }
 
+/**
+ * Redessine la page Journal avec onglets Historique/Progression
+ * @returns {string} HTML du contenu Journal
+ */
 function renderJournalPage() {
   const icoJournal    = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/></svg>`;
   const icoProgression = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="20" x2="5" y2="12"/><line x1="10" y1="20" x2="10" y2="6"/><line x1="15" y1="20" x2="15" y2="10"/><line x1="20" y1="20" x2="20" y2="3"/><line x1="2" y1="20" x2="23" y2="20"/></svg>`;
@@ -1205,6 +1329,10 @@ function renderJournalPage() {
   return seg + (journalSubTab === 'stats' ? renderGlobalProgress() : renderJournal());
 }
 
+/**
+ * Alias pour renderGlobalProgress() — Redessine l'onglet Progress
+ * @returns {string} HTML du contenu Progress
+ */
 function renderProgress() {
   return renderGlobalProgress();
 }

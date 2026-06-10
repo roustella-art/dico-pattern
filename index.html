@@ -254,6 +254,7 @@
   .settings-overlay{position:fixed;inset:0;z-index:1000;background:rgba(15,25,55,.85);display:flex;align-items:flex-start;justify-content:center;padding:24px 14px;overflow-y:auto;animation:fadeIn .18s ease}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes fadeInDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeInOut{0%{opacity:0;transform:scale(.9)};20%{opacity:1;transform:scale(1)};80%{opacity:1;transform:scale(1)};100%{opacity:0;transform:scale(.9)}}
   .settings-modal{background:#fff;border-radius:18px;padding:18px 20px 22px;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);position:relative}
   .settings-modal .modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
   .settings-modal h2{font-size:18px;font-weight:800;color:var(--blue);letter-spacing:-.2px}
@@ -447,6 +448,7 @@
 
 <script src="data.js"></script>
 <script src="state.js"></script>
+<script src="onboarding.js"></script>
 <script src="audio.js"></script>
 <script src="render.js"></script>
 <script>
@@ -954,6 +956,196 @@ function setGammeDirection(patId, dirKey) {
       }
     });
   }
+}
+
+function getTriadeStringGroup(patId) {
+  const pat = PATTERNS.find(p => p.id === patId);
+  if (!pat || !pat.stringGroups) return null;
+  const saved = state.triadeStringGroup && state.triadeStringGroup[patId];
+  const keys = Object.keys(pat.stringGroups);
+  return (saved && keys.includes(saved)) ? saved : keys[0];
+}
+
+function getTriadeActiveTab(pat) {
+  if (!pat.stringGroups) return pat.tab;
+  const groupKey = getTriadeStringGroup(pat.id);
+  return pat.stringGroups[groupKey] || Object.values(pat.stringGroups)[0];
+}
+
+function getValidInterp(pat) {
+  if (!pat.customInterps) return PREVIEW.interp;
+  if (pat.customInterps.includes(PREVIEW.interp)) return PREVIEW.interp;
+  return pat.customInterps[0];  // Fallback à la première interprétation disponible
+}
+
+function setTriadeStringGroup(patId, groupKey) {
+  if (!state.triadeStringGroup) state.triadeStringGroup = {};
+  state.triadeStringGroup[patId] = groupKey;
+  saveState();
+  if (PREVIEW.patId === patId) previewStop();
+  const pat = PATTERNS.find(p => p.id === patId);
+  // Mettre à jour la tab affichée
+  const pre = document.getElementById('tab-pre-' + patId);
+  if (pre && pat) {
+    const rawTab = getTriadeActiveTab(pat);
+    let neckTab = rawTab;
+    if (!pat.disableHighNeck) {
+      neckTab = transformTab(rawTab, pat.id, true);
+    }
+    const filtered = neckTab;  // Pas de filtrage de cordes pour les triades
+    pre.innerHTML = tabWithSymbols(cleanTabDisplay(filtered), getValidInterp(pat));
+  }
+  // Live refresh de la progression
+  if (pat) {
+    const progEl = document.getElementById('gamme-prog-' + patId);
+    if (progEl) {
+      const { html, progressPercent } = buildGammeProgGrid(pat);
+      progEl.innerHTML = html;
+      // Mettre à jour le % affiché dans l'en-tête de la carte
+      const trainEl = document.getElementById('pat-train-' + patId);
+      if (trainEl) {
+        const pctSpan = trainEl.querySelector('span:last-child');
+        if (pctSpan) pctSpan.textContent = progressPercent > 0 ? progressPercent + '%' : '';
+      }
+    }
+  }
+  // Mettre à jour l'apparence des boutons de groupe
+  if (pat && pat.stringGroups) {
+    Object.keys(pat.stringGroups).forEach(gk => {
+      const btn = document.getElementById('triade-group-btn-' + patId + '-' + gk);
+      if (btn) {
+        const isActive = gk === groupKey;
+        btn.style.background  = isActive ? 'var(--blue)'   : 'transparent';
+        btn.style.color       = isActive ? '#fff'          : 'var(--text2)';
+        btn.style.borderColor = isActive ? 'var(--blue)'   : 'var(--border)';
+        btn.style.fontWeight  = isActive ? '700'           : '600';
+      }
+    });
+  }
+}
+
+// ─── SÉLECTEUR DE CORDE (patterns stringSelector) ────────────────────────────
+// Permet de jouer un pattern mono-corde sur n'importe quelle corde choisie
+
+function getRhythmicStringSelect(patId) {
+  const saved = state.rhythmicStringSelect && state.rhythmicStringSelect[patId];
+  if (saved) return saved;
+  // Auto-détecter la corde source dans le tab de base
+  const pat = PATTERNS.find(p => p.id === patId);
+  if (pat && pat.tab) {
+    for (const line of pat.tab.split('\n')) {
+      const m = line.match(/^([eEBGDA])\s*\|(.+)/);
+      if (m && /\d/.test(m[2])) return m[1];
+    }
+  }
+  return 'E';
+}
+
+// Remplace chaque case N par (N+12) en volant 1 tiret après la note pour compenser
+// → les colonnes et lineLength restent identiques (timing préservé)
+function applyHighNeckToTab(tabStr) {
+  return tabStr.split('\n').map(line => {
+    const m = line.match(/^([eEBGDA])\s*\|(.*)/);
+    if (!m) return line;
+    const content = m[2];
+    if (!/\d/.test(content)) return line; // ligne sans notes → inchangée
+    let result = '';
+    let i = 0;
+    while (i < content.length) {
+      if (/\d/.test(content[i])) {
+        let num = '';
+        while (i < content.length && /\d/.test(content[i])) num += content[i++];
+        const newNum = String(parseInt(num) + 12);
+        const extra = newNum.length - num.length; // chars gagnés (ex: 0→12 = +1)
+        result += newNum;
+        // Compenser en sautant 'extra' tirets immédiatement après
+        let skipped = 0;
+        while (skipped < extra && i < content.length && content[i] === '-') { i++; skipped++; }
+      } else {
+        result += content[i++];
+      }
+    }
+    return m[1] + '|' + result;
+  }).join('\n');
+}
+
+function transposeSingleStringTab(tabStr, targetStr) {
+  const lines = tabStr.split('\n');
+  let sourceStr = null, sourceContent = null;
+  for (const line of lines) {
+    const m = line.match(/^([eEBGDA])\s*\|(.+)/);
+    if (m && /\d/.test(m[2])) { sourceStr = m[1]; sourceContent = m[2]; break; }
+  }
+  if (!sourceStr || sourceStr === targetStr) return tabStr;
+  return lines.map(line => {
+    const m = line.match(/^([eEBGDA])\s*\|(.+)/);
+    if (!m) return line;
+    if (m[1] === sourceStr) return m[1] + '|' + m[2].replace(/\d+/g, n => '-'.repeat(n.length));
+    if (m[1] === targetStr) return m[1] + '|' + sourceContent;
+    return line;
+  }).join('\n');
+}
+
+// Décale TOUTES les cordes de N positions (pour accords multi-cordes transposables)
+// Ex: shift=1 (E→A) : contenu E va sur A, contenu A va sur D, reste = dashes
+function transposeShiftTab(tabStr, targetStr) {
+  const SL = ['e','B','G','D','A','E'];
+  const baseIdx = SL.indexOf('E'); // 5
+  const targetIdx = SL.indexOf(targetStr);
+  if (targetIdx === -1 || targetIdx === baseIdx) return tabStr;
+  const shift = baseIdx - targetIdx; // ex: E→A: 1, E→D: 2
+  const lines = tabStr.split('\n');
+  const contentMap = {};
+  let lineLen = 0;
+  lines.forEach(line => {
+    const m = line.match(/^([eEBGDA])\|(.*)\|$/);
+    if (m) { contentMap[m[1]] = m[2]; lineLen = Math.max(lineLen, m[2].length); }
+  });
+  const newMap = {};
+  SL.forEach((s, idx) => {
+    const src = idx + shift;
+    newMap[s] = (src >= 0 && src < SL.length)
+      ? (contentMap[SL[src]] || '-'.repeat(lineLen))
+      : '-'.repeat(lineLen);
+  });
+  return lines.map(line => {
+    const m = line.match(/^([eEBGDA])\|(.*)\|$/);
+    if (!m) return line;
+    return m[1] + '|' + newMap[m[1]] + '|';
+  }).join('\n');
+}
+
+function setRhythmicStringSelect(patId, strKey) {
+  if (!state.rhythmicStringSelect) state.rhythmicStringSelect = {};
+  state.rhythmicStringSelect[patId] = strKey;
+  saveState();
+  if (PREVIEW.patId === patId) previewStop();
+  const pat = PATTERNS.find(p => p.id === patId);
+  if (!pat) return;
+  // Mettre à jour la tab affichée
+  const pre = document.getElementById('tab-pre-' + patId);
+  if (pre) {
+    let transposed = pat.stringShift
+      ? transposeShiftTab(pat.tab, strKey)
+      : transposeSingleStringTab(pat.tab, strKey);
+    // Correction G-B : intervalle de 4 demi-tons au lieu de 5
+    if (pat.stringShift && strKey === 'G' && GB_SHIFT_PATTERN_IDS.includes(patId)) {
+      transposed = applyGBShiftCorrection(transposed);
+    }
+    if (SETTINGS.neckPosition === 'high') transposed = applyHighNeckToTab(transposed);
+    pre.innerHTML = tabWithSymbols(cleanTabDisplay(transposed), PREVIEW.interp, pat.rhythmicResolution ? { rhythmicResolution: pat.rhythmicResolution } : {});
+  }
+  // Mettre à jour les boutons
+  ['e','B','G','D','A','E'].forEach(s => {
+    const btn = document.getElementById('rhythmic-str-btn-' + patId + '-' + s);
+    if (btn) {
+      const active = s === strKey;
+      btn.style.background  = active ? 'var(--blue)' : 'transparent';
+      btn.style.color       = active ? '#fff'        : 'var(--text2)';
+      btn.style.borderColor = active ? 'var(--blue)' : 'var(--border)';
+      btn.style.fontWeight  = active ? '700'         : '600';
+    }
+  });
 }
 
 function getEffectiveTab(rawTabStr) {
@@ -1851,7 +2043,7 @@ function openSettings(tab) {
           <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
         </div>
         <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
-        <div class="sf-version">v2.9</div>
+        <div class="sf-version">v2.9.4</div>
       </div>
     </div>
   </div>`;
@@ -1885,7 +2077,7 @@ function closeSettings() {
 
 function resetApp() {
   if (!confirm(`⚠️ Remettre l'app à zéro ? Progression, notes et réglages seront effacés.`)) return;
-  ['dicoPattern','dicoPatNotes','dicoOnboarded','dicoSettings','dicoSessions','dicoPatTrace','dicoPatternJournal'].forEach(k => localStorage.removeItem(k));
+  ['dicoPattern','dicoPatNotes','dicoOnboarded','dicoSettings','dicoSessions','dicoPatTrace','dicoPatternJournal','dico-onboarding-done','dico-onboarding-level','dico-cache-version'].forEach(k => localStorage.removeItem(k));
   Object.keys(localStorage).filter(k => k.startsWith('altFing_')).forEach(k => localStorage.removeItem(k));
   location.reload();
 }
@@ -2350,6 +2542,7 @@ document.addEventListener('mousedown',  wakeLockResetInactiveTimer, { passive: t
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 loadState();
+showOnboarding();           // affiche le questionnaire de niveau à la première utilisation
 applyDarkMode();            // applique le dark mode si activé dans les settings
 render();
 updateHeaderUI();           // met à jour le header (visibility du bouton mid/high, etc.)
@@ -2378,6 +2571,37 @@ document.addEventListener("toggle", (event) => {
     metroStop();
   }
 }, false);
+
+// ── Vérification de mise à jour PWA ────────────────────────────────────────────
+// Charge version.json pour vérifier s'il y a une nouvelle version
+// Si la version change, efface le cache et force un refresh
+async function checkForUpdate() {
+  try {
+    const resp = await fetch('./version.json?t=' + Date.now(), { cache: 'no-store' });
+    const versionData = await resp.json();
+    const savedVersion = localStorage.getItem('dico-cache-version');
+
+    if (savedVersion !== versionData.cacheVersion) {
+      console.log('🔄 Nouvelle version détectée, vidage du cache...');
+      // Vider tous les caches
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(cacheNames.map(name => caches.delete(name)));
+      }
+      // Sauvegarder la nouvelle version
+      localStorage.setItem('dico-cache-version', versionData.cacheVersion);
+      // Force un reload complet
+      window.location.reload(true);
+    }
+  } catch (e) {
+    console.warn('Erreur lors de la vérification de mise à jour:', e);
+  }
+}
+
+// Vérifier la mise à jour au chargement et toutes les 5 minutes
+checkForUpdate();
+setInterval(checkForUpdate, 5 * 60 * 1000);
+
 // PWA Service Worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
@@ -2482,25 +2706,6 @@ function toggleFavorite(key, event) {
   const btn = event.target.closest('button');
   if (btn) btn.innerHTML = heartSVG(!!state.favorites[key]);
 }
-
-function togglePimtDone(pimtKey, btn) {
-  // S'assurer que state.pimtDone existe
-  if (!state.pimtDone) {
-    state.pimtDone = {};
-  }
-  // Toggle l'état du doigté
-  state.pimtDone[pimtKey] = !state.pimtDone[pimtKey];
-  saveState();
-  // Mise à jour du bouton immédiatement
-  if (btn && btn.tagName === 'BUTTON') {
-    const done = !!state.pimtDone[pimtKey];
-    btn.style.background = done ? 'var(--green)' : 'transparent';
-    btn.style.color = done ? '#fff' : 'var(--text2)';
-    btn.style.borderColor = done ? 'var(--green)' : 'var(--border)';
-    btn.textContent = done ? '✓ Maîtrisé' : 'À travailler';
-  }
-}
-
 
 function toggleParcoursCell(key, btn, color) {
   state.progress[key] = !state.progress[key];
