@@ -1086,6 +1086,35 @@ function transposeSingleStringTab(tabStr, targetStr) {
   }).join('\n');
 }
 
+// Décale TOUTES les cordes de N positions (pour accords multi-cordes transposables)
+// Ex: shift=1 (E→A) : contenu E va sur A, contenu A va sur D, reste = dashes
+function transposeShiftTab(tabStr, targetStr) {
+  const SL = ['e','B','G','D','A','E'];
+  const baseIdx = SL.indexOf('E'); // 5
+  const targetIdx = SL.indexOf(targetStr);
+  if (targetIdx === -1 || targetIdx === baseIdx) return tabStr;
+  const shift = baseIdx - targetIdx; // ex: E→A: 1, E→D: 2
+  const lines = tabStr.split('\n');
+  const contentMap = {};
+  let lineLen = 0;
+  lines.forEach(line => {
+    const m = line.match(/^([eEBGDA])\|(.*)\|$/);
+    if (m) { contentMap[m[1]] = m[2]; lineLen = Math.max(lineLen, m[2].length); }
+  });
+  const newMap = {};
+  SL.forEach((s, idx) => {
+    const src = idx + shift;
+    newMap[s] = (src >= 0 && src < SL.length)
+      ? (contentMap[SL[src]] || '-'.repeat(lineLen))
+      : '-'.repeat(lineLen);
+  });
+  return lines.map(line => {
+    const m = line.match(/^([eEBGDA])\|(.*)\|$/);
+    if (!m) return line;
+    return m[1] + '|' + newMap[m[1]] + '|';
+  }).join('\n');
+}
+
 function setRhythmicStringSelect(patId, strKey) {
   if (!state.rhythmicStringSelect) state.rhythmicStringSelect = {};
   state.rhythmicStringSelect[patId] = strKey;
@@ -1096,9 +1125,15 @@ function setRhythmicStringSelect(patId, strKey) {
   // Mettre à jour la tab affichée
   const pre = document.getElementById('tab-pre-' + patId);
   if (pre) {
-    let transposed = transposeSingleStringTab(pat.tab, strKey);
+    let transposed = pat.stringShift
+      ? transposeShiftTab(pat.tab, strKey)
+      : transposeSingleStringTab(pat.tab, strKey);
+    // Correction G-B : intervalle de 4 demi-tons au lieu de 5
+    if (pat.stringShift && strKey === 'G' && GB_SHIFT_PATTERN_IDS.includes(patId)) {
+      transposed = applyGBShiftCorrection(transposed);
+    }
     if (SETTINGS.neckPosition === 'high') transposed = applyHighNeckToTab(transposed);
-    pre.innerHTML = tabWithSymbols(cleanTabDisplay(transposed), PREVIEW.interp);
+    pre.innerHTML = tabWithSymbols(cleanTabDisplay(transposed), PREVIEW.interp, pat.rhythmicResolution ? { rhythmicResolution: pat.rhythmicResolution } : {});
   }
   // Mettre à jour les boutons
   ['e','B','G','D','A','E'].forEach(s => {
@@ -2008,7 +2043,7 @@ function openSettings(tab) {
           <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
         </div>
         <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
-        <div class="sf-version">v2.9.3</div>
+        <div class="sf-version">v2.9.4</div>
       </div>
     </div>
   </div>`;
