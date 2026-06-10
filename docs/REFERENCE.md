@@ -1,4 +1,177 @@
-# 🎸 Différence: PATTERNS vs GAMMES
+# Référence Technique — Dico Pattern
+
+Documentation de référence consolidée : guide d'ajout de patterns, différences techniques entre types, décisions de design.
+
+---
+
+# Partie 1 — Guide : Ajouter un pattern
+
+## Structure des fichiers
+
+```
+data.js     → ajouter les patterns ici
+state.js    → état et réglages (ne pas toucher)
+audio.js    → son et métronome (ne pas toucher)
+render.js   → affichage (ne pas toucher)
+index.html  → structure et CSS (ne pas toucher)
+```
+
+---
+
+## Les 3 types de patterns
+
+### Type A — Pattern classique (A4, A6…)
+
+- **Toujours 3 entrées** : une par direction U / D / M
+- Une seule tablature `tab`
+- L'app transpose automatiquement selon le groupe de cordes et la position du manche
+
+```js
+{
+  id:"A4P3aU",            // UNIQUE — convention: [CAT]P[NUM][DIR]
+  cat:"A4",               // A4 = 4 notes · A6 = 6 notes
+  dir:"U",                // U = montée · D = descente · M = mix
+  num:'3a',               // numéro inédit dans cette catégorie
+  notes:4,
+  difficulty:"Débutant",  // "Débutant" | "Intermédiaire" | "Avancé"
+  fingerings:['ind + maj + ann + aur', 'ind + maj + ann + ann'],
+  name:"Nom du pattern",
+  bpm:60,                 // BPM de départ
+  bpmTarget:130,          // BPM objectif
+  tab:`e|--------------------------5-6-8-9-|
+B|------------------5-6-8-9---------|
+G|----------5-6-8-9-----------------|
+D|--5-6-8-9-------------------------|
+A|----------------------------------|
+E|----------------------------------|
+↩ retour décalé +1
+--6-7-9-10------------------------|||
+----------6-7-9-10----------------|||
+------------------6-7-9-10-------o|||
+--------------------------6-7-9-10|||
+----------------------------------|||
+----------------------------------|||`,
+  desc:"Description courte du pattern.",
+  tip:"Conseil pratique pour le travailler.",
+},
+```
+
+> Répéter 3 fois avec `dir:"U"`, `dir:"D"`, `dir:"M"` et les tabs correspondantes.
+
+**Champs optionnels :**
+- `etape` + `etapeOrder` → position dans le Parcours (1, 2 ou 3)
+- `fretOffset:-1` → pattern qui commence une case plus bas (case 4)
+- `related:"A4P1b"` → lien vers un pattern similaire
+
+---
+
+### Type B — Pattern statique multi-cordes (B6…)
+
+- **2 tablatures** : `tabMid` (case 5) et `tabHigh` (case 12)
+- Pas de transformation automatique — les deux tabs sont écrites manuellement
+
+```js
+{
+  id:"B6P2aU",
+  cat:"B6", dir:"U", num:"2a", notes:6,
+  difficulty:"Intermédiaire",
+  fingerings:['ind + maj + aur'],
+  name:"Nom du run",
+  bpm:60, bpmTarget:110,
+  tabMid:`e|-----------------------------------------------5----------|
+B|-----------------------------5--------5--6--8-----8--6----|
+G|-----------5--------5--6--8-----8--6----------------------|
+D|--5--6--8-----8--6----------------------------------------|
+A|---------------------------------------------------------|
+E|---------------------------------------------------------|
+↩ retour décalé +1 case (B→G→D)
+...`,
+  tabHigh:`e|-----------------------------------------------12---------|
+B|-----------------------------12-------12-13-15----15-13---|
+G|-----------12       12-13-15----15-13---------------------|
+D|--12-13-15----15-13---------------------------------------|
+A|----------------------------------------------------------|
+E|----------------------------------------------------------|
+↩ retour décalé +1 case (B→G→D)
+...`,
+  desc:"Description.",
+  tip:"Conseil.",
+},
+```
+
+---
+
+### Type Gamme — Pentatonique, Ionien…
+
+- `special: true` obligatoire
+- Une seule `tab`, pas de transformation automatique
+- Pas besoin de directions U/D/M
+
+```js
+{
+  id:"pentaC3",           // UNIQUE — convention: [nom][forme]
+  cat:"gamme",
+  num:"3",
+  notes:12,
+  difficulty:"Débutant",
+  special:true,           // OBLIGATOIRE
+  name:"Pentatonic #3",
+  bpm:120, bpmTarget:120,
+  tab:`e |--------------------------------7--10----|
+B |--------------------------8--10----------|
+G |--------------------7--9----------------|
+D |--------------7--9----------------------|
+A |--------7--10---------------------------|
+E |--7--10---------------------------------|
+↩
+--10--7---------------------------------||
+--------10--7---------------------------||
+--------------9--7----------------------||
+--------------------9--7----------------||
+--------------------------10--8---------||
+--------------------------------10--7---||`,
+  desc:"Description de la gamme.",
+  tip:"Conseil.",
+},
+```
+
+---
+
+## Règles à respecter
+
+| Règle | Détail |
+|---|---|
+| ID unique | Vérifier qu'aucun autre pattern n'a le même `id` |
+| 3 entrées par pattern A | Une pour chaque direction U, D, M |
+| `tabHigh` = `tabMid` + 7 cases | Pour les patterns B uniquement |
+| `special:true` | Obligatoire pour toutes les gammes |
+| Tester après ajout | Ouvrir http://localhost:8765 et vérifier l'affichage |
+
+---
+
+## Démarrer le serveur de test
+
+```bash
+cd "chemin/vers/dico-pattern"
+python3 -m http.server 8765
+```
+
+Puis ouvrir **http://localhost:8765** dans le navigateur.
+
+---
+
+## Où ajouter dans data.js
+
+- Patterns **A4** → après la dernière entrée `A4P…`
+- Patterns **A6** → après la dernière entrée `A6P…`
+- Patterns **B6** → après la dernière entrée `B6P…`
+- **Gammes** → tout à la fin du tableau, avant le `];` final
+
+---
+
+---
+
+# Partie 2 — Types de patterns et gammes en détail
 
 ## Pattern Normal (U/D/M)
 **Cas d'usage:** Exercices techniques avec directions (ascendant/descendant/mix)
@@ -631,7 +804,127 @@ btnId = 'triade-group-btn-' + patId + '-' + groupKey
 
 ---
 
-**🎯 TL;DR:**
+## Pattern avec timing rythmique réel (`rhythmicTiming`)
+
+### Contexte
+
+Par défaut, le moteur audio joue toutes les notes de façon **équidistante** : chaque note est séparée par une "subdivision" (16th, 8th, etc. selon le réglage du header). L'espacement visuel des tirets dans la tab n'est pas interprété comme durée.
+
+La propriété `rhythmicTiming: true` active un mode où **l'espacement des tirets dans la tab est interprété comme durée musicale réelle**. Cela permet d'écrire des patterns avec des valeurs de note mixtes (croches + doubles croches, etc.).
+
+### Propriétés data.js
+
+```javascript
+{
+  id: "rhythmic-test",
+  rhythmicTiming: true,      // Active le moteur de timing rythmique
+  rhythmicResolution: 3,     // Nombre de chars de tab = 1 subdivision (1 sixteenth)
+  tab: `...`
+}
+```
+
+**`rhythmicResolution`** est le facteur de conversion entre les caractères de la tab et les subdivisions musicales :
+- `1 sixteenth = rhythmicResolution chars dans la tab`
+- Exemple : avec resolution=3, une croche (8th = 2 sixteenths) = 6 chars, une double croche (16th) = 3 chars
+
+### Comment écrire une tab rythmique
+
+La règle clé : **le nombre de tirets entre les notes détermine leur durée relative**.
+
+```
+E|0-----0--0--0-----0--0--|
+    ↑6    ↑3 ↑3  ↑6    ↑3 ↑3
+  croche  dc  dc croche  dc  dc
+```
+
+**Règle d'alignement des longueurs de lignes :**
+- Toutes les lignes (y compris les cordes muettes `e|`, `B|`, etc.) doivent avoir **exactement la même longueur** de contenu
+- La durée de la dernière note est calculée comme `lineLength - lastNoteCol`
+- Si les lignes muettes sont plus longues, `lineLength` sera incorrecte → dérive de tempo
+
+**Exemple correct (48 chars pour toutes les lignes) :**
+```javascript
+tab:`e|------------------------------------------------|
+B|------------------------------------------------|
+G|------------------------------------------------|
+D|------------------------------------------------|
+A|------------------------------------------------|
+E|0-----0--0--0-----0--0--0-----0--0--0-----0--0--|`
+```
+
+### Calcul de la résolution
+
+Pour trouver `rhythmicResolution` :
+1. Identifier la plus petite valeur de note (subdivision de référence)
+2. Compter les chars entre deux notes adjacentes de cette valeur
+3. Ce nombre = `rhythmicResolution`
+
+Exemple : doubles croches séparées par 3 chars → `rhythmicResolution = 3`
+
+### Architecture audio (audio.js)
+
+**Parsing : `parseTabNotesWithDurations()` et `parseSectionWithDurations()`**
+
+Au lieu de simplement enregistrer les positions de colonnes, ces fonctions calculent aussi la **durée de chaque note** :
+
+```javascript
+// Durée = distance jusqu'à la prochaine note
+distance = nextNoteCol - currentNoteCol
+
+// Dernière note : distance jusqu'à la fin de la ligne
+distance = lineLength - lastNoteCol  // ← nécessite lignes de même longueur !
+```
+
+**Scheduling : mode `hasRhythmicTiming` dans `scheduleCycle()`**
+
+Au lieu de `noteOffset(i, sixteenth)` (équidistant), chaque note est positionnée par accumulation :
+
+```javascript
+let currentTime = 0;
+cycle.forEach(({ duration }) => {
+  pluckNote(..., safeT0 + currentTime, ...);
+  currentTime += duration * sixteenth / rhythmicResolution;
+});
+```
+
+**Ancrage absolu (anti-dérive) :**
+
+La durée de boucle est calculée une seule fois à `previewPlay()` et stockée dans `PREVIEW._rhythmicLoopDuration`. Chaque boucle suivante est ancrée sur `patStart` :
+
+```javascript
+// Calcul unique au démarrage
+PREVIEW._rhythmicPatStart = patStart;
+PREVIEW._rhythmicLoopDuration = sum(durations) * sixteenth / rhythmicResolution;
+PREVIEW._rhythmicCumulativeTimes = [...]; // offset de chaque note
+
+// nextT0 pour chaque boucle = ancre absolue (pas de dérive d'accumulation timer)
+nextT0 = PREVIEW._rhythmicPatStart + PREVIEW.sessionLoops * PREVIEW._rhythmicLoopDuration;
+```
+
+Pourquoi c'est important : sans ancrage, un timer qui arrive systématiquement 5ms en retard dérive de 5ms × N boucles → 500ms après 100 boucles.
+
+**Curseur synchronisé :**
+
+Le curseur utilise `PREVIEW._rhythmicCumulativeTimes[i]` au lieu de `noteOffset(i, sx)`, et `PREVIEW._rhythmicLoopDuration` pour la durée du cycle, ce qui le maintient aligné sur les notes réelles.
+
+### Piège classique : tab mal dimensionnée
+
+Le bug le plus courant : des lignes de longueurs différentes.
+
+```
+# BUG : e=52 chars, E=52 chars mais note12 à col 47
+# lineLength = 52, durée note12 = 52-47 = 5 chars
+# Total = 6+3+3+6+3+3+6+3+3+6+3+5 = 50 → loop = 50/3 = 16.67 sixteenths ≠ 16
+# Résultat : dérive de 83ms par boucle → décalage "fort" perceptible dès la 2ème boucle
+
+# FIX : aligner toutes les lignes sur 48 chars
+# lineLength = 48, durée note12 = 48-45 = 3
+# Total = 48 → loop = 48/3 = 16 sixteenths = 4 beats exactement
+```
+
+---
+
+**TL;DR:**
 - **Pattern** = exercice technique, multiple directions, doigtés
 - **Gamme** = pattern spécial, `special:true`, `cat:"gamme"`, note-par-note, 2 mesures
 - **fretOffset** = propriété optionnelle pour décaler les cases à l'affichage (lisibilité)
@@ -639,3 +932,108 @@ btnId = 'triade-group-btn-' + patId + '-' + groupKey
 - **gammeActiveStrings** = sélection par corde pour les gammes, masquage des notes inactives, persisté en localStorage
 - **hasDirectionTabs** = gamme avec variantes de direction (ex: pentatonique 1↔2), une progression distincte par direction, live refresh ciblé
 - **dirBadge** = badge dans le `th` de la grille pour afficher le mode actif (patterns classiques et gammes à onglets)
+- **rhythmicTiming** = pattern avec durées réelles basées sur l'espacement de la tab, ancrage absolu anti-dérive, curseur synchronisé
+
+---
+
+---
+
+# Partie 3 — Décisions de design
+
+## Vue d'ensemble
+Document des choix de design majeurs et des rationnements derrière ces choix.
+
+---
+
+## 1. Suppression du système de doigtés (v1.1)
+
+**Date :** 3 juin 2026  
+**Status :** ✅ Implémentée
+
+### Rationnement
+- Les doigtés ajoutent une **complexité inutile** pour l'utilisateur courant
+- Chaque guitariste a **ses propres préférences** de doigté selon sa main, son style, ses objectifs
+- L'app est déjà **très complète** sans cette feature (progression, notes, métronome, etc.)
+- Les notes suffisent pour que l'utilisateur **documente son approche personnelle**
+
+### Changements effectués
+1. Supprimé le système d'accordéons de doigtés dans les patterns
+2. Gardé la section "Notes" sous chaque tableau de progression
+3. Supprimé le code associé :
+   - Boutons d'accordéons doigtés
+   - Affichage des tabs alternatives pour chaque doigté
+   - Fonction `toggleFingering()` et assimilées
+   - Données `pimtDone` du localStorage
+
+### Bénéfices
+- ✅ Interface plus **épurée et lisible**
+- ✅ Moins de **distractions** pendant la pratique
+- ✅ Utilisateur **responsable de son approche** (liberté créative)
+- ✅ Maintenance **plus simple** du code
+
+### Réouverture possible
+Si à l'avenir on souhaite revenir à un système de doigtés :
+- Repartir d'une architecture plus modulaire
+- Permettre à l'utilisateur d'**uploader ses propres doigtés**
+- Système de **presets de doigtés** par style (jazz, metal, classique)
+
+---
+
+## 2. Architecture actuelle
+
+### Simplifications faites
+- ✅ Header minimaliste par défaut (décompte + clic + BPM)
+- ✅ Navigation réduite (Parcours | Patterns | Gammes | Journal)
+- ✅ Onboarding adaptatif par niveau
+- ✅ Valeurs rythmiques cohérentes (notation anglo-saxonne)
+
+### À explorer plus tard
+- Partage de progression entre utilisateurs
+- Intégration avec des forums de guitaristes
+- Mode collaboratif (coach virtuel)
+- Export de sessions vers YouTube (vidéos tutoriels)
+
+---
+
+## 3. Priorités de l'app
+
+### Cœur (✅ Implemented)
+1. Métronome avec subdivision
+2. Progression visuelle et sonore
+3. Journal de pratique
+4. Onboarding adaptatif
+
+### Important (✅ Implemented)
+1. Gammes (pentatoniques + modes)
+2. Export/Import de données
+3. PWA (offline + installation)
+4. Mode sombre
+
+### Nice-to-have (reporté ou supprimé)
+- ~~Doigtés interactifs~~ → Supprimé
+- ~~Coach vocal~~ → Complexe
+- ~~Gamification avancée~~ → Simple progression suffisant
+
+---
+
+## 4. Philosophie de l'app
+
+**Dico Pattern** suit la philosophie **"less is more"** :
+- **Pas d'overwhelm** : l'utilisateur choisit ce qu'il voit
+- **Responsabilité de l'utilisateur** : on propose les outils, l'utilisateur adapte sa pratique
+- **Efficacité d'abord** : chaque feature doit avoir une raison d'être
+- **Respect du musicien** : l'app ne dicte pas comment bien jouer
+
+---
+
+## 5. Log des modifications majeures
+
+| Date | Version | Changement |
+|------|---------|-----------|
+| 2026-06-09 | 1.2 | Moteur audio rythmique (`rhythmicTiming`), ancrage absolu anti-dérive |
+| 2026-06-09 | 1.2 | Tableaux de progression séparés par groupe de cordes (Triades Diminuées) |
+| 2026-06-03 | 1.1-onboarding | Ajout onboarding adaptatif + versioning PWA |
+| 2026-06-03 | 1.1-notation | Notations rythmiques anglo-saxonnes (8/3:8/16/6:16) |
+| 2026-06-03 | 1.1-design | Décision : suppression doigtés, garde notes seulement |
+| 2026-06-01 | 1.0-gammes | Réorganisation gammes (penta 1-5 → transitions 6-10 → Ionien 11) |
+| 2026-06-01 | 1.0-release | Première version stable |

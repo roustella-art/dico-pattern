@@ -1,38 +1,46 @@
-# Organisation des Fichiers Dico Pattern
+# Dico Pattern — par Ced
 
-## Structure des dossiers
+App PWA d'entraînement guitare (patterns techniques + gammes).
 
-### 📁 01_Backups/
-Fichiers de sauvegarde et backups
-- `index.html.backup_*` - Backups du fichier principal
-- `index_08.html.bak` - Anciennes versions
-
-### 📁 02_Documentation/
-Documentation du projet et références techniques
-- `IDEES.md` - Idées et TODO
-- `JOURNAL-projet.md` - Journal du projet
-- `PROMPT-HAIKU.md` - Prompts utilisés avec Haiku
-- `LARGEVIEW_LOOPEXT_v1.09_REFERENCE.md` - Documentation technique
-- `LARGEVIEW-OPUS-BRIEF.md` - Brief pour Claude Opus
-
-### 📁 03_Assets/
-Ressources graphiques
-- `icon-*.png` - Icônes de l'application (180x180, 192x192, 512x512)
-
-### 📁 04_Config/
-Configuration et fichiers système
-- `manifest*.json` - Configuration PWA
-- `sw*.js` - Service Workers
-- `deploy.sh` - Script de déploiement
-
-### 📁 05_Archives/
-Anciennes versions du code (historique)
-- `index_*.html` - Versions de test et anciennes
-- `index-*.html` - Branches expérimentales
-
-### 📁 skills/
-Skills personnalisés pour le projet
+**Production :** https://roustella-art.github.io/dico-pattern/
 
 ---
 
-**Conseil:** Garder seulement `index.html`, `manifest.json` et `sw.js` actifs à la racine du dossier dicopattern.
+## Fichiers source
+
+```
+index.html      → structure HTML + CSS + fonctions globales
+data.js         → tous les patterns et gammes
+state.js        → état, réglages, localStorage
+audio.js        → moteur audio Web Audio API + métronome
+render.js       → rendu DOM
+```
+
+## Configuration / déploiement
+
+```
+manifest.json   → config PWA
+sw.js           → Service Worker (cache offline)
+version.json    → numéro de version (mise à jour auto PWA)
+deploy.sh       → commit + push GitHub Pages en une commande
+```
+
+## Documentation
+
+```
+docs/REFERENCE.md            → référence technique complète :
+                               types de patterns, guide d'ajout, décisions de design
+docs/JOURNAL.md              → historique du projet, sessions de dev, changelog
+docs/IDEES.md                → idées et backlog
+docs/DESIGN_AUDIT.md         → audit design
+docs/APP_STORE_LAUNCH_PLAN.md → plan de lancement
+```
+
+---
+
+## Lancer en local
+
+```bash
+python3 -m http.server 8765
+# → http://localhost:8765
+```

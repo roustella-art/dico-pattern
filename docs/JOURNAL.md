@@ -1,4 +1,11 @@
-# Le Dico Pattern — Journal de construction
+# Journal — Dico Pattern
+
+Historique narratif du projet, sessions de développement récentes, et changelog des versions.
+
+---
+
+# Partie 1 — Construction du projet
+
 _Avril 2026 · 10 sessions de travail_
 
 ---
@@ -125,7 +132,7 @@ Premier test du script `deploy.sh` — commit et push vers GitHub Pages en une c
 
 ---
 
-## Où en est l'app aujourd'hui
+## Où en est l'app aujourd'hui (avril 2026)
 
 **App principale** — https://roustella-art.github.io/dico-pattern/
 63 patterns, catégories A2/A4/A6/B6, Étape 1 définie, audio complet (doux/piano/guitare), preview avec décompte et clic, réglages (groupe de cordes, son, case de départ), progression par élève, doigtés + schémas de main, accordéon alternatif 🌶️, header épuré, chrono dans Progression, popups de session.
@@ -170,8 +177,190 @@ Implémentation : objet `etapeDescs` dans `render.js`, rendu comme un bloc semi-
 - Ajouter de nouveaux patterns à l'app principale
 - Construire les catégories B (2 cordes) et C (3 cordes)
 - Trancher sur le modèle économique si les retours sont bons
-- Et un jour : le livre 📖
+- Et un jour : le livre
 
 ---
 
 _"Mouvement d'abord, musique après."_
+
+---
+
+---
+
+# Partie 2 — Sessions de développement récentes
+
+## Session du 3 juin 2026
+
+### Simplification UI : Suppression des doigtés et notes directes — ✅ IMPLÉMENTÉ
+**Fichiers modifiés:** `render.js`, `index.html`, `state.js`  
+**Versions:** v25 → v26 | v1.1.0 → v1.1.1
+
+**Étape 1 — Suppression des doigtés :**
+- Supprimé accordéons de doigtés ("Pimenter")
+- Supprimé système `pimtDone` (doigtés complétés)
+- Supprimé fonction `togglePimtDone()`
+- Conservé section "Notes" sous le tableau de progression
+
+**Étape 2 — Notes directement accessibles :**
+- Supprimé accordéon "Notes" (drawer)
+- Affichage direct textarea sans avoir à ouvrir d'accordéon
+- Textarea visible immédiatement après le tableau de progression
+- → **Plus intuitif et fluide**
+
+**Conservation pour réouverture future:**
+- Données `fingerings[]` laissées dans `data.js` (inactives)
+- Fonctions `expandFingering()` / `reverseFingering()` disponibles dans `audio.js`
+
+---
+
+### Système de mise à jour PWA + Onboarding
+**Fichiers:** `version.json`, `index.html`, `sw.js`, `onboarding.js`
+
+**Problème résolu:** Les utilisateurs obtiennent une vieille version cachée quand ils ajoutent la PWA à l'écran d'accueil.
+
+**Solution:** Versioning du cache via `version.json`
+- App vérifie `version.json` au chargement et toutes les 5 minutes
+- Si version change → efface le cache → force un reload
+- Service Worker lit la version et installe le cache approprié
+- **Workflow déploiement:** Changer le numéro dans `version.json` → utilisateurs obtiennent la mise à jour automatique
+
+**Onboarding au premier lancement:**
+- Questionnaire interactif : Débutant / Intermédiaire / Avancé
+- Presets de tempo personnalisés par niveau :
+  - **Débutant** : 40/60/80 BPM, subdivision croches (8)
+  - **Intermédiaire** : 60/80/100 BPM, subdivision doubles croches (16)
+  - **Avancé** : 80/100/120 BPM, subdivision sextolets (6:16)
+- Sauvegardé dans localStorage (affichage unique)
+- Modal avec animation et feedback utilisateur
+
+---
+
+## Session du 1er juin 2026
+
+### 1. Réorganisation des exercices Gammes
+**Fichier:** `data.js`
+
+**Changements:**
+- Réordonné les gammes pour une progression pédagogique logique :
+  - **Positions 1–5:** Pentatonic #1 à #5 (Débutant)
+  - **Positions 6–10:** Pentatonic Transition 1↔2 à 5↔1 (Intermédiaire)
+  - **Position 11:** A Ionien (Intermédiaire)
+- Mis à jour les numéros `num` dans chaque entrée
+- Déplacé physiquement A Ionien après les transitions
+
+**Fichier:** `render.js`
+- Changé le tri de `gammeGroups` de lexicographique vers numérique pour affichage correct (10, 11 après 9, non après 1)
+- Tri par `parseInt(num, 10)` au lieu de `localeCompare`
+
+---
+
+### 2. Configuration par défaut du header
+**Fichier:** `state.js`
+
+**Affichage par défaut (minimaliste):**
+```javascript
+showCountin: true      // ✅ Afficher décompte
+showClick: true        // ✅ Afficher clic métronome
+showMetroSolo: false   // ❌ Métronome solo caché
+showSubdivBtn: false   // ❌ Bouton ÷N caché
+showTrain: false       // ❌ Mode entraînement caché
+showNeckBtn: false     // ❌ Mid/High caché
+showShuffleBtn: false  // ❌ Shuffle caché
+showStringBtn: false   // ❌ Groupe de cordes caché
+showHeaderStats: false // ❌ Stats streak caché
+```
+
+**BPM initial:** 60 (au lieu de 40)
+
+---
+
+### 3. Notations rythmiques — Cohérence anglo-saxonne
+**Fichier:** `index.html`
+
+| Avant | Après | Notation | Couleur |
+|-------|-------|----------|---------|
+| 2 | **8** | Croche (8th note) | #1a7fa6 (bleu) |
+| 3 | **3:8** | Triolet (triplet) | #56864A (vert) |
+| ♬ | **16** | Double croche (16th note) | #C8952A (orange) |
+| 6 | **6:16** | Sextolet (sextuplet) | #7B5EA7 (violet) |
+
+Couleurs distinctes synchronisées entre header et réglages via `SUBDIV_LABELS` dans `audio.js`.
+
+---
+
+## Session du 9 juin 2026
+
+### Tableaux de progression séparés par groupe de cordes (Triades Diminuées)
+
+Chaque groupe de cordes (GBe / DGB / ADG / EAD) a désormais son propre tableau de progression indépendant. `progressId = patId + '__' + groupKey`. Live refresh au changement de groupe via `setTriadeStringGroup()`. Le % global agrège tous les groupes. Voir REFERENCE.md pour la documentation technique.
+
+### Moteur audio rythmique (`rhythmicTiming`)
+
+Nouveau système de timing basé sur l'espacement des tirets dans la tablature ASCII. Permet d'écrire des patterns avec des valeurs de note mixtes. Architecture : ancrage absolu anti-dérive, curseur synchronisé. Voir REFERENCE.md section "Pattern avec timing rythmique réel" pour la documentation complète.
+
+---
+
+---
+
+# Partie 3 — Changelog des versions
+
+## v1.2 — Moteur Rythmique + Progressions Triades
+**Date:** 9 juin 2026
+
+### Nouvelles fonctionnalités
+- **Moteur audio `rhythmicTiming`** : l'espacement des tirets dans la tab est interprété comme durée musicale réelle
+- **Ancrage absolu anti-dérive** : `nextT0 = patStart + N × loopDuration` — élimine toute dérive de tempo sur plusieurs boucles
+- **Curseur synchronisé** : `PREVIEW._rhythmicCumulativeTimes` aligne le curseur sur les notes réelles
+- **Progression séparée par groupe de cordes** (Triades Diminuées) : 4 tableaux indépendants GBe/DGB/ADG/EAD avec live refresh
+
+---
+
+## v1.12 — Gammes Spéciales
+**Date:** 18 mai 2026
+
+### Nouvelles fonctionnalités
+- **Système de Gammes Spéciales**
+  - Ajout d'un type de pattern spécial (`special: true`, `cat: "gamme"`)
+  - Lecture note-par-note séquentielle (pas de grouping par colonne)
+  - Format: 2 mesures complètes (6 notes montée + 6 notes retour)
+  - Pas de direction U/D/M, lecture directe du fichier ASCII
+
+- **Section "🎵 Gammes" dédiée**
+  - Affichage séparé dans l'onglet Patterns
+  - Visible uniquement si filtre = "Tous" ou "Gamme"
+  - Cache automatiquement si filtre spécifique (A2, A3, A4, A5, A6, B6, B8)
+
+- **UI simplifiée pour gammes**
+  - Pas de boutons direction (U/D/M)
+  - Grille de progression sans colonne direction
+  - Pourcentage de progression en temps réel
+  - Symboles de médiator (↑↓) sur les deux sections
+
+### Gammes incluses
+1. **Pentatonic C/Am forme 1** (BPM: 120)
+2. **Pentatonic Bb/Gm forme 2** (BPM: 120)
+
+### Améliorations techniques
+- `parseSectionSpecial()` pour extraction sans grouping
+- `parseTabNotesSpecial()` pour parsing ASCII tablature spécial
+- `parseTabForCursorSpecial()` pour positionnement curseur
+- `refreshSpecialProgressPercent()` pour mise à jour temps réel
+
+---
+
+## v1.10 — Simplification UI
+
+- Suppression Large View
+- Suppression mode paysage
+- Refactorisation "Case de départ": 2 presets Mid-neck/High-neck
+- Fix import/export JSON avec fichiers réels
+- Ajout Challenge Aléatoire quotidien au parcours
+
+---
+
+**Prochaines étapes potentielles:**
+- [ ] Enregistrer session dès la lecture d'une preview
+- [ ] Rafraîchir tempo presets quand réglages changent
+- [ ] Réduire le wake lock de 10 à 5 minutes
+- [ ] Ajouter plus de gammes (modes, positions)
+- [ ] Définir la description de l'Étape 3 "L'extension"

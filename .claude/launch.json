@@ -3,9 +3,10 @@
   "configurations": [
     {
       "name": "dico-pattern",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-l", "8765", "."],
-      "port": 8765
+      "runtimeExecutable": "/Library/Developer/CommandLineTools/usr/bin/python3",
+      "runtimeArgs": ["/tmp/serve-penta.py"],
+      "port": 8765,
+      "autoPort": false
     }
   ]
 }
