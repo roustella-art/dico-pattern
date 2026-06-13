@@ -25,26 +25,26 @@
   }
   @media (prefers-color-scheme:dark){
     :root{
-      /* Dark mode — fond sombre, texte clair, accents lumineux */
-      --blue:#4dd0e1;--blue-light:#1a4a52;
-      --green:#7ec96f;--green-light:#1a3a1a;
-      --red:#e07070;--orange:#ff9966;--orange-light:#331a0f;
-      --bg:#0f1419;--card:#1a2229;
-      --text:#e8e6e1;--text2:#a8a09a;--text3:#7a7470;
-      --border:#2a3239;--radius:12px;
-      --header-bg:#0a0e13;--header-text:#e8e6e1;
+      /* Dark mode — fond sombre, accents inchangés */
+      --blue:#0F4C5C;--blue-light:#D9E5E9;
+      --green:#56864A;--green-light:#E2EBD9;
+      --red:#B0413E;--orange:#D4622E;--orange-light:#FAEDDC;
+      --bg:#1E1E1E;--card:#2A2A2A;
+      --text:#F0EDE8;--text2:#A8A29C;--text3:#78726E;
+      --border:#3C3C3C;--radius:12px;
+      --header-bg:#1F2D33;--header-text:#F4EEE2;
     }
   }
 
-  /* Dark mode manual toggle — applique les mêmes variables CSS que prefers-color-scheme:dark */
+  /* Dark mode manual toggle */
   html.dark-mode{
-    --blue:#4dd0e1;--blue-light:#1a4a52;
-    --green:#7ec96f;--green-light:#1a3a1a;
-    --red:#e07070;--orange:#ff9966;--orange-light:#331a0f;
-    --bg:#0f1419;--card:#1a2229;
-    --text:#e8e6e1;--text2:#a8a09a;--text3:#7a7470;
-    --border:#2a3239;--radius:12px;
-    --header-bg:#0a0e13;--header-text:#e8e6e1;
+    --blue:#0F4C5C;--blue-light:#D9E5E9;
+    --green:#56864A;--green-light:#E2EBD9;
+    --red:#B0413E;--orange:#D4622E;--orange-light:#FAEDDC;
+    --bg:#1E1E1E;--card:#2A2A2A;
+    --text:#F0EDE8;--text2:#A8A29C;--text3:#78726E;
+    --border:#3C3C3C;--radius:12px;
+    --header-bg:#1F2D33;--header-text:#F4EEE2;
   }
 
   /* Light mode manual toggle — applique les mêmes variables CSS que :root pour forcer le light mode */
@@ -142,7 +142,7 @@
   main{flex:1;overflow-y:auto;padding:12px}
 
   /* BOTTOM NAV */
-  nav{flex-shrink:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+  nav{flex-shrink:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom)}
   nav button{flex:1;border:none;background:none;font-size:10px;color:var(--text2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:all .15s;border-bottom:3px solid transparent}
   nav button .ico{font-size:22px;line-height:1}
   nav button.active{color:var(--blue);font-weight:600;background:var(--blue-light);border-bottom-color:var(--blue);border-radius:8px 8px 0 0}
@@ -174,7 +174,7 @@
   /* TAB DISPLAY */
   .tab-wrap{overflow-x:auto;margin:10px 0;background:#1a1a2e;border-radius:8px;padding:10px 12px;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .tab-wrap:active{opacity:.88}
-  .tab-wrap pre{font-family:'Courier New',Courier,monospace;font-size:13px;color:#a8d8a8;line-height:1.6;white-space:pre;position:relative;z-index:1;pointer-events:none;user-select:none;will-change:transform}
+  .tab-wrap pre{font-family:'Courier New',Courier,monospace;font-size:13px;color:var(--tab-color,#fff);line-height:1.6;white-space:pre;position:relative;z-index:1;pointer-events:none;user-select:none;will-change:transform}
   .tab-play-badge{position:absolute;top:7px;right:8px;width:26px;height:26px;background:rgba(255,255,255,.10);border-radius:50%;display:flex;align-items:center;justify-content:center;pointer-events:none;transition:background .15s;z-index:3}
   .tab-play-badge.playing{background:rgba(212,98,46,.35)}
   /* CURSEUR TAB — top/height fixés dynamiquement en JS par section */
@@ -191,9 +191,9 @@
   .progress-bar{background:var(--green);border-radius:3px;height:100%;transition:width .3s}
 
   /* PROGRESSION */
-  .pat-selector{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:#fff;margin-bottom:12px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23595959' fill='none' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+  .pat-selector{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--card);margin-bottom:12px;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23595959' fill='none' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
   .fing-row{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:12px}
-  .fing-row button{flex:1;padding:8px 4px;border:none;border-right:1px solid var(--border);background:#fff;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;line-height:1.4;color:var(--text)}
+  .fing-row button{flex:1;padding:8px 4px;border:none;border-right:1px solid var(--border);background:var(--card);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;line-height:1.4;color:var(--text)}
   .fing-row button:last-child{border-right:none}
   .fing-row button.active{background:var(--blue);color:#fff;font-weight:600}
   .grid-label{font-size:11px;font-weight:600;color:var(--text2);margin:12px 0 6px;letter-spacing:.3px}
@@ -202,11 +202,11 @@
   .prog-grid th{background:var(--blue);color:#fff;font-size:11px;padding:7px 4px;text-align:center;font-weight:500}
   .prog-grid th.mode-head{background:var(--blue);font-size:12px;text-align:left;padding-left:12px}
   .prog-grid td{border:1px solid var(--border);text-align:center;padding:4px 2px}
-  .prog-grid td.tempo{font-size:11px;font-weight:600;color:var(--text2);background:#fafafa;white-space:nowrap;padding:0 8px}
-  .prog-grid tr:hover td{background:#f9f8f5}
-  .cell-btn{width:28px;height:28px;border:2px solid #ddd;background:#fff;cursor:pointer;font-size:14px;border-radius:6px;transition:all .15s;display:flex;align-items:center;justify-content:center;margin:0 auto;color:transparent}
+  .prog-grid td.tempo{font-size:11px;font-weight:600;color:var(--text2);background:var(--bg);white-space:nowrap;padding:0 8px}
+  .prog-grid tr:hover td{background:var(--border)}
+  .cell-btn{width:28px;height:28px;border:2px solid var(--border);background:var(--card);cursor:pointer;font-size:14px;border-radius:6px;transition:all .15s;display:flex;align-items:center;justify-content:center;margin:0 auto;color:transparent}
   .cell-btn.checked{background:var(--green);border-color:var(--green);color:transparent}
-  .cell-btn:not(.checked):hover{border-color:var(--green);background:#f5f5f5}
+  .cell-btn:not(.checked):hover{border-color:var(--green);background:var(--bg)}
   .pct-card{background:var(--card);border-radius:var(--radius);padding:14px;margin-bottom:10px;border:1px solid var(--border)}
   .pct-card h3{font-size:13px;color:var(--text2);margin-bottom:8px}
   .pct-big{font-size:36px;font-weight:800;color:var(--blue)}
@@ -223,8 +223,8 @@
   .metro-wrap{display:flex;align-items:center;gap:6px;margin-top:10px;padding:8px 10px;background:#f8f7f4;border-radius:8px;border:1px solid var(--border);flex-wrap:wrap}
   .metro-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .05s;flex-shrink:0}
   .metro-dot.flash{background:var(--green)}
-  .metro-adj{width:30px;height:30px;border:1px solid var(--border);background:#fff;border-radius:6px;font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;flex-shrink:0}
-  .metro-bpm{width:52px;text-align:center;font-size:16px;font-weight:700;border:1px solid var(--border);border-radius:6px;padding:4px 2px;background:#fff;-moz-appearance:textfield}
+  .metro-adj{width:30px;height:30px;border:1px solid var(--border);background:var(--card);border-radius:6px;font-size:17px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;flex-shrink:0}
+  .metro-bpm{width:52px;text-align:center;font-size:16px;font-weight:700;border:1px solid var(--border);border-radius:6px;padding:4px 2px;background:var(--card);-moz-appearance:textfield}
   .metro-bpm::-webkit-inner-spin-button,.metro-bpm::-webkit-outer-spin-button{-webkit-appearance:none}
   .metro-target{font-size:11px;color:var(--text2);flex:1;white-space:nowrap}
   .metro-btn{font-size:12px;font-weight:700;padding:6px 12px;border:none;border-radius:8px;cursor:pointer;color:#fff;flex-shrink:0}
@@ -255,7 +255,7 @@
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes fadeInDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
   @keyframes fadeInOut{0%{opacity:0;transform:scale(.9)};20%{opacity:1;transform:scale(1)};80%{opacity:1;transform:scale(1)};100%{opacity:0;transform:scale(.9)}}
-  .settings-modal{background:#fff;border-radius:18px;padding:18px 20px 22px;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);position:relative}
+  .settings-modal{background:var(--card);border-radius:18px;padding:18px 20px 22px;max-width:420px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);position:relative}
   .settings-modal .modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
   .settings-modal h2{font-size:18px;font-weight:800;color:var(--blue);letter-spacing:-.2px}
   .settings-modal .sub{font-size:12px;color:var(--text2);margin-top:2px}
@@ -264,10 +264,15 @@
   .settings-modal .group{margin-bottom:18px}
   .settings-modal .group-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;display:block}
   .settings-modal .seg{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
-  .settings-modal .seg button{flex:1;border:none;border-right:1px solid var(--border);background:#fff;font-size:12px;font-weight:600;color:var(--text2);padding:9px 6px;cursor:pointer;transition:all .12s;text-align:center}
+  .settings-modal .seg button{flex:1;border:none;border-right:1px solid var(--border);background:var(--card);font-size:12px;font-weight:600;color:var(--text2);padding:9px 6px;cursor:pointer;transition:all .12s;text-align:center}
   .settings-modal .seg button:last-child{border-right:none}
   .settings-modal .seg button.active{background:var(--blue);color:#fff}
   .settings-modal .seg.tabs-settings button.active{background:var(--orange);color:#fff}
+
+  /* Dark mode: onglets plus lisibles en blanc sur fond sombre */
+  html.dark-mode .settings-modal .seg button{color:#fff}
+  html.dark-mode .settings-modal .seg button:not(.active){background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}
+
   .settings-modal .hint{font-size:11px;color:var(--text2);margin-top:5px;line-height:1.4}
   /* Footer modale — actions secondaires */
   .settings-footer{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
@@ -1993,6 +1998,18 @@ function openSettings(tab) {
           </div>
         </div>
 
+        <div class="group">
+          <label class="group-label">Couleur des tablatures</label>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:8px">
+            <button onclick="setTabColor('#fff');this.parentElement.querySelectorAll('button').forEach(b=>b.style.border='');this.style.border='2px solid var(--blue)'" style="width:100%;height:36px;background:#1a1a2e;border:${SETTINGS.tabColor==='#fff'?'2px solid var(--blue)':'1px solid #ccc'};border-radius:6px;cursor:pointer;font-size:10px;color:#fff;transition:all .15s" title="Blanc">Blanc</button>
+            <button onclick="setTabColor('#a8d8a8');this.parentElement.querySelectorAll('button').forEach(b=>b.style.border='');this.style.border='2px solid var(--blue)'" style="width:100%;height:36px;background:#1a1a2e;border:${SETTINGS.tabColor==='#a8d8a8'?'2px solid var(--blue)':'1px solid #ccc'};border-radius:6px;cursor:pointer;font-size:10px;color:#a8d8a8;transition:all .15s" title="Vert">Vert</button>
+            <button onclick="setTabColor('#4dd0e1');this.parentElement.querySelectorAll('button').forEach(b=>b.style.border='');this.style.border='2px solid var(--blue)'" style="width:100%;height:36px;background:#1a1a2e;border:${SETTINGS.tabColor==='#4dd0e1'?'2px solid var(--blue)':'1px solid #ccc'};border-radius:6px;cursor:pointer;font-size:10px;color:#4dd0e1;transition:all .15s" title="Cyan">Cyan</button>
+            <button onclick="setTabColor('#ff9966');this.parentElement.querySelectorAll('button').forEach(b=>b.style.border='');this.style.border='2px solid var(--blue)'" style="width:100%;height:36px;background:#1a1a2e;border:${SETTINGS.tabColor==='#ff9966'?'2px solid var(--blue)':'1px solid #ccc'};border-radius:6px;cursor:pointer;font-size:10px;color:#ff9966;transition:all .15s" title="Orange">Orange</button>
+            <button onclick="setTabColor('#d0d0d0');this.parentElement.querySelectorAll('button').forEach(b=>b.style.border='');this.style.border='2px solid var(--blue)'" style="width:100%;height:36px;background:#1a1a2e;border:${SETTINGS.tabColor==='#d0d0d0'?'2px solid var(--blue)':'1px solid #ccc'};border-radius:6px;cursor:pointer;font-size:10px;color:#d0d0d0;transition:all .15s" title="Gris">Gris</button>
+          </div>
+          <div class="hint">Sélectionnez la couleur de votre choix pour les tablatures ASCII. Les changements s'appliquent immédiatement.</div>
+        </div>
+
       </div>
 
       <!-- ═══ PANE : HEADER — Personnalisation de la barre d'en-tête ═══ -->
@@ -2043,7 +2060,7 @@ function openSettings(tab) {
           <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
         </div>
         <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
-        <div class="sf-version">v2.9.4</div>
+        <div class="sf-version">v2.10</div>
       </div>
     </div>
   </div>`;
@@ -2298,6 +2315,18 @@ function applyDarkMode() {
   }
 }
 
+function setTabColor(color) {
+  if (['#fff', '#a8d8a8', '#4dd0e1', '#ff9966', '#d0d0d0'].includes(color)) {
+    SETTINGS.tabColor = color;
+    saveSettings();
+    document.documentElement.style.setProperty('--tab-color', color);
+  }
+}
+
+function applyTabColor() {
+  document.documentElement.style.setProperty('--tab-color', SETTINGS.tabColor);
+}
+
 function toggleDailyChallenge() {
   state.dailyChallengeOpen = !state.dailyChallengeOpen;
   saveState();
@@ -2544,6 +2573,7 @@ document.addEventListener('mousedown',  wakeLockResetInactiveTimer, { passive: t
 loadState();
 showOnboarding();           // affiche le questionnaire de niveau à la première utilisation
 applyDarkMode();            // applique le dark mode si activé dans les settings
+applyTabColor();            // applique la couleur des tablatures sauvegardée
 render();
 updateHeaderUI();           // met à jour le header (visibility du bouton mid/high, etc.)
 updateHeaderStatsDisplay(); // affiche les stats dans le header si activé
