@@ -496,28 +496,15 @@ function renderPatternGroupBody(pats, key) {
     const { html: progGridInner, progressPercent } = buildGammeProgGrid(p);
     const progGrid = `<div id="gamme-prog-${p.id}">${progGridInner}</div>`;
 
-    // ── Notes personnelles ──
+    // ── Notes personnelles : directement accessibles sans accordéon ──
     const infoDrawer = `
-      <details id="drawer-${key}" class="info-drawer" style="margin-bottom:2px">
-        <summary style="font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;
-          padding:7px 10px;background:#f8f7f4;border-radius:8px;border:1px solid var(--border);
-          list-style:none;display:flex;align-items:center;justify-content:space-between;user-select:none">
-          <span style="display:flex;align-items:center;gap:6px">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            Notes
-          </span>
-          <span style="font-size:9px;opacity:.5">▼</span>
-        </summary>
-        <div style="padding:12px 0 2px;display:flex;flex-direction:column;gap:10px">
-          <textarea placeholder="Notes personnelles…"
-            style="width:100%;min-height:52px;padding:8px 10px;font-size:12px;font-family:-apple-system,sans-serif;
-              color:var(--text);background:#fafaf8;border:1px solid var(--border);border-radius:8px;
-              resize:vertical;outline:none;line-height:1.5"
-            onblur="savePatNote('${key}',this.value)">${PAT_NOTES[key]||PAT_NOTES[p.id]||''}</textarea>
-        </div>
-      </details>`;
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+        <textarea placeholder="Notes personnelles…"
+          style="width:100%;min-height:52px;padding:8px 10px;font-size:12px;font-family:-apple-system,sans-serif;
+            color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:8px;
+            resize:vertical;outline:none;line-height:1.5"
+          onblur="savePatNote('${key}',this.value)">${PAT_NOTES[key]||PAT_NOTES[p.id]||''}</textarea>
+      </div>`;
 
     return `
       <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
@@ -661,7 +648,7 @@ function renderPatternGroupBody(pats, key) {
       ${relBtn}
       <textarea placeholder="Notes personnelles…"
         style="width:100%;min-height:52px;padding:8px 10px;font-size:12px;font-family:-apple-system,sans-serif;
-          color:var(--text);background:#fafaf8;border:1px solid var(--border);border-radius:8px;
+          color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:8px;
           resize:vertical;outline:none;line-height:1.5"
         onblur="savePatNote('${key}',this.value)">${PAT_NOTES[key]||PAT_NOTES[p.id]||''}</textarea>
     </div>`;

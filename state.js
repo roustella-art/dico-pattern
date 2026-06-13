@@ -61,6 +61,7 @@ const SETTINGS = {
   clickVolume: 60,           // 0–100 → gain clic métronome (60 ≈ ×0.36)
   shuffleMode: false,        // mode shuffle/swing (facteur fixe 0.67 = triolet)
   darkMode: false,           // true = mode sombre activé manuellement
+  tabColor: '#fff',          // couleur des tablatures ASCII : '#fff' | '#a8d8a8' | '#4dd0e1' | '#ff9966' | '#d0d0d0'
 };
 
 /**
@@ -101,6 +102,7 @@ function loadSettings() {
     if (!isNaN(cv) && cv >= 0 && cv <= 100) SETTINGS.clickVolume = cv;
     if (s.shuffleMode === true) SETTINGS.shuffleMode = true;
     if (s.darkMode === true) SETTINGS.darkMode = true;
+    if (['#fff', '#a8d8a8', '#4dd0e1', '#ff9966', '#d0d0d0'].includes(s.tabColor)) SETTINGS.tabColor = s.tabColor;
     if (s.tempoPresets && typeof s.tempoPresets === 'object') {
       ['lent','cool','chaud'].forEach(k => {
         const v = parseInt(s.tempoPresets[k]);
@@ -141,6 +143,7 @@ function saveSettings() {
       clickVolume: SETTINGS.clickVolume,
       shuffleMode: SETTINGS.shuffleMode,
       darkMode: SETTINGS.darkMode,
+      tabColor: SETTINGS.tabColor,
     }));
   } catch(e) { console.warn('saveSettings:', e); }
 }

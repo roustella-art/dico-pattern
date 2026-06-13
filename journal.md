@@ -240,6 +240,131 @@ if (interp === 'Up')   s = onBeat ? '↑' : '↓';
 
 ---
 
+## Session du 13 juin 2026
+
+### Nouvelles données : arpège Em et famille complète B8P1/B8P2 (a/b/c/d)
+
+**Fichier modifié :** `data.js`
+
+---
+
+#### 1 — Pattern `arpegeEm1` : arpège Mi mineur avec balayage
+
+Nouveau pattern `cat:"gamme"` avec trois spécificités techniques cumulées :
+
+- `special: true` — lecture note par note séquentielle (pas de grouping par colonne)
+- `disableHighNeck: true` — interdit la transposition +12 cases
+- `customInterps: ["Down", "Up", "Sweep"]` — troisième interprétation "Sweep" en plus des deux habituelles
+
+**Format Sweep :**  
+Une ligne d'en-tête au-dessus de la tablature indique le coup de médiator pour chaque note :
+- `n` = coup vers le bas ↓ (picking)
+- `V` = coup vers le haut ↑ (picking)
+- espace = liaison (hammer-on ou pull-off, pas de médiator)
+
+Reconnue par le parser via `/^\s*[nV\s]+$/.test(l) && /[nV]/.test(l)`.  
+Le motif monte de E|7 (Si) jusqu'à e|12 (Mi) en 6 coups ↓ balayés, puis redescend jusqu'à E|3 (Sol) en 6 coups ↑.
+
+---
+
+#### 2 — Réorganisation B8 : renommages
+
+Pour rétablir la numérotation logique :
+- `B8P1b` (ancienne alternance) → renommé `B8P2b`
+- `B8P2a` → renommé `B8P3a`
+- Nouveau `B8P1b` créé (voir §3)
+
+---
+
+#### 3 — Nouveau `B8P1b` (U/D/M) : index + annulaire, montée corde inférieure
+
+Source : `B8P1(2)b.txt` (tabMid) + `B8P1(2)b High.txt` (tabHigh)  
+Frets mid-neck : aller 5-7, retour 6-8 (`↩ retour +1`)  
+Frets high-neck : aller 12-14, retour 13-15  
+Difficulté : Intermédiaire
+
+---
+
+#### 4 — Famille complète B8P1 et B8P2 : variantes a / b / c / d
+
+Chaque variante est dérivée de la précédente par substitution systématique des numéros de case. Règle anti-double-substitution : remplacer les nombres dans l'ordre décroissant.
+
+| Variante | Doigts | Frets aller (mid) | Frets retour (mid) | Dérivée de |
+|----------|--------|-------------------|--------------------|------------|
+| **a** | ind + maj | 5–6 | 6–7 | b : 7→6, 8→7 |
+| **b** | ind + ann | 5–7 | 6–8 | (source) |
+| **c** | ind + aur | 5–8 | 6–9 | b : 7→8, 8→9 |
+| **d** | ind + aur (ext.) | 4–8 | 5–9 | c : 5→4, 6→5 |
+
+High-neck : même écart (+7 cases), même logique de substitution.
+
+Patterns créés : `B8P1a`, `B8P2a`, `B8P1c`, `B8P2c`, `B8P1d`, `B8P2d` — chacun en 3 directions (U/D/M), soit **18 patterns ajoutés** au total.
+
+**Ordre dans `data.js` :** B8P2a → B8P2b → B8P2c → B8P2d → B8P1a → B8P1b → B8P1c → B8P1d → B8P3a
+
+---
+
+### Dark Mode doux — refonte complète de la palette
+
+**Fichiers modifiés :** `index.html`, `version.json`
+
+Refonte du dark mode pour qu'il assombrisse uniquement les fonds sans toucher aux couleurs d'accent (bleu, vert, rouge, orange). L'objectif était d'éviter l'effet "inversé" de l'ancienne palette qui agressait les yeux.
+
+**Nouvelle palette dark mode (`html.dark-mode` + `prefers-color-scheme: dark`) :**
+
+| Variable | Avant | Après |
+|---|---|---|
+| `--bg` | `#0f1419` (bleu nuit) | `#1E1E1E` (gris neutre) |
+| `--card` | `#1a2229` | `#2A2A2A` |
+| `--text` | `#e8e6e1` | `#F0EDE8` |
+| `--text2` | `#a8a09a` | `#A8A29C` |
+| `--border` | `#2a3239` | `#3C3C3C` |
+| `--header-bg` | `#0a0e13` | `#1F2D33` (identique au light mode) |
+| `--blue` | `#4dd0e1` (cyan) | `#0F4C5C` (**inchangé**) |
+| `--green` | `#7ec96f` | `#56864A` (**inchangé**) |
+| `--red` | `#e07070` | `#B0413E` (**inchangé**) |
+| `--orange` | `#ff9966` | `#D4622E` (**inchangé**) |
+
+**Éléments codés en dur corrigés (passage de `#fff` à `var(--card)`) :**
+- Barre de navigation (`nav`)
+- Sélecteur de pattern (`.pat-selector`)
+- Boutons de doigté (`.fing-row button`)
+- Boutons +/− et champ BPM métronome (`.metro-adj`, `.metro-bpm`)
+- Modal des réglages et ses onglets (`.settings-modal`, `.seg button`)
+
+---
+
+### Couleur des tablatures ASCII — sélecteur dans les réglages
+
+**Fichiers modifiés :** `index.html`, `state.js`, `version.json`
+
+Ajout d'un sélecteur de couleur pour les tablatures ASCII dans **Réglages > Affichage**, avec live refresh (les tablatures changent instantanément sans rechargement de page).
+
+**Choix disponibles :** Blanc (`#fff`), Vert (`#a8d8a8`), Cyan (`#4dd0e1`), Orange (`#ff9966`), Gris (`#d0d0d0`)
+
+**Implémentation :**
+- `state.js` : ajout de `tabColor: '#fff'` dans `SETTINGS`, chargement/sauvegarde dans `localStorage`
+- CSS : `.tab-wrap pre` passe de `color:#fff` à `color:var(--tab-color, #fff)`
+- `setTabColor(color)` : met à jour `--tab-color` via `document.documentElement.style.setProperty('--tab-color', color)` — garanti sur tous les éléments y compris ceux re-rendus après le choix
+- `applyTabColor()` : appelée au boot pour restaurer la couleur sauvegardée
+- La variable CSS sur `<html>` évite le problème des éléments re-rendus par `render()` qui ne recevaient pas le style inline
+
+---
+
+### Dark Mode — correction des éléments blancs résiduels
+
+**Fichiers modifiés :** `index.html`, `render.js`, `version.json`
+
+Après la refonte, plusieurs éléments restaient trop clairs en dark mode :
+
+- **Cellules tempo du tableau de progressions** (`.prog-grid td.tempo`) : `background:#fafafa` → `var(--bg)`
+- **Hover des lignes du tableau** (`.prog-grid tr:hover td`) : `background:#f9f8f5` → `var(--border)`
+- **Cases à cocher** (`.cell-btn`) : `background:#fff; border:#ddd` → `var(--card); var(--border)`
+- **Hover des cases non cochées** : `background:#f5f5f5` → `var(--bg)`
+- **Notes personnelles** (`textarea` dans `render.js`, 2 occurrences) : `background:#fafaf8` → `var(--card)`
+
+---
+
 ## Session du 1er juin 2026
 
 ### Réorganisation des exercices Gammes

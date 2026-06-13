@@ -288,6 +288,29 @@ Couleurs distinctes synchronisées entre header et réglages via `SUBDIV_LABELS`
 
 ---
 
+## Session du 13 juin 2026
+
+### Arpège Em #1 et famille B8P1/B8P2 complète (a → d)
+
+**Fichier :** `data.js`
+
+**Pattern `arpegeEm1` :**  
+Un arpège de Mi mineur (E G B) en balayage aller-retour sur 6 cordes. C'est le premier pattern à cumuler `special:true` (lecture note par note), `disableHighNeck:true` et une troisième interprétation `"Sweep"` — en plus de Down et Up. En mode Sweep, une ligne d'en-tête au-dessus de la tablature indique le coup de médiator : `n` = ↓, `V` = ↑, espace = liaison. Le motif monte en 6 balayages ↓ jusqu'à la case 12 et redescend en 6 balayages ↑ jusqu'à E|3.
+
+**Famille B8P1 / B8P2 — quatre variantes de doigté :**  
+À partir du pattern de base `b` (index + annulaire, cases 5-7), trois dérivées ont été construites par substitution des numéros de case :
+
+- **`a` — index + majeur** : cases 5-6 (aller), 6-7 (retour) — écart d'un ton
+- **`b` — index + annulaire** : cases 5-7, 6-8 — écart d'une tierce mineure *(source)*
+- **`c` — index + auriculaire** : cases 5-8, 6-9 — écart de quatre demi-tons
+- **`d` — auriculaire fixe + extension index** : cases 4-8, 5-9 — le plus exigeant, l'auriculaire ne bouge pas, c'est l'index qui descend d'un cran
+
+Chaque variante existe en 3 directions (U / D / M) pour B8P1 et B8P2, soit **18 nouveaux patterns** au total. Les versions high-neck suivent le même écart (+7 cases), dérivées par la même logique de substitution.
+
+**Réorganisation :** `B8P2a` a été renommé `B8P3a` et l'ancien `B8P1b` est devenu `B8P2b` pour libérer les numéros 1a–1d et 2a–2d à la nouvelle famille.
+
+---
+
 ## Session du 9 juin 2026
 
 ### Tableaux de progression séparés par groupe de cordes (Triades Diminuées)
