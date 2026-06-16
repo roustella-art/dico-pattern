@@ -397,8 +397,9 @@ function renderPatternGroupBody(pats, key) {
         // Segment pour version + dropdown pour formes
         const selectedForme = getGammeSelectedForme(p.id);
         const isPenta = getGammePenta(p.id);
+        const hasPentaDirs = Object.keys(p.directions).some(k => k.startsWith('Penta '));
         const pentaBtnStyle = `font-size:13px;font-weight:700;padding:6px 12px;border-radius:8px;border:1px solid #e53e3e;cursor:pointer;background:${isPenta?'#e53e3e':'transparent'};color:${isPenta?'#fff':'#e53e3e'};transition:all .15s`;
-        const pentaBtn = `<button id="gamme-penta-btn-${p.id}" onclick="toggleGammePenta('${p.id}')" style="${pentaBtnStyle}">Penta</button>`;
+        const pentaBtn = hasPentaDirs ? `<button id="gamme-penta-btn-${p.id}" onclick="toggleGammePenta('${p.id}')" style="${pentaBtnStyle}">Penta</button>` : '';
         const versionRow = p.versionTabs.map(vk => {
           const btnId = 'gamme-dir-btn-' + p.id + '-' + vk;
           const label = (p.versionLabels && p.versionLabels[vk]) || vk;
