@@ -240,6 +240,25 @@ if (interp === 'Up')   s = onBeat ? '↑' : '↓';
 
 ---
 
+## Session du 16 juin 2026 (suite)
+
+### Symboles musicaux pour les subdivisions rythmiques
+
+**Fichiers modifiés :** `audio.js`, `index.html`, `version.json`
+
+Remplacement des labels textuels ("8", "3:8", "16", "6:16") par des symboles musicaux SVG dans le bouton de cycle des subdivisions du header.
+
+**Implémentation :**
+- `audio.js` : nouvelle fonction `getSubdivSVG(n)` qui génère des SVG pour chaque subdivision
+  - Croche (2) : 1 queue
+  - Triolet (3) : 1 queue + marquage "3"
+  - Double croche (4) : 2 queues
+  - Sextolet (6) : 2 queues + marquage "6"
+- Mise à jour de `syncSubdivUI()` pour utiliser `innerHTML = getSubdivSVG(n)` au lieu de `textContent = label`
+- Les couleurs des symboles changent selon la subdivision active (couleur du fond du bouton)
+
+---
+
 ## Session du 16 juin 2026
 
 ### Classification des difficultés — Renaming inclusif

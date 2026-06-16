@@ -423,7 +423,7 @@
       <div style="display:flex;align-items:center;gap:6px">
       </div>
       <div style="flex:1"></div>
-      <button id="header-countin-btn" class="countin-btn h-toggle" onclick="toggleCountIn()" title="Décompte 4 temps avant la lecture">Décompte</button>
+      <button id="header-countin-btn" class="countin-btn h-toggle" onclick="toggleCountIn()" title="Décompte 4 temps avant la lecture">-4</button>
       <button id="header-click-btn" class="click-btn h-toggle"
         onclick="togglePreviewClick()"
         title="Clic métronomique">Clic</button>
@@ -442,6 +442,9 @@
     </button>
     <button onclick="showTab('gammes')" id="nav-gammes">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M2 13 C5 5 9 5 12 13 C15 21 19 21 22 13"/></svg></span>Gammes
+    </button>
+    <button onclick="showTab('arpeges')" id="nav-arpeges">
+      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M12 7 L6.5 16 M13 7 L17.5 16 M7 18 L17 18"/></svg></span>Arpèges
     </button>
     <button onclick="showTab('journal')" id="nav-journal">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><polyline points="16 2 16 8 8 8 8 2"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg></span>Journal
@@ -922,13 +925,33 @@ function getGammeSelectedForme(patId) {
   return (saved && pat.formeTabs.includes(saved)) ? saved : pat.formeTabs[0];
 }
 
+function getGammePenta(patId) {
+  return !!(state.gammaPenta && state.gammaPenta[patId]);
+}
+
+function toggleGammePenta(patId) {
+  if (!state.gammaPenta) state.gammaPenta = {};
+  state.gammaPenta[patId] = !state.gammaPenta[patId];
+  saveState();
+  if (PREVIEW.patId === patId) previewStop();
+  _refreshGammeTabAndProg(patId);
+  const btn = document.getElementById('gamme-penta-btn-' + patId);
+  if (btn) {
+    const active = state.gammaPenta[patId];
+    btn.style.background  = active ? '#e53e3e' : 'transparent';
+    btn.style.color       = active ? '#fff'    : '#e53e3e';
+    btn.style.borderColor = '#e53e3e';
+  }
+}
+
 // Retourne le tab actif (version + forme ou direction simple)
 function getGammeActiveTab(pat) {
   if (!pat.hasDirectionTabs || !pat.directions) return getEffectiveTab(getTabForNeckPosition(pat));
   if (pat.formeTabs) {
     const version = getGammeSelectedDir(pat.id);
     const forme   = getGammeSelectedForme(pat.id);
-    return pat.directions[version + '|' + forme] || Object.values(pat.directions)[0];
+    const prefix  = getGammePenta(pat.id) ? 'Penta ' : '';
+    return pat.directions[prefix + version + '|' + forme] || Object.values(pat.directions)[0];
   }
   const dirKey = getGammeSelectedDir(pat.id);
   return pat.directions[dirKey] || Object.values(pat.directions)[0];
@@ -1737,7 +1760,7 @@ function chronoReset() {
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 function showTab(tab) {
   // Double-tap sur l'onglet actif : ferme les cartes, stop la preview, reset vers métronome
-  if (tab === state.tab && (tab === 'patterns' || tab === 'gammes')) {
+  if (tab === state.tab && (tab === 'patterns' || tab === 'gammes' || tab === 'arpeges')) {
     previewStop();
     state.openCards = {};
     HCTRL.mode = 'metro';
@@ -2091,7 +2114,7 @@ function openSettings(tab) {
           <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
         </div>
         <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
-        <div class="sf-version">v3.0</div>
+        <div class="sf-version">v3.1</div>
       </div>
     </div>
   </div>`;

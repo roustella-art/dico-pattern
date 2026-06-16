@@ -30,6 +30,7 @@ function render() {
   const el = document.getElementById('content');
   if      (state.tab === 'patterns') el.innerHTML = renderPatterns();
   else if (state.tab === 'gammes')   el.innerHTML = renderGammes();
+  else if (state.tab === 'arpeges')  el.innerHTML = renderArpeges();
   else if (state.tab === 'journal')  el.innerHTML = renderJournalPage();
   else                               el.innerHTML = renderProgress();
   metroPostRender();
@@ -332,9 +333,12 @@ function buildGammeProgGrid(p) {
   let badgeText = '';
   if (p.hasDirectionTabs && selectedDir) {
     if (p.formeTabs) {
-      const forme = getGammeSelectedForme(p.id);
-      progressId = p.id + '__' + selectedDir + '_' + (forme || p.formeTabs[0]);
-      badgeText = selectedDir + ' · ' + (forme || p.formeTabs[0]).replace(' 8va', '');
+      const forme    = getGammeSelectedForme(p.id);
+      const isPenta  = getGammePenta(p.id);
+      const pentaPfx = isPenta ? 'Penta_' : '';
+      progressId = p.id + '__' + pentaPfx + selectedDir + '_' + (forme || p.formeTabs[0]);
+      const formeLabel = (forme || p.formeTabs[0]).replace(' 8va', '');
+      badgeText = (isPenta ? 'P·' : '') + selectedDir + ' · ' + formeLabel;
     } else {
       progressId = p.id + '__' + selectedDir.replace(/[→↔]/g, '-');
       badgeText = selectedDir;
@@ -392,6 +396,9 @@ function renderPatternGroupBody(pats, key) {
       if (p.versionTabs && p.formeTabs) {
         // Segment pour version + dropdown pour formes
         const selectedForme = getGammeSelectedForme(p.id);
+        const isPenta = getGammePenta(p.id);
+        const pentaBtnStyle = `font-size:13px;font-weight:700;padding:6px 12px;border-radius:8px;border:1px solid #e53e3e;cursor:pointer;background:${isPenta?'#e53e3e':'transparent'};color:${isPenta?'#fff':'#e53e3e'};transition:all .15s`;
+        const pentaBtn = `<button id="gamme-penta-btn-${p.id}" onclick="toggleGammePenta('${p.id}')" style="${pentaBtnStyle}">Penta</button>`;
         const versionRow = p.versionTabs.map(vk => {
           const btnId = 'gamme-dir-btn-' + p.id + '-' + vk;
           const label = (p.versionLabels && p.versionLabels[vk]) || vk;
@@ -403,7 +410,7 @@ function renderPatternGroupBody(pats, key) {
         dirTabsHtml = `
           <div style="margin-bottom:8px">
             <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block">Version</label>
-            <div style="display:flex;gap:6px">${versionRow}</div>
+            <div style="display:flex;gap:6px">${versionRow}${pentaBtn}</div>
           </div>
           <div style="margin-bottom:10px">
             <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block">Forme</label>
@@ -888,6 +895,76 @@ function renderGammes() {
 
     html += `
     <div class="card ${isPenta ? 'card-penta' : ''}" id="card-${key}">
+      <div class="card-head" onclick="toggleCard('${key}')">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:7px">
+            <span style="width:7px;height:7px;border-radius:50%;background:${diffDot};flex-shrink:0;display:inline-block"></span>
+            <h2 style="font-size:14px">${base.name}</h2>
+          </div>
+          <div class="progress-bar-wrap" style="margin-top:6px"><div id="grpbar-${key}" class="progress-bar" style="width:${pct}%;background:var(--blue)"></div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <span id="grppct-${key}" style="font-size:11px;font-weight:600;color:var(--blue)">${pct > 0 ? pct+'%' : ''}</span>
+          <button onclick="toggleFavorite('${key}',event)"
+            style="background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center">
+            ${heartSVG(!!state.favorites[key])}
+          </button>
+          <span style="color:var(--border);font-size:13px;line-height:1;margin:0 1px">·</span>
+          <span class="arrow ${isOpen?'open':''}">▶</span>
+        </div>
+      </div>
+      <div class="card-body ${isOpen?'open':''}">`;
+
+    html += renderPatternGroupBody(pats, key);
+    html += `</div></div>`;
+  });
+
+  return html;
+}
+
+
+/**
+ * Affiche l'onglet Arpèges (patterns avec cat:"arpeges")
+ * @returns {string} HTML de la liste des arpèges
+ */
+function renderArpeges() {
+  const arpegeGroups = {};
+  PATTERNS.filter(p => p.cat === 'arpeges').forEach(p => {
+    const key = p.cat + 'P' + p.num;
+    if (!arpegeGroups[key]) arpegeGroups[key] = [];
+    arpegeGroups[key].push(p);
+  });
+
+  if (Object.keys(arpegeGroups).length === 0) {
+    return `<div style="padding:40px 20px;text-align:center;color:var(--text2)">
+      <div style="font-size:40px;margin-bottom:12px">🎸</div>
+      <div style="font-size:14px;font-weight:500">Aucun arpège disponible</div>
+    </div>`;
+  }
+
+  const diffs = ['all','Basique','Technique','Complexe'];
+  const diffColors = {all:'',Basique:'diff-deb',Technique:'diff-int',Complexe:'diff-adv'};
+  let html = `<div class="filter-seg" style="margin-bottom:14px">`;
+  diffs.forEach(d => {
+    const active = state.diffFilter === d ? 'active' : '';
+    const colorClass = active && d !== 'all' ? diffColors[d] : '';
+    html += `<button class="${active} ${colorClass}" onclick="setDiffFilter('${d}')">${d === 'all' ? 'Tous' : d}</button>`;
+  });
+  html += `</div>`;
+
+  Object.entries(arpegeGroups).sort((a,b) => {
+    const na = parseInt(a[1][0].num, 10);
+    const nb = parseInt(b[1][0].num, 10);
+    return na - nb;
+  }).forEach(([key, pats]) => {
+    const base = pats[0];
+    if (state.diffFilter !== 'all' && base.difficulty !== state.diffFilter) return;
+    const isOpen = state.openCards[key];
+    const pct = getGroupPct(key);
+    const diffDot = {Basique:'#4a9e6b',Technique:'#c07830',Complexe:'#a03030'}[base.difficulty]||'#999';
+
+    html += `
+    <div class="card" id="card-${key}">
       <div class="card-head" onclick="toggleCard('${key}')">
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;gap:7px">

@@ -1243,6 +1243,16 @@ function setClickSubdiv(n) {
   }
 }
 
+function getSubdivSVG(n) {
+  const svgs = {
+    2: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;stroke:currentColor;fill:currentColor"><ellipse cx="8" cy="18" rx="4.2" ry="3.1" transform="rotate(-20 8 18)" stroke="none"/><path d="M11.7 16.8 V5" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M11.7 5 C18 6.5 18.5 11 15.5 14.5" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+    3: '<svg viewBox="0 0 30 24" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:20px;stroke:currentColor;fill:currentColor"><ellipse cx="8" cy="18" rx="4.2" ry="3.1" transform="rotate(-20 8 18)" stroke="none"/><path d="M11.7 16.8 V5" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M11.7 5 C18 6.5 18.5 11 15.5 14.5" stroke-width="2" fill="none" stroke-linecap="round"/><text x="24" y="13" font-size="11" font-weight="800" text-anchor="middle" stroke="none" font-family="Georgia,serif">3</text></svg>',
+    4: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px;height:20px;stroke:currentColor;fill:currentColor"><ellipse cx="8" cy="18.5" rx="4.2" ry="3.1" transform="rotate(-20 8 18.5)" stroke="none"/><path d="M11.7 17.3 V4" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M11.7 4 C18 5.5 18.5 9.5 15.5 12.5" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M11.7 9 C18 10.5 18.5 14.5 15.5 17.5" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+    6: '<svg viewBox="0 0 30 24" xmlns="http://www.w3.org/2000/svg" style="width:24px;height:20px;stroke:currentColor;fill:currentColor"><ellipse cx="8" cy="18.5" rx="4.2" ry="3.1" transform="rotate(-20 8 18.5)" stroke="none"/><path d="M11.7 17.3 V4" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M11.7 4 C18 5.5 18.5 9.5 15.5 12.5" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M11.7 9 C18 10.5 18.5 14.5 15.5 17.5" stroke-width="2" fill="none" stroke-linecap="round"/><text x="24" y="13" font-size="11" font-weight="800" text-anchor="middle" stroke="none" font-family="Georgia,serif">6</text></svg>',
+  };
+  return svgs[n] || '';
+}
+
 function syncSubdivUI() {
   const n = SETTINGS.clickSubdiv;
   const SUBDIV_COL = {
@@ -1270,8 +1280,7 @@ function syncSubdivUI() {
   const cycleBtn = document.getElementById('subdiv-cycle-btn');
   if (cycleBtn) {
     const col = SUBDIV_COL[n] || 'rgba(244,238,226,.08)';
-    const label = SUBDIV_LABELS[n] || `÷${n}`;
-    cycleBtn.textContent    = label;
+    cycleBtn.innerHTML      = getSubdivSVG(n);
     cycleBtn.style.background   = col;
     cycleBtn.style.borderColor  = col;
     cycleBtn.style.color        = '#fff';
