@@ -29,7 +29,6 @@ function setJournalSubTab(tab) {
 function render() {
   const el = document.getElementById('content');
   if      (state.tab === 'patterns') el.innerHTML = renderPatterns();
-  else if (state.tab === 'parcours') el.innerHTML = renderParcours();
   else if (state.tab === 'gammes')   el.innerHTML = renderGammes();
   else if (state.tab === 'journal')  el.innerHTML = renderJournalPage();
   else                               el.innerHTML = renderProgress();
@@ -54,10 +53,11 @@ function getDailyRandomPatterns() {
     return cache.patterns.map(id => PATTERNS.find(p => p.id === id)).filter(Boolean);
   }
 
-  // Dédupliquer par groupe (cat + 'P' + num) — tous les patterns de l'appli
+  // Dédupliquer par groupe — patterns normaux uniquement (pas gammes/spéciaux)
   const seen = new Set();
   const groups = [];
   PATTERNS.forEach(p => {
+    if (p.special) return;
     const gkey = p.cat + 'P' + p.num;
     if (seen.has(gkey)) return;
     seen.add(gkey);
@@ -96,12 +96,8 @@ function getDailyRandomPatterns() {
   return selected;
 }
 
-// ── PARCOURS TAB ──
+// ── [PARCOURS supprimé en v3 — voir branche archive/parcours-v2] ──
 
-/**
- * Redessine l'onglet Parcours avec apprentissage structuré par étapes
- * @returns {string} HTML du contenu Parcours
- */
 function renderParcours() {
   const etapeNames = { 1: 'La base', 2: "L'indépendance", 3: "L'extension" };
   const etapeDescs = {
@@ -759,6 +755,53 @@ function renderPatterns() {
     groups[key].push(p);
   });
 
+  // ── Challenge du jour ──
+  const dailyPatterns = getDailyRandomPatterns();
+  if (dailyPatterns.length > 0) {
+    html += `
+    <div style="background:linear-gradient(135deg,#E89968 0%,#D9834F 100%);border-radius:var(--radius);box-shadow:0 2px 8px rgba(212,98,46,.15);margin-bottom:16px;overflow:hidden">
+      <div style="padding:13px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none" onclick="toggleDailyChallenge()">
+        <div style="display:flex;align-items:center;gap:10px;flex:1">
+          <svg width="22" height="22" viewBox="0 0 24 24" style="flex-shrink:0">
+            <ellipse cx="12" cy="19" rx="9" ry="3" fill="rgba(0,0,0,0.12)"/>
+            <rect x="1" y="1" width="22" height="22" rx="2.5" fill="#E3E3E3" stroke="#999" stroke-width="1"/>
+            <rect x="2" y="2" width="20" height="20" rx="2.5" fill="#FAFAFA"/>
+            <circle cx="7" cy="7" r="1.5" fill="#333"/>
+            <circle cx="12" cy="12" r="1.5" fill="#333"/>
+            <circle cx="17" cy="17" r="1.5" fill="#333"/>
+          </svg>
+          <div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:rgba(255,255,255,.7)">Challenge du jour</div>
+            <div style="font-size:15px;font-weight:800;color:#fff">Patterns aléatoires</div>
+          </div>
+        </div>
+        <svg id="daily-challenge-arrow" style="transition:transform .2s;transform:rotate(${state.dailyChallengeOpen?'180':'0'}deg);margin-left:12px;flex-shrink:0"
+          width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+          <polyline points="2 4 7 10 12 4"/>
+        </svg>
+      </div>
+      <div id="daily-challenge-patterns" style="border-top:2px solid rgba(255,255,255,.2);padding:10px;display:${state.dailyChallengeOpen?'flex':'none'};flex-direction:column;gap:8px">
+        ${dailyPatterns.map(p => {
+          const key = p.cat + 'P' + p.num;
+          const pct = getGroupPct(key);
+          const barColor = pct >= 80 ? 'var(--green)' : pct >= 40 ? 'var(--orange)' : 'var(--blue)';
+          return `
+          <div style="background:var(--card);border-radius:var(--radius);box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden">
+            <div style="padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer" onclick="goToPattern('${key}')">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0">${pct}%</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14px;font-weight:700">${p.name}</div>
+                <div style="font-size:11px;color:var(--text2);margin-top:2px">${key} · ${diffTag(p.difficulty)}</div>
+                <div class="progress-bar-wrap" style="margin-top:6px"><div class="progress-bar" style="width:${pct}%;background:${barColor}"></div></div>
+              </div>
+              <span style="font-size:16px;color:var(--text2)">→</span>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }
+
   Object.entries(groups).sort((a,b) => a[0].localeCompare(b[0])).forEach(([key, pats]) => {
     // Passer les gammes (qui seront affichées dans une section séparée)
     if (pats[0].cat === 'gamme') return;
@@ -872,43 +915,6 @@ function renderGammes() {
   return html;
 }
 
-function toggleEtape(num) {
-  const wasOpen = state.etapeOpen[num];
-  state.etapeOpen[num] = !state.etapeOpen[num];
-  saveState();
-  // Si on FERME l'étape, arrêter la lecture
-  if (wasOpen && !state.etapeOpen[num]) {
-    previewStop();
-    metroStop();
-  }
-  // Manipuler directement le DOM au lieu de re-rendre
-  const contentDiv = document.getElementById(`etape-content-${num}`);
-  const arrow = document.getElementById(`etape-arrow-${num}`);
-  if (contentDiv) {
-    contentDiv.style.display = state.etapeOpen[num] ? 'block' : 'none';
-  }
-  if (arrow) {
-    arrow.style.transform = state.etapeOpen[num] ? 'rotate(180deg)' : 'rotate(0deg)';
-  }
-}
-function toggleParcours(key) {
-  const wasOpen = state.parcoursOpen === key;
-  if (wasOpen) previewStop();
-  if (!wasOpen) { PREVIEW.bpm = HCTRL.bpm; PREVIEW.interp = 'Down'; PREVIEW.settingsOpen = false; }
-  state.parcoursOpen = wasOpen ? null : key;
-  // S'assure que l'étape parente est ouverte (sinon parc-card-${key} n'est pas dans le DOM)
-  if (!wasOpen) {
-    const pat = PATTERNS.find(p => p.cat + 'P' + p.num === key);
-    if (pat) state.etapeOpen[pat.etape] = true;
-  }
-  render();
-  if (!wasOpen) {
-    setTimeout(() => {
-      const el = document.getElementById('parc-card-' + key);
-      if (el) el.scrollIntoView({ behavior:'smooth', block:'nearest' });
-    }, 60);
-  }
-}
 
 /**
  * Met à jour le % de progression d'un groupe (sans couleur)

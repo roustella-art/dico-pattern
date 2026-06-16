@@ -7,7 +7,7 @@
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let state = {
-  tab: 'parcours',
+  tab: 'patterns',
   filter: 'all',
   diffFilter: 'all',
   openCards: {},

@@ -437,10 +437,7 @@
   </header>
   <main id="content"></main>
   <nav>
-    <button class="active" onclick="showTab('parcours')" id="nav-parcours">
-      <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="5" cy="18" r="2.2" fill="currentColor" stroke="none"/><circle cx="19" cy="6" r="2.2" fill="currentColor" stroke="none"/><path d="M7.2 17C10 17 14 7 16.8 7"/></svg></span>Parcours
-    </button>
-    <button onclick="showTab('patterns')" id="nav-patterns">
+    <button class="active" onclick="showTab('patterns')" id="nav-patterns">
       <span class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Patterns
     </button>
     <button onclick="showTab('gammes')" id="nav-gammes">
@@ -1740,10 +1737,9 @@ function chronoReset() {
 // ─── TABS ─────────────────────────────────────────────────────────────────────
 function showTab(tab) {
   // Double-tap sur l'onglet actif : ferme les cartes, stop la preview, reset vers métronome
-  if (tab === state.tab && (tab === 'parcours' || tab === 'patterns' || tab === 'gammes')) {
+  if (tab === state.tab && (tab === 'patterns' || tab === 'gammes')) {
     previewStop();
     state.openCards = {};
-    state.parcoursOpen = null;
     HCTRL.mode = 'metro';
     syncHeaderPlay();
     render();
@@ -1751,16 +1747,8 @@ function showTab(tab) {
   }
   if (METRO.running && tab !== state.tab) { metroStop(false); }
   state.tab = tab;
-  // Retour sur Journal → toujours afficher Progression en premier
+  // Retour sur Journal → toujours afficher Historique en premier
   if (tab === 'journal') journalSubTab = 'journal';
-  // Réinitialiser les accordéons du parcours
-  if (tab === 'parcours') {
-    previewStop();
-    state.etapeOpen = {};
-    state.parcoursOpen = null;
-    state.openCards = {};
-    state.cardDir = {};
-  }
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('nav-'+tab).classList.add('active');
   render();
@@ -2103,7 +2091,7 @@ function openSettings(tab) {
           <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
         </div>
         <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
-        <div class="sf-version">v2.12</div>
+        <div class="sf-version">v3.0</div>
       </div>
     </div>
   </div>`;
