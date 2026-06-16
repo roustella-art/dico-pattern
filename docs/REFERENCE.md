@@ -1026,10 +1026,57 @@ Si à l'avenir on souhaite revenir à un système de doigtés :
 
 ---
 
-## 5. Log des modifications majeures
+## 5. Structure du dossier (v2.10+)
+
+```
+dico-pattern/
+├── index.html          ← Core PWA (markup + CSS + orchestration)
+├── audio.js            ← Web Audio API (métronome + preview)
+├── render.js           ← Logique UI (rendu de tous les onglets)
+├── state.js            ← Gestion état + localStorage
+├── data.js             ← Base de données patterns (147+ patterns)
+├── sw.js               ← Service Worker (offline PWA)
+├── onboarding.js       ← Guide utilisateur adaptatif
+├── manifest.json       ← Config PWA
+├── version.json        ← Version app + cacheVersion SW
+├── README.md
+│
+├── assets/icons/       ← Icons PWA (180, 192, 512px)
+├── scripts/            ← Utilitaires build
+│   ├── bump-version.sh
+│   └── generate-version.js
+└── docs/               ← Documentation complète
+    ├── REFERENCE.md    ← Ce fichier
+    ├── IDEES.md        ← Roadmap & idées
+    ├── JOURNAL.md      ← Journal de développement
+    └── ...
+```
+
+---
+
+## 6. Qualité du code
+
+### JSDoc (v2.10)
+Toutes les fonctions publiques ont un JSDoc `@param` + `@returns` :
+- `render.js` : 25+ fonctions documentées
+- `state.js` : 15+ fonctions documentées
+- `audio.js` : 10+ fonctions documentées
+
+### Principes à respecter
+- **DRY** : pas de duplication de logique — utiliser `buildProgGridRows()`, `buildCalendarCells()`
+- **Pas de refactoring inline handlers** : risque trop élevé, pas de gain fonctionnel
+- **Pas de consolidation logique %** : 4 fonctions légèrement différentes, risque de régression sans tests
+
+---
+
+## 7. Log des modifications majeures
 
 | Date | Version | Changement |
 |------|---------|-----------|
+| 2026-06-13 | 2.11 | Arpège Em #1 + famille B8P1/B8P2 complète (a/b/c/d) |
+| 2026-06-10 | 2.10 | Organisation dossier (assets/, scripts/, docs/) + JSDoc 50+ fonctions |
+| 2026-06-10 | 2.9.x | Ajustements mineurs UX + SSH GitHub configuré |
+| 2026-06-10 | 2.9 | Refactoring : buildProgGridRows(), buildCalendarCells(), tri journal par timestamp |
 | 2026-06-09 | 1.2 | Moteur audio rythmique (`rhythmicTiming`), ancrage absolu anti-dérive |
 | 2026-06-09 | 1.2 | Tableaux de progression séparés par groupe de cordes (Triades Diminuées) |
 | 2026-06-03 | 1.1-onboarding | Ajout onboarding adaptatif + versioning PWA |
