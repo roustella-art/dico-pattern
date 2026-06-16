@@ -149,6 +149,7 @@
 
   /* CARDS */
   .card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:10px;overflow:hidden}
+  .card.card-penta{border-left:4px solid var(--blue-light)}
   .card-head{padding:13px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
   .card-head h2{font-size:15px;font-weight:700}
   .card-head .badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--blue-light);color:var(--blue)}
@@ -854,7 +855,7 @@ function toggleGammeString(patId, stringIdx) {
     const pat = PATTERNS.find(p => p.id === patId);
     if (pat) {
       const rawTab = getGammeActiveTab(pat);
-      const neckTab = transformTab(rawTab, pat.id, true);
+      const neckTab = pat.disableHighNeck ? rawTab : transformTab(rawTab, pat.id, true);
       const filtered = applyGammeStringFilter(neckTab, current);
       pre.innerHTML = tabWithSymbols(cleanTabDisplay(filtered), PREVIEW.interp);
     }
@@ -887,7 +888,7 @@ function resetGammeStrings(patId) {
     const pat = PATTERNS.find(p => p.id === patId);
     if (pat) {
       const rawTab = getGammeActiveTab(pat);
-      const neckTab = transformTab(rawTab, pat.id, true);
+      const neckTab = pat.disableHighNeck ? rawTab : transformTab(rawTab, pat.id, true);
       pre.innerHTML = tabWithSymbols(cleanTabDisplay(neckTab), PREVIEW.interp);
     }
   }
@@ -910,56 +911,98 @@ function getGammeSelectedDir(patId) {
   const pat = PATTERNS.find(p => p.id === patId);
   if (!pat || !pat.hasDirectionTabs || !pat.directions) return null;
   const saved = state.gammeSelectedDir && state.gammeSelectedDir[patId];
+  if (pat.versionTabs) {
+    return (saved && pat.versionTabs.includes(saved)) ? saved : pat.versionTabs[0];
+  }
   const keys = Object.keys(pat.directions);
   return (saved && keys.includes(saved)) ? saved : keys[0];
 }
 
-// Retourne le tab actif (direction sélectionnée ou tab standard)
+function getGammeSelectedForme(patId) {
+  const pat = PATTERNS.find(p => p.id === patId);
+  if (!pat || !pat.formeTabs) return null;
+  const saved = state.gammeSelectedForme && state.gammeSelectedForme[patId];
+  return (saved && pat.formeTabs.includes(saved)) ? saved : pat.formeTabs[0];
+}
+
+// Retourne le tab actif (version + forme ou direction simple)
 function getGammeActiveTab(pat) {
   if (!pat.hasDirectionTabs || !pat.directions) return getEffectiveTab(getTabForNeckPosition(pat));
+  if (pat.formeTabs) {
+    const version = getGammeSelectedDir(pat.id);
+    const forme   = getGammeSelectedForme(pat.id);
+    return pat.directions[version + '|' + forme] || Object.values(pat.directions)[0];
+  }
   const dirKey = getGammeSelectedDir(pat.id);
   return pat.directions[dirKey] || Object.values(pat.directions)[0];
 }
 
-// Changer la direction d'une gamme avec onglets — mise à jour DOM ciblée
-function setGammeDirection(patId, dirKey) {
-  if (!state.gammeSelectedDir) state.gammeSelectedDir = {};
-  state.gammeSelectedDir[patId] = dirKey;
-  saveState();
-  if (PREVIEW.patId === patId) previewStop();
+function _refreshGammeTabAndProg(patId) {
   const pat = PATTERNS.find(p => p.id === patId);
-  // Mettre à jour la tab affichée
+  if (!pat) return;
   const pre = document.getElementById('tab-pre-' + patId);
-  if (pre && pat) {
-    const rawTab = pat.directions[dirKey] || Object.values(pat.directions)[0];
-    const neckTab = transformTab(rawTab, pat.id, true);
+  if (pre) {
+    const rawTab = getGammeActiveTab(pat);
+    const neckTab = pat.disableHighNeck ? rawTab : transformTab(rawTab, pat.id, true);
     const filtered = applyGammeStringFilter(neckTab, getGammeActiveStrings(patId));
     pre.innerHTML = tabWithSymbols(cleanTabDisplay(filtered), PREVIEW.interp);
   }
-  // Mettre à jour la grille de progression
   const progEl = document.getElementById('gamme-prog-' + patId);
-  if (progEl && pat) {
+  if (progEl) {
     const { html, progressPercent } = buildGammeProgGrid(pat);
     progEl.innerHTML = html;
-    // Mettre à jour le % affiché dans l'en-tête de la carte
     const trainEl = document.getElementById('pat-train-' + patId);
     if (trainEl) {
       const pctSpan = trainEl.querySelector('span:last-child');
       if (pctSpan) pctSpan.textContent = progressPercent > 0 ? progressPercent + '%' : '';
     }
   }
-  // Mettre à jour l'apparence des boutons de direction
-  if (pat && pat.directions) {
+}
+
+// Changer la version (Base / Étendue) — mise à jour DOM ciblée
+function setGammeDirection(patId, dirKey) {
+  if (!state.gammeSelectedDir) state.gammeSelectedDir = {};
+  state.gammeSelectedDir[patId] = dirKey;
+  saveState();
+  if (PREVIEW.patId === patId) previewStop();
+  _refreshGammeTabAndProg(patId);
+  const pat = PATTERNS.find(p => p.id === patId);
+  // Boutons de version
+  if (pat && pat.versionTabs) {
+    pat.versionTabs.forEach(vk => {
+      const btn = document.getElementById('gamme-dir-btn-' + patId + '-' + vk);
+      if (btn) {
+        const isActive = vk === dirKey;
+        btn.style.background  = isActive ? 'var(--blue)' : 'transparent';
+        btn.style.color       = isActive ? '#fff'        : 'var(--text2)';
+        btn.style.borderColor = isActive ? 'var(--blue)' : 'var(--border)';
+        btn.style.fontWeight  = isActive ? '700'         : '600';
+      }
+    });
+  } else if (pat && pat.directions) {
     Object.keys(pat.directions).forEach(dk => {
       const btn = document.getElementById('gamme-dir-btn-' + patId + '-' + dk.replace(/[→↔]/g, '_'));
       if (btn) {
         const isActive = dk === dirKey;
-        btn.style.background  = isActive ? 'var(--blue)'   : 'transparent';
-        btn.style.color       = isActive ? '#fff'          : 'var(--text2)';
-        btn.style.borderColor = isActive ? 'var(--blue)'   : 'var(--border)';
-        btn.style.fontWeight  = isActive ? '700'           : '600';
+        btn.style.background  = isActive ? 'var(--blue)' : 'transparent';
+        btn.style.color       = isActive ? '#fff'        : 'var(--text2)';
+        btn.style.borderColor = isActive ? 'var(--blue)' : 'var(--border)';
+        btn.style.fontWeight  = isActive ? '700'         : '600';
       }
     });
+  }
+}
+
+// Changer la forme (C / A / …) — mise à jour DOM ciblée
+function setGammeForme(patId, forme) {
+  if (!state.gammeSelectedForme) state.gammeSelectedForme = {};
+  state.gammeSelectedForme[patId] = forme;
+  saveState();
+  if (PREVIEW.patId === patId) previewStop();
+  _refreshGammeTabAndProg(patId);
+  const select = document.getElementById('gamme-forme-select-' + patId);
+  if (select) {
+    select.value = forme;
   }
 }
 
@@ -2060,7 +2103,7 @@ function openSettings(tab) {
           <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
         </div>
         <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
-        <div class="sf-version">v2.10</div>
+        <div class="sf-version">v2.12</div>
       </div>
     </div>
   </div>`;

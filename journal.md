@@ -240,6 +240,39 @@ if (interp === 'Up')   s = onBeat ? '↑' : '↓';
 
 ---
 
+## Session du 16 juin 2026
+
+### Classification des difficultés — Renaming inclusif
+
+**Fichiers modifiés :** `data.js`, `render.js`, `index.html`, `version.json`
+
+Renommage complet des niveaux de difficulté pour une meilleure inclusivité et encouragement à l'exploration :
+- `Débutant` → `Basique`
+- `Intermédiaire` → `Technique`
+- `Avancé` → `Complexe`
+
+L'objectif était d'éviter que le vocabulaire "Débutant/Avancé" décourage les utilisateurs de découvrir des exercices — un débutant peut très bien travailler un exercice "Complexe" qui l'intéresse, et le nouveau vocabulaire décrit l'exercice plutôt que le niveau de l'utilisateur.
+
+**Changements :**
+- `data.js` : 182 patterns mis à jour (39 Basique, 121 Technique, 22 Complexe)
+- `render.js` : fonction `diffTag()`, objets `diffDot` et `diffColors`, tableau `diffs` mis à jour
+- Couleurs préservées : Basique (vert #4a9e6b), Technique (orange #c07830), Complexe (rouge #a03030)
+
+---
+
+### Gammes pentatonic — Distinction visuelle
+
+**Fichiers modifiés :** `render.js`, `index.html`, `version.json`
+
+Ajout d'une bordure gauche bleue clair sur les cartes des gammes pentatonic pour les repérer facilement dans la section Gammes.
+
+**Implémentation :**
+- `render.js` : détection automatique des pentatonic via `base.id.startsWith('penta')`, ajout de la classe `card-penta`
+- CSS : `.card.card-penta` utilise une bordure gauche `4px solid var(--blue-light)` qui fonctionne en light et dark mode
+- S'applique à tous les patterns dont l'ID commence par "penta" (pentaC1-5, pentaTrans1-5, etc.)
+
+---
+
 ## Session du 13 juin 2026
 
 ### Nouvelles données : arpège Em et famille complète B8P1/B8P2 (a/b/c/d)

@@ -7,7 +7,7 @@ const PATTERNS = [
   // ── A4 — 4 NOTES ────────────────────────────────────────────────────────────
 
   {
-    id:"A4P2aU", cat:"A4", dir:"U", num:'2a', notes:4, etape:1, etapeOrder:3, difficulty:"Débutant", fingerings:['ind + maj + ann + aur', 'ind + ind (glis.) + maj + ann', 'ind + maj + ann + ann', 'ind + maj + maj + ann'],
+    id:"A4P2aU", cat:"A4", dir:"U", num:'2a', notes:4, etape:1, etapeOrder:3, difficulty:"Basique", fingerings:['ind + maj + ann + aur', 'ind + ind (glis.) + maj + ann', 'ind + maj + ann + ann', 'ind + maj + maj + ann'],
     name:"Chromatique", bpm:60, bpmTarget:130,
     tab:`e|--------------------------5-6-7-8-|
 B|------------------5-6-7-8---------|
@@ -27,7 +27,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2aD", cat:"A4", dir:"D", num:'2a', notes:4, etape:1, etapeOrder:3, difficulty:"Débutant", fingerings:['ind + maj + ann + aur', 'ind + ind (glis.) + maj + ann', 'ind + maj + ann + ann', 'ind + maj + maj + ann'],
+    id:"A4P2aD", cat:"A4", dir:"D", num:'2a', notes:4, etape:1, etapeOrder:3, difficulty:"Basique", fingerings:['ind + maj + ann + aur', 'ind + ind (glis.) + maj + ann', 'ind + maj + ann + ann', 'ind + maj + maj + ann'],
     name:"Chromatique", bpm:60, bpmTarget:130,
     tab:`e|--------------------------8-7-6-5-|
 B|------------------8-7-6-5---------|
@@ -47,7 +47,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2aM", cat:"A4", dir:"M", num:'2a', notes:4, etape:1, etapeOrder:3, difficulty:"Débutant", fingerings:['ind + maj + ann + aur', 'ind + ind (glis.) + maj + ann', 'ind + maj + ann + ann', 'ind + maj + maj + ann'],
+    id:"A4P2aM", cat:"A4", dir:"M", num:'2a', notes:4, etape:1, etapeOrder:3, difficulty:"Basique", fingerings:['ind + maj + ann + aur', 'ind + ind (glis.) + maj + ann', 'ind + maj + ann + ann', 'ind + maj + maj + ann'],
     name:"Chromatique", bpm:60, bpmTarget:119,
     tab:`e|--------------------------5-6-7-8-|
 B|------------------5-6-7-8---------|
@@ -67,7 +67,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1aU", cat:"A4", dir:"U", num:'1a', notes:4, etape:2, etapeOrder:1, difficulty:"Débutant", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
+    id:"A4P1aU", cat:"A4", dir:"U", num:'1a', notes:4, etape:2, etapeOrder:1, difficulty:"Basique", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
     name:"Alternance demi-ton", bpm:60, bpmTarget:150,
     tab:`e|--------------------------5-6-5-6-|
 B|------------------5-6-5-6---------|
@@ -87,7 +87,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1aD", cat:"A4", dir:"D", num:'1a', notes:4, etape:2, etapeOrder:1, difficulty:"Débutant", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
+    id:"A4P1aD", cat:"A4", dir:"D", num:'1a', notes:4, etape:2, etapeOrder:1, difficulty:"Basique", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
     name:"Alternance demi-ton", bpm:60, bpmTarget:150,
     tab:`e|--------------------------6-5-6-5-|
 B|------------------6-5-6-5---------|
@@ -107,7 +107,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1aM", cat:"A4", dir:"M", num:'1a', notes:4, etape:2, etapeOrder:1, difficulty:"Débutant", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
+    id:"A4P1aM", cat:"A4", dir:"M", num:'1a', notes:4, etape:2, etapeOrder:1, difficulty:"Basique", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
     name:"Alternance demi-ton", bpm:60, bpmTarget:138,
     tab:`e|--------------------------5-6-5-6-|
 B|------------------5-6-5-6---------|
@@ -127,7 +127,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1bU", cat:"A4", dir:"U", num:'1b', notes:4, etape:1, etapeOrder:1, difficulty:"Débutant", related:"A2P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A4P1bU", cat:"A4", dir:"U", num:'1b', notes:4, etape:1, etapeOrder:1, difficulty:"Basique", related:"A2P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Alternance ton entier", bpm:60, bpmTarget:140,
     tab:`e|--------------------------5-7-5-7-|
 B|------------------5-7-5-7---------|
@@ -147,7 +147,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1bD", cat:"A4", dir:"D", num:'1b', notes:4, etape:1, etapeOrder:1, difficulty:"Débutant", related:"A2P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A4P1bD", cat:"A4", dir:"D", num:'1b', notes:4, etape:1, etapeOrder:1, difficulty:"Basique", related:"A2P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Alternance ton entier", bpm:60, bpmTarget:140,
     tab:`e|--------------------------7-5-7-5-|
 B|------------------7-5-7-5---------|
@@ -167,7 +167,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1bM", cat:"A4", dir:"M", num:'1b', notes:4, etape:1, etapeOrder:1, difficulty:"Débutant", related:"A2P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A4P1bM", cat:"A4", dir:"M", num:'1b', notes:4, etape:1, etapeOrder:1, difficulty:"Basique", related:"A2P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Alternance ton entier", bpm:60, bpmTarget:128,
     tab:`e|--------------------------5-7-5-7-|
 B|------------------5-7-5-7---------|
@@ -187,7 +187,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2bU", cat:"A4", dir:"U", num:'2b', notes:4, difficulty:"Intermédiaire", fingerings:['ind + ann + maj + aur', 'ind + maj (ext.) + ind + ann', 'maj + aur + ann + aur', 'ind + ann + ind (glis.) + maj'],
+    id:"A4P2bU", cat:"A4", dir:"U", num:'2b', notes:4, difficulty:"Technique", fingerings:['ind + ann + maj + aur', 'ind + maj (ext.) + ind + ann', 'maj + aur + ann + aur', 'ind + ann + ind (glis.) + maj'],
     name:"Croisé 1-3-2-4", bpm:60, bpmTarget:120,
     tab:`e|--------------------------5-7-6-8-|
 B|------------------5-7-6-8---------|
@@ -207,7 +207,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2bD", cat:"A4", dir:"D", num:'2b', notes:4, difficulty:"Intermédiaire", fingerings:['ind + ann + maj + aur', 'ind + maj (ext.) + ind + ann', 'maj + aur + ann + aur', 'ind + ann + ind (glis.) + maj'],
+    id:"A4P2bD", cat:"A4", dir:"D", num:'2b', notes:4, difficulty:"Technique", fingerings:['ind + ann + maj + aur', 'ind + maj (ext.) + ind + ann', 'maj + aur + ann + aur', 'ind + ann + ind (glis.) + maj'],
     name:"Croisé 1-3-2-4", bpm:60, bpmTarget:120,
     tab:`e|--------------------------8-6-7-5-|
 B|------------------8-6-7-5---------|
@@ -227,7 +227,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2bM", cat:"A4", dir:"M", num:'2b', notes:4, difficulty:"Intermédiaire", fingerings:['ind + ann + maj + aur', 'ind + maj (ext.) + ind + ann', 'maj + aur + ann + aur', 'ind + ann + ind (glis.) + maj'],
+    id:"A4P2bM", cat:"A4", dir:"M", num:'2b', notes:4, difficulty:"Technique", fingerings:['ind + ann + maj + aur', 'ind + maj (ext.) + ind + ann', 'maj + aur + ann + aur', 'ind + ann + ind (glis.) + maj'],
     name:"Croisé 1-3-2-4", bpm:60, bpmTarget:110,
     tab:`e|--------------------------5-7-6-8-|
 B|------------------5-7-6-8---------|
@@ -247,7 +247,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2cU", cat:"A4", dir:"U", num:'2c', notes:4, difficulty:"Intermédiaire", fingerings:['ind + aur + maj + ann', 'ind + ann (ext.) + maj + ann', 'ind + aur + aur (glis.) + ann', 'ind + aur + ind (glis.) + maj'],
+    id:"A4P2cU", cat:"A4", dir:"U", num:'2c', notes:4, difficulty:"Technique", fingerings:['ind + aur + maj + ann', 'ind + ann (ext.) + maj + ann', 'ind + aur + aur (glis.) + ann', 'ind + aur + ind (glis.) + maj'],
     name:"Croisé 1-4-2-3", bpm:60, bpmTarget:110,
     tab:`e|--------------------------5-8-6-7-|
 B|------------------5-8-6-7---------|
@@ -267,7 +267,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2cD", cat:"A4", dir:"D", num:'2c', notes:4, difficulty:"Intermédiaire", fingerings:['ind + aur + maj + ann', 'ind + ann (ext.) + maj + ann', 'ind + aur + aur (glis.) + ann', 'ind + aur + ind (glis.) + maj'],
+    id:"A4P2cD", cat:"A4", dir:"D", num:'2c', notes:4, difficulty:"Technique", fingerings:['ind + aur + maj + ann', 'ind + ann (ext.) + maj + ann', 'ind + aur + aur (glis.) + ann', 'ind + aur + ind (glis.) + maj'],
     name:"Croisé 1-4-2-3", bpm:60, bpmTarget:110,
     tab:`e|--------------------------8-5-7-6-|
 B|------------------8-5-7-6---------|
@@ -287,7 +287,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2cM", cat:"A4", dir:"M", num:'2c', notes:4, difficulty:"Intermédiaire", fingerings:['ind + aur + maj + ann', 'ind + ann (ext.) + maj + ann', 'ind + aur + aur (glis.) + ann', 'ind + aur + ind (glis.) + maj'],
+    id:"A4P2cM", cat:"A4", dir:"M", num:'2c', notes:4, difficulty:"Technique", fingerings:['ind + aur + maj + ann', 'ind + ann (ext.) + maj + ann', 'ind + aur + aur (glis.) + ann', 'ind + aur + ind (glis.) + maj'],
     name:"Croisé 1-4-2-3", bpm:60, bpmTarget:101,
     tab:`e|--------------------------5-8-6-7-|
 B|------------------5-8-6-7---------|
@@ -307,7 +307,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1cU", cat:"A4", dir:"U", num:'1c', notes:4, etape:2, etapeOrder:3, difficulty:"Intermédiaire", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ann + aur (ext.)'],
+    id:"A4P1cU", cat:"A4", dir:"U", num:'1c', notes:4, etape:2, etapeOrder:3, difficulty:"Technique", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ann + aur (ext.)'],
     name:"Alternance tierce mineure", bpm:60, bpmTarget:130,
     tab:`e|--------------------------5-8-5-8-|
 B|------------------5-8-5-8---------|
@@ -327,7 +327,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1cD", cat:"A4", dir:"D", num:'1c', notes:4, etape:2, etapeOrder:3, difficulty:"Intermédiaire", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ann + aur (ext.)'],
+    id:"A4P1cD", cat:"A4", dir:"D", num:'1c', notes:4, etape:2, etapeOrder:3, difficulty:"Technique", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ann + aur (ext.)'],
     name:"Alternance tierce mineure", bpm:60, bpmTarget:130,
     tab:`e|--------------------------8-5-8-5-|
 B|------------------8-5-8-5---------|
@@ -347,7 +347,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1cM", cat:"A4", dir:"M", num:'1c', notes:4, etape:2, etapeOrder:3, difficulty:"Intermédiaire", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ann + aur (ext.)'],
+    id:"A4P1cM", cat:"A4", dir:"M", num:'1c', notes:4, etape:2, etapeOrder:3, difficulty:"Technique", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ann + aur (ext.)'],
     name:"Alternance tierce mineure", bpm:60, bpmTarget:119,
     tab:`e|--------------------------5-8-5-8-|
 B|------------------5-8-5-8---------|
@@ -367,7 +367,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2dU", cat:"A4", dir:"U", num:'2d', notes:4, difficulty:"Avancé", fingerings:['ind + aur + ann + maj', 'maj + aur + ann + maj', 'ind + aur + ann + ind (glis.)', 'ind + ann (ext.) + ann (glis.) + maj'],
+    id:"A4P2dU", cat:"A4", dir:"U", num:'2d', notes:4, difficulty:"Complexe", fingerings:['ind + aur + ann + maj', 'maj + aur + ann + maj', 'ind + aur + ann + ind (glis.)', 'ind + ann (ext.) + ann (glis.) + maj'],
     name:"Croisé 1-4-3-2", bpm:60, bpmTarget:110,
     tab:`e|--------------------------5-8-7-6-|
 B|------------------5-8-7-6---------|
@@ -387,7 +387,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2dD", cat:"A4", dir:"D", num:'2d', notes:4, difficulty:"Avancé", fingerings:['ind + aur + ann + maj', 'maj + aur + ann + maj', 'ind + aur + ann + ind (glis.)', 'ind + ann (ext.) + ann (glis.) + maj'],
+    id:"A4P2dD", cat:"A4", dir:"D", num:'2d', notes:4, difficulty:"Complexe", fingerings:['ind + aur + ann + maj', 'maj + aur + ann + maj', 'ind + aur + ann + ind (glis.)', 'ind + ann (ext.) + ann (glis.) + maj'],
     name:"Croisé 1-4-3-2", bpm:60, bpmTarget:110,
     tab:`e|--------------------------8-5-6-7-|
 B|------------------8-5-6-7---------|
@@ -407,7 +407,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2dM", cat:"A4", dir:"M", num:'2d', notes:4, difficulty:"Avancé", fingerings:['ind + aur + ann + maj', 'maj + aur + ann + maj', 'ind + aur + ann + ind (glis.)', 'ind + ann (ext.) + ann (glis.) + maj'],
+    id:"A4P2dM", cat:"A4", dir:"M", num:'2d', notes:4, difficulty:"Complexe", fingerings:['ind + aur + ann + maj', 'maj + aur + ann + maj', 'ind + aur + ann + ind (glis.)', 'ind + ann (ext.) + ann (glis.) + maj'],
     name:"Croisé 1-4-3-2", bpm:60, bpmTarget:101,
     tab:`e|--------------------------5-8-7-6-|
 B|------------------5-8-7-6---------|
@@ -427,7 +427,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2eU", cat:"A4", dir:"U", num:'2e', notes:4, difficulty:"Avancé", fingerings:['ind + maj + aur + ann'],
+    id:"A4P2eU", cat:"A4", dir:"U", num:'2e', notes:4, difficulty:"Complexe", fingerings:['ind + maj + aur + ann'],
     name:"Croisé 1-2-4-3", bpm:60, bpmTarget:110,
     tab:`e|--------------------------5-6-8-7-|
 B|------------------5-6-8-7---------|
@@ -447,7 +447,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2eD", cat:"A4", dir:"D", num:'2e', notes:4, difficulty:"Avancé", fingerings:['ind + maj + aur + ann'],
+    id:"A4P2eD", cat:"A4", dir:"D", num:'2e', notes:4, difficulty:"Complexe", fingerings:['ind + maj + aur + ann'],
     name:"Croisé 1-2-4-3", bpm:60, bpmTarget:110,
     tab:`e|--------------------------6-5-7-8-|
 B|------------------6-5-7-8---------|
@@ -467,7 +467,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P2eM", cat:"A4", dir:"M", num:'2e', notes:4, difficulty:"Avancé", fingerings:['ind + maj + aur + ann'],
+    id:"A4P2eM", cat:"A4", dir:"M", num:'2e', notes:4, difficulty:"Complexe", fingerings:['ind + maj + aur + ann'],
     name:"Croisé 1-2-4-3", bpm:60, bpmTarget:101,
     tab:`e|--------------------------5-6-8-7-|
 B|------------------5-6-8-7---------|
@@ -487,7 +487,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P?aU", cat:"A4", dir:"U", num:'?a', notes:4, difficulty:"Avancé", fingerings:['ind + maj + ann + aur (ext.)', 'ind + maj + maj (ext.) + aur', 'ind + maj + ann + ann (glis.)', 'ind + ind (glis.) + maj + ann'], fretOffset:-1,
+    id:"A4P?aU", cat:"A4", dir:"U", num:'?a', notes:4, difficulty:"Complexe", fingerings:['ind + maj + ann + aur (ext.)', 'ind + maj + maj (ext.) + aur', 'ind + maj + ann + ann (glis.)', 'ind + ind (glis.) + maj + ann'], fretOffset:-1,
     name:"Croisé 1-2-3-5", bpm:60, bpmTarget:100,
     tab:`e|--------------------------5-6-7-9-|
 B|------------------5-6-7-9---------|
@@ -507,7 +507,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P?aD", cat:"A4", dir:"D", num:'?a', notes:4, difficulty:"Avancé", fingerings:['ind + maj + ann + aur (ext.)', 'ind + maj + maj (ext.) + aur', 'ind + maj + ann + ann (glis.)', 'ind + ind (glis.) + maj + ann'], fretOffset:-1,
+    id:"A4P?aD", cat:"A4", dir:"D", num:'?a', notes:4, difficulty:"Complexe", fingerings:['ind + maj + ann + aur (ext.)', 'ind + maj + maj (ext.) + aur', 'ind + maj + ann + ann (glis.)', 'ind + ind (glis.) + maj + ann'], fretOffset:-1,
     name:"Croisé 1-2-3-5", bpm:60, bpmTarget:100,
     tab:`e|--------------------------9-7-6-5-|
 B|------------------9-7-6-5---------|
@@ -527,7 +527,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P?aM", cat:"A4", dir:"M", num:'?a', notes:4, difficulty:"Avancé", fingerings:['ind + maj + ann + aur (ext.)', 'ind + maj + maj (ext.) + aur', 'ind + maj + ann + ann (glis.)', 'ind + ind (glis.) + maj + ann'], fretOffset:-1,
+    id:"A4P?aM", cat:"A4", dir:"M", num:'?a', notes:4, difficulty:"Complexe", fingerings:['ind + maj + ann + aur (ext.)', 'ind + maj + maj (ext.) + aur', 'ind + maj + ann + ann (glis.)', 'ind + ind (glis.) + maj + ann'], fretOffset:-1,
     name:"Croisé 1-2-3-5", bpm:60, bpmTarget:92,
     tab:`e|--------------------------5-6-7-9-|
 B|------------------5-6-7-9---------|
@@ -547,7 +547,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P1dU", cat:"A4", dir:"U", num:'1d', notes:4, etape:3, etapeOrder:1, difficulty:"Intermédiaire", fingerings:['ind + aur (grand écart)', 'ind + ann (ext. max)', 'maj + aur (ext.)', 'ind + ind (glis.)'], fretOffset:-1,
+    id:"A4P1dU", cat:"A4", dir:"U", num:'1d', notes:4, etape:3, etapeOrder:1, difficulty:"Technique", fingerings:['ind + aur (grand écart)', 'ind + ann (ext. max)', 'maj + aur (ext.)', 'ind + ind (glis.)'], fretOffset:-1,
     name:"Alternance tierce majeure", bpm:55, bpmTarget:110,
     tab:`e|-----------------------------5-9-5-9-|
 B|---------------------5-9-5-9---------|
@@ -567,7 +567,7 @@ E|-------------------------------------|
   },
 
   {
-    id:"A4P1dD", cat:"A4", dir:"D", num:'1d', notes:4, etape:3, etapeOrder:1, difficulty:"Intermédiaire", fingerings:['ind + aur (grand écart)', 'ind + ann (ext. max)', 'maj + aur (ext.)', 'ind + ind (glis.)'], fretOffset:-1,
+    id:"A4P1dD", cat:"A4", dir:"D", num:'1d', notes:4, etape:3, etapeOrder:1, difficulty:"Technique", fingerings:['ind + aur (grand écart)', 'ind + ann (ext. max)', 'maj + aur (ext.)', 'ind + ind (glis.)'], fretOffset:-1,
     name:"Alternance tierce majeure", bpm:55, bpmTarget:110,
     tab:`e|------------------------------9-5-9-5-|
 B|----------------------9-5-9-5---------|
@@ -587,7 +587,7 @@ E|--------------------------------------|
   },
 
   {
-    id:"A4P1dM", cat:"A4", dir:"M", num:'1d', notes:4, etape:3, etapeOrder:1, difficulty:"Intermédiaire", fingerings:['ind + aur (grand écart)', 'ind + ann (ext. max)', 'maj + aur (ext.)', 'ind + ind (glis.)'], fretOffset:-1,
+    id:"A4P1dM", cat:"A4", dir:"M", num:'1d', notes:4, etape:3, etapeOrder:1, difficulty:"Technique", fingerings:['ind + aur (grand écart)', 'ind + ann (ext. max)', 'maj + aur (ext.)', 'ind + ind (glis.)'], fretOffset:-1,
     name:"Alternance tierce majeure", bpm:55, bpmTarget:100,
     tab:`e|-----------------------------5-9-5-9-|
 B|---------------------5-9-5-9---------|
@@ -607,7 +607,7 @@ E|-------------------------------------|
   },
 
   {
-    id:"A4P-YMaU", cat:"A4", dir:"U", num:'-YMa', notes:4, difficulty:"Avancé", fingerings:['ind + maj + ind (shift) + maj', 'ind + maj + ann + aur (ext.)', 'ind + maj + aur + aur (glis.)', 'ind + ind (glis.) + ann + aur'],
+    id:"A4P-YMaU", cat:"A4", dir:"U", num:'-YMa', notes:4, difficulty:"Complexe", fingerings:['ind + maj + ind (shift) + maj', 'ind + maj + ann + aur (ext.)', 'ind + maj + aur + aur (glis.)', 'ind + ind (glis.) + ann + aur'],
     name:"Seconde augmentée (Yngwie)", bpm:55, bpmTarget:110,
     tab:`e|-----------------------------5-6-9-10-|
 B|--------------------5-6-9-10----------|
@@ -627,7 +627,7 @@ E|--------------------------------------|
   },
 
   {
-    id:"A4P-YMaD", cat:"A4", dir:"D", num:'-YMa', notes:4, difficulty:"Avancé", fingerings:['ind + maj + ind (shift) + maj', 'ind + maj + ann + aur (ext.)', 'ind + maj + aur + aur (glis.)', 'ind + ind (glis.) + ann + aur'],
+    id:"A4P-YMaD", cat:"A4", dir:"D", num:'-YMa', notes:4, difficulty:"Complexe", fingerings:['ind + maj + ind (shift) + maj', 'ind + maj + ann + aur (ext.)', 'ind + maj + aur + aur (glis.)', 'ind + ind (glis.) + ann + aur'],
     name:"Seconde augmentée (Yngwie)", bpm:55, bpmTarget:110,
     tab:`e|-----------------------------10-9-6-5-|
 B|--------------------10-9-6-5----------|
@@ -647,7 +647,7 @@ E|--------------------------------------|
   },
 
   {
-    id:"A4P-YMaM", cat:"A4", dir:"M", num:'-YMa', notes:4, difficulty:"Avancé", fingerings:['ind + maj + ind (shift) + maj', 'ind + maj + ann + aur (ext.)', 'ind + maj + aur + aur (glis.)', 'ind + ind (glis.) + ann + aur'],
+    id:"A4P-YMaM", cat:"A4", dir:"M", num:'-YMa', notes:4, difficulty:"Complexe", fingerings:['ind + maj + ind (shift) + maj', 'ind + maj + ann + aur (ext.)', 'ind + maj + aur + aur (glis.)', 'ind + ind (glis.) + ann + aur'],
     name:"Seconde augmentée (Yngwie)", bpm:55, bpmTarget:100,
     tab:`e|-----------------------------5-6-9-10-|
 B|--------------------5-6-9-10----------|
@@ -669,7 +669,7 @@ E|--------------------------------------|
   // ── A3 — 3 NOTES ────────────────────────────────────────────────────────────
 
   {
-    id:"A3P1aU", cat:"A3", dir:"U", num:'1a', notes:3, difficulty:"Débutant", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"A3P1aU", cat:"A3", dir:"U", num:'1a', notes:3, difficulty:"Basique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Triade 1-2-3", bpm:70, bpmTarget:140,
     tab:`e|--------------------5-6-8-|
 B|--------------5-6-8-------|
@@ -689,7 +689,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1aD", cat:"A3", dir:"D", num:'1a', notes:3, difficulty:"Débutant", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"A3P1aD", cat:"A3", dir:"D", num:'1a', notes:3, difficulty:"Basique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Triade 1-2-3", bpm:70, bpmTarget:140,
     tab:`e|--------------------8-6-5-|
 B|--------------8-6-5-------|
@@ -709,7 +709,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1aM", cat:"A3", dir:"M", num:'1a', notes:3, difficulty:"Débutant", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"A3P1aM", cat:"A3", dir:"M", num:'1a', notes:3, difficulty:"Basique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Triade 1-2-3", bpm:70, bpmTarget:128,
     tab:`e|--------------------5-6-8-|
 B|--------------5-6-8-------|
@@ -731,7 +731,7 @@ E|--------------------------|
   // ── A3P1d — Chromatique 1-2-3 (version consécutive de 1-2-3) ────────────────
 
   {
-    id:"A3P1dU", cat:"A3", dir:"U", num:'1d', notes:3, difficulty:"Débutant", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"A3P1dU", cat:"A3", dir:"U", num:'1d', notes:3, difficulty:"Basique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Chromatique 1-2-3", bpm:70, bpmTarget:140,
     tab:`e|--------------------5-6-7-|
 B|--------------5-6-7-------|
@@ -751,7 +751,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1dD", cat:"A3", dir:"D", num:'1d', notes:3, difficulty:"Débutant", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"A3P1dD", cat:"A3", dir:"D", num:'1d', notes:3, difficulty:"Basique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Chromatique 1-2-3", bpm:70, bpmTarget:140,
     tab:`e|--------------------7-6-5-|
 B|--------------7-6-5-------|
@@ -771,7 +771,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1dM", cat:"A3", dir:"M", num:'1d', notes:3, difficulty:"Débutant", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"A3P1dM", cat:"A3", dir:"M", num:'1d', notes:3, difficulty:"Basique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Chromatique 1-2-3", bpm:70, bpmTarget:128,
     tab:`e|--------------------5-6-7-|
 B|--------------5-6-7-------|
@@ -793,7 +793,7 @@ E|--------------------------|
   // ── A3P2a — Triade 2-1-3 (inversion de 1-2-3) ──────────────────────────────
 
   {
-    id:"A3P2aU", cat:"A3", dir:"U", num:'2a', notes:3, difficulty:"Intermédiaire", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
+    id:"A3P2aU", cat:"A3", dir:"U", num:'2a', notes:3, difficulty:"Technique", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
     name:"Triade 2-1-3", bpm:70, bpmTarget:140,
     tab:`e|--------------------6-5-8-|
 B|--------------6-5-8-------|
@@ -815,7 +815,7 @@ E|--------------------------|
   // ── A3P2d — Chromatique 2-1-3 (version consécutive de 2-1-3) ────────────────
 
   {
-    id:"A3P2dU", cat:"A3", dir:"U", num:'2d', notes:3, difficulty:"Intermédiaire", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
+    id:"A3P2dU", cat:"A3", dir:"U", num:'2d', notes:3, difficulty:"Technique", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
     name:"Chromatique 2-1-3", bpm:70, bpmTarget:140,
     tab:`e|--------------------6-5-7-|
 B|--------------6-5-7-------|
@@ -835,7 +835,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P2dD", cat:"A3", dir:"D", num:'2d', notes:3, difficulty:"Intermédiaire", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
+    id:"A3P2dD", cat:"A3", dir:"D", num:'2d', notes:3, difficulty:"Technique", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
     name:"Chromatique 2-1-3", bpm:70, bpmTarget:140,
     tab:`e|--------------------6-7-5-|
 B|--------------6-7-5-------|
@@ -855,7 +855,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P2dM", cat:"A3", dir:"M", num:'2d', notes:3, difficulty:"Intermédiaire", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
+    id:"A3P2dM", cat:"A3", dir:"M", num:'2d', notes:3, difficulty:"Technique", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
     name:"Chromatique 2-1-3", bpm:70, bpmTarget:128,
     tab:`e|--------------------6-5-7-|
 B|--------------6-5-7-------|
@@ -875,7 +875,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P2aD", cat:"A3", dir:"D", num:'2a', notes:3, difficulty:"Intermédiaire", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
+    id:"A3P2aD", cat:"A3", dir:"D", num:'2a', notes:3, difficulty:"Technique", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
     name:"Triade 2-1-3", bpm:70, bpmTarget:140,
     tab:`e|--------------------6-8-5-|
 B|--------------6-8-5-------|
@@ -895,7 +895,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P2aM", cat:"A3", dir:"M", num:'2a', notes:3, difficulty:"Intermédiaire", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
+    id:"A3P2aM", cat:"A3", dir:"M", num:'2a', notes:3, difficulty:"Technique", fingerings:['maj + ind + aur', 'maj + ind + ann', 'ann + ind + aur', 'ind + ann + aur'],
     name:"Triade 2-1-3", bpm:70, bpmTarget:128,
     tab:`e|--------------------6-5-8-|
 B|--------------6-5-8-------|
@@ -917,7 +917,7 @@ E|--------------------------|
   // ── A3P2b — Triade 3-1-4 (inversion de 1-3-4) ──────────────────────────────
 
   {
-    id:"A3P2bU", cat:"A3", dir:"U", num:'2b', notes:3, difficulty:"Intermédiaire", fingerings:['ann + ind + aur', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'],
+    id:"A3P2bU", cat:"A3", dir:"U", num:'2b', notes:3, difficulty:"Technique", fingerings:['ann + ind + aur', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'],
     name:"Triade 3-1-4", bpm:70, bpmTarget:140,
     tab:`e|--------------------7-5-8-|
 B|--------------7-5-8-------|
@@ -937,7 +937,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P2bD", cat:"A3", dir:"D", num:'2b', notes:3, difficulty:"Intermédiaire", fingerings:['ann + ind + aur', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'],
+    id:"A3P2bD", cat:"A3", dir:"D", num:'2b', notes:3, difficulty:"Technique", fingerings:['ann + ind + aur', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'],
     name:"Triade 3-1-4", bpm:70, bpmTarget:140,
     tab:`e|--------------------7-8-5-|
 B|--------------7-8-5-------|
@@ -957,7 +957,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P2bM", cat:"A3", dir:"M", num:'2b', notes:3, difficulty:"Intermédiaire", fingerings:['ann + ind + aur', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'],
+    id:"A3P2bM", cat:"A3", dir:"M", num:'2b', notes:3, difficulty:"Technique", fingerings:['ann + ind + aur', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'],
     name:"Triade 3-1-4", bpm:70, bpmTarget:128,
     tab:`e|--------------------7-5-8-|
 B|--------------7-5-8-------|
@@ -979,7 +979,7 @@ E|--------------------------|
   // ── A3P2c — Triade 3-1-5 (grande extension avec inversion) ────────────────────
 
   {
-    id:"A3P2cU", cat:"A3", dir:"U", num:'2c', notes:3, difficulty:"Intermédiaire", fingerings:['ann + ind + ind (shift)', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'], fretOffset:-1,
+    id:"A3P2cU", cat:"A3", dir:"U", num:'2c', notes:3, difficulty:"Technique", fingerings:['ann + ind + ind (shift)', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'], fretOffset:-1,
     name:"Triade 3-1-5", bpm:60, bpmTarget:120,
     tab:`e|--------------------7-5-9-|
 B|--------------7-5-9-------|
@@ -999,7 +999,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P2cD", cat:"A3", dir:"D", num:'2c', notes:3, difficulty:"Intermédiaire", fingerings:['ann + ind + ind (shift)', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'], fretOffset:-1,
+    id:"A3P2cD", cat:"A3", dir:"D", num:'2c', notes:3, difficulty:"Technique", fingerings:['ann + ind + ind (shift)', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'], fretOffset:-1,
     name:"Triade 3-1-5", bpm:60, bpmTarget:120,
     tab:`e|--------------------7-9-5-|
 B|--------------7-9-5-------|
@@ -1019,7 +1019,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P2cM", cat:"A3", dir:"M", num:'2c', notes:3, difficulty:"Intermédiaire", fingerings:['ann + ind + ind (shift)', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'], fretOffset:-1,
+    id:"A3P2cM", cat:"A3", dir:"M", num:'2c', notes:3, difficulty:"Technique", fingerings:['ann + ind + ind (shift)', 'ann + maj (ext.) + aur', 'ann + ind + ind (glis.)', 'aur + ind + ind (glis.)'], fretOffset:-1,
     name:"Triade 3-1-5", bpm:60, bpmTarget:110,
     tab:`e|--------------------7-5-9-|
 B|--------------7-5-9-------|
@@ -1039,7 +1039,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P3bU", cat:"A3", dir:"U", num:'3b', notes:3, difficulty:"Intermédiaire", fingerings:['vide + ind + ann'],
+    id:"A3P3bU", cat:"A3", dir:"U", num:'3b', notes:3, difficulty:"Technique", fingerings:['vide + ind + ann'],
     name:"Groupe 0-5-7", bpm:80, bpmTarget:0,
     tab:`e|--------------------0-5-7-|
 B|--------------0-5-7-------|
@@ -1059,7 +1059,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P3bD", cat:"A3", dir:"D", num:'3b', notes:3, difficulty:"Intermédiaire", fingerings:['vide + ind + ann'],
+    id:"A3P3bD", cat:"A3", dir:"D", num:'3b', notes:3, difficulty:"Technique", fingerings:['vide + ind + ann'],
     name:"Groupe 0-5-7", bpm:80, bpmTarget:0,
     tab:`e|--------------------0-7-5-|
 B|--------------0-7-5-------|
@@ -1079,7 +1079,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P3bM", cat:"A3", dir:"M", num:'3b', notes:3, difficulty:"Intermédiaire", fingerings:['vide + ind + ann'],
+    id:"A3P3bM", cat:"A3", dir:"M", num:'3b', notes:3, difficulty:"Technique", fingerings:['vide + ind + ann'],
     name:"Groupe 0-5-7", bpm:80, bpmTarget:0,
     tab:`e|--------------------0-5-7-|
 B|--------------0-5-7-------|
@@ -1099,7 +1099,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1bU", cat:"A3", dir:"U", num:'1b', notes:3, difficulty:"Débutant", fingerings:['ind + ann + aur', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'],
+    id:"A3P1bU", cat:"A3", dir:"U", num:'1b', notes:3, difficulty:"Basique", fingerings:['ind + ann + aur', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'],
     name:"Triade 1-3-4", bpm:70, bpmTarget:140,
     tab:`e|--------------------5-7-8-|
 B|--------------5-7-8-------|
@@ -1119,7 +1119,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1bD", cat:"A3", dir:"D", num:'1b', notes:3, difficulty:"Débutant", fingerings:['ind + ann + aur', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'],
+    id:"A3P1bD", cat:"A3", dir:"D", num:'1b', notes:3, difficulty:"Basique", fingerings:['ind + ann + aur', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'],
     name:"Triade 1-3-4", bpm:70, bpmTarget:140,
     tab:`e|--------------------8-7-5-|
 B|--------------8-7-5-------|
@@ -1139,7 +1139,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1bM", cat:"A3", dir:"M", num:'1b', notes:3, difficulty:"Débutant", fingerings:['ind + ann + aur', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'],
+    id:"A3P1bM", cat:"A3", dir:"M", num:'1b', notes:3, difficulty:"Basique", fingerings:['ind + ann + aur', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'],
     name:"Triade 1-3-4", bpm:70, bpmTarget:128,
     tab:`e|--------------------5-7-8-|
 B|--------------5-7-8-------|
@@ -1159,7 +1159,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1cU", cat:"A3", dir:"U", num:'1c', notes:3, difficulty:"Intermédiaire", fingerings:['ind + ann + ind (shift)', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'], fretOffset:-1,
+    id:"A3P1cU", cat:"A3", dir:"U", num:'1c', notes:3, difficulty:"Technique", fingerings:['ind + ann + ind (shift)', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'], fretOffset:-1,
     name:"Triade 1-3-5", bpm:60, bpmTarget:120,
     tab:`e|--------------------5-7-9-|
 B|--------------5-7-9-------|
@@ -1179,7 +1179,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1cD", cat:"A3", dir:"D", num:'1c', notes:3, difficulty:"Intermédiaire", fingerings:['ind + ann + ind (shift)', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'], fretOffset:-1,
+    id:"A3P1cD", cat:"A3", dir:"D", num:'1c', notes:3, difficulty:"Technique", fingerings:['ind + ann + ind (shift)', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'], fretOffset:-1,
     name:"Triade 1-3-5", bpm:60, bpmTarget:120,
     tab:`e|--------------------9-7-5-|
 B|--------------9-7-5-------|
@@ -1199,7 +1199,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P1cM", cat:"A3", dir:"M", num:'1c', notes:3, difficulty:"Intermédiaire", fingerings:['ind + ann + ind (shift)', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'], fretOffset:-1,
+    id:"A3P1cM", cat:"A3", dir:"M", num:'1c', notes:3, difficulty:"Technique", fingerings:['ind + ann + ind (shift)', 'ind + maj (ext.) + aur', 'ind + ann + ann (glis.)', 'maj + aur + aur (glis.)'], fretOffset:-1,
     name:"Triade 1-3-5", bpm:60, bpmTarget:110,
     tab:`e|--------------------5-7-9-|
 B|--------------5-7-9-------|
@@ -1219,7 +1219,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P?aU", cat:"A3", dir:"U", num:'?a', notes:3, difficulty:"Intermédiaire", fingerings:['ind + ind + aur', 'ind + ind + ann (ext.)', 'maj + maj + aur', 'ind + ind (glis.) + maj'], fretOffset:-1,
+    id:"A3P?aU", cat:"A3", dir:"U", num:'?a', notes:3, difficulty:"Technique", fingerings:['ind + ind + aur', 'ind + ind + ann (ext.)', 'maj + maj + aur', 'ind + ind (glis.) + maj'], fretOffset:-1,
     name:"Double frappe + saut", bpm:60, bpmTarget:120,
     tab:`e|--------------------5-5-9-|
 B|--------------5-5-9-------|
@@ -1239,7 +1239,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P?aD", cat:"A3", dir:"D", num:'?a', notes:3, difficulty:"Intermédiaire", fingerings:['ind + ind + aur', 'ind + ind + ann (ext.)', 'maj + maj + aur', 'ind + ind (glis.) + maj'], fretOffset:-1,
+    id:"A3P?aD", cat:"A3", dir:"D", num:'?a', notes:3, difficulty:"Technique", fingerings:['ind + ind + aur', 'ind + ind + ann (ext.)', 'maj + maj + aur', 'ind + ind (glis.) + maj'], fretOffset:-1,
     name:"Double frappe + saut", bpm:60, bpmTarget:120,
     tab:`e|--------------------9-5-5-|
 B|--------------9-5-5-------|
@@ -1259,7 +1259,7 @@ E|--------------------------|
   },
 
   {
-    id:"A3P?aM", cat:"A3", dir:"M", num:'?a', notes:3, difficulty:"Intermédiaire", fingerings:['ind + ind + aur', 'ind + ind + ann (ext.)', 'maj + maj + aur', 'ind + ind (glis.) + maj'], fretOffset:-1,
+    id:"A3P?aM", cat:"A3", dir:"M", num:'?a', notes:3, difficulty:"Technique", fingerings:['ind + ind + aur', 'ind + ind + ann (ext.)', 'maj + maj + aur', 'ind + ind (glis.) + maj'], fretOffset:-1,
     name:"Double frappe + saut", bpm:55, bpmTarget:110,
     tab:`e|--------------------5-5-9-|
 B|--------------5-5-9-------|
@@ -1281,7 +1281,7 @@ E|--------------------------|
   // ── A2 — 2 NOTES ────────────────────────────────────────────────────────────
 
   {
-    id:"A2P1aU", cat:"A2", dir:"U", num:'1a', notes:2, difficulty:"Intermédiaire", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
+    id:"A2P1aU", cat:"A2", dir:"U", num:'1a', notes:2, difficulty:"Technique", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
     name:"Demi-ton", bpm:80, bpmTarget:160,
     tab:`e|--------------5-6-|
 B|----------5-6-----|
@@ -1301,7 +1301,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1aD", cat:"A2", dir:"D", num:'1a', notes:2, difficulty:"Intermédiaire", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
+    id:"A2P1aD", cat:"A2", dir:"D", num:'1a', notes:2, difficulty:"Technique", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
     name:"Demi-ton", bpm:80, bpmTarget:160,
     tab:`e|--------------6-5-|
 B|----------6-5-----|
@@ -1321,7 +1321,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1aM", cat:"A2", dir:"M", num:'1a', notes:2, difficulty:"Intermédiaire", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
+    id:"A2P1aM", cat:"A2", dir:"M", num:'1a', notes:2, difficulty:"Technique", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
     name:"Demi-ton", bpm:80, bpmTarget:147,
     tab:`e|--------------5-6-|
 B|----------5-6-----|
@@ -1341,7 +1341,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1bU", cat:"A2", dir:"U", num:'1b', notes:2, etape:3, etapeOrder:3, difficulty:"Intermédiaire", related:"A4P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A2P1bU", cat:"A2", dir:"U", num:'1b', notes:2, etape:3, etapeOrder:3, difficulty:"Technique", related:"A4P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Ton entier", bpm:80, bpmTarget:160,
     tab:`e|--------------5-7-|
 B|----------5-7-----|
@@ -1361,7 +1361,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1bD", cat:"A2", dir:"D", num:'1b', notes:2, etape:3, etapeOrder:3, difficulty:"Intermédiaire", related:"A4P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A2P1bD", cat:"A2", dir:"D", num:'1b', notes:2, etape:3, etapeOrder:3, difficulty:"Technique", related:"A4P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Ton entier", bpm:80, bpmTarget:160,
     tab:`e|--------------7-5-|
 B|----------7-5-----|
@@ -1381,7 +1381,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1bM", cat:"A2", dir:"M", num:'1b', notes:2, etape:3, etapeOrder:3, difficulty:"Intermédiaire", related:"A4P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
+    id:"A2P1bM", cat:"A2", dir:"M", num:'1b', notes:2, etape:3, etapeOrder:3, difficulty:"Technique", related:"A4P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
     name:"Ton entier", bpm:80, bpmTarget:147,
     tab:`e|--------------5-7-|
 B|----------5-7-----|
@@ -1401,7 +1401,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1cU", cat:"A2", dir:"U", num:'1c', notes:2, difficulty:"Intermédiaire", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ind + ind (glis.)'],
+    id:"A2P1cU", cat:"A2", dir:"U", num:'1c', notes:2, difficulty:"Technique", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ind + ind (glis.)'],
     name:"Tierce mineure", bpm:70, bpmTarget:140,
     tab:`e|--------------5-8-|
 B|----------5-8-----|
@@ -1421,7 +1421,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1cD", cat:"A2", dir:"D", num:'1c', notes:2, difficulty:"Intermédiaire", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ind + ind (glis.)'],
+    id:"A2P1cD", cat:"A2", dir:"D", num:'1c', notes:2, difficulty:"Technique", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ind + ind (glis.)'],
     name:"Tierce mineure", bpm:70, bpmTarget:140,
     tab:`e|--------------8-5-|
 B|----------8-5-----|
@@ -1441,7 +1441,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1cM", cat:"A2", dir:"M", num:'1c', notes:2, difficulty:"Intermédiaire", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ind + ind (glis.)'],
+    id:"A2P1cM", cat:"A2", dir:"M", num:'1c', notes:2, difficulty:"Technique", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ind + ind (glis.)'],
     name:"Tierce mineure", bpm:70, bpmTarget:128,
     tab:`e|--------------5-8-|
 B|----------5-8-----|
@@ -1461,7 +1461,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1dU", cat:"A2", dir:"U", num:'1d', notes:2, difficulty:"Intermédiaire", fingerings:['ind + aur (ext.)', 'ind + ann (surext.)', 'ind + ann (glis.)', 'ind + maj (glis.)'], fretOffset:-1,
+    id:"A2P1dU", cat:"A2", dir:"U", num:'1d', notes:2, difficulty:"Technique", fingerings:['ind + aur (ext.)', 'ind + ann (surext.)', 'ind + ann (glis.)', 'ind + maj (glis.)'], fretOffset:-1,
     name:"Tierce majeure", bpm:65, bpmTarget:130,
     tab:`e|--------------5-9-|
 B|----------5-9-----|
@@ -1481,7 +1481,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1dD", cat:"A2", dir:"D", num:'1d', notes:2, difficulty:"Intermédiaire", fingerings:['ind + aur (ext.)', 'ind + ann (surext.)', 'ind + ann (glis.)', 'ind + maj (glis.)'], fretOffset:-1,
+    id:"A2P1dD", cat:"A2", dir:"D", num:'1d', notes:2, difficulty:"Technique", fingerings:['ind + aur (ext.)', 'ind + ann (surext.)', 'ind + ann (glis.)', 'ind + maj (glis.)'], fretOffset:-1,
     name:"Tierce majeure", bpm:65, bpmTarget:130,
     tab:`e|--------------9-5-|
 B|----------9-5-----|
@@ -1501,7 +1501,7 @@ E|------------------|
   },
 
   {
-    id:"A2P1dM", cat:"A2", dir:"M", num:'1d', notes:2, difficulty:"Intermédiaire", fingerings:['ind + aur (ext.)', 'ind + ann (surext.)', 'ind + ann (glis.)', 'ind + maj (glis.)'], fretOffset:-1,
+    id:"A2P1dM", cat:"A2", dir:"M", num:'1d', notes:2, difficulty:"Technique", fingerings:['ind + aur (ext.)', 'ind + ann (surext.)', 'ind + ann (glis.)', 'ind + maj (glis.)'], fretOffset:-1,
     name:"Tierce majeure", bpm:60, bpmTarget:120,
     tab:`e|--------------5-9-|
 B|----------5-9-----|
@@ -1522,7 +1522,7 @@ E|------------------|
 
   // ── A6 — 6 NOTES (triade doublée) ──────────────────────────────────────────
   {
-    id:"A6P1aU", cat:"A6", dir:"U", num:'1a', notes:6, etape:1, etapeOrder:2, difficulty:"Débutant", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + maj + maj (glis.)', 'ind + ind (glis.) + maj'],
+    id:"A6P1aU", cat:"A6", dir:"U", num:'1a', notes:6, etape:1, etapeOrder:2, difficulty:"Basique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + maj + maj (glis.)', 'ind + ind (glis.) + maj'],
     name:"Triade doublée 1-2-4", bpm:65, bpmTarget:130,
     tab:`e|--------------------------------------5-6-8-5-6-8-|
 B|--------------------------5-6-8-5-6-8-------------|
@@ -1541,7 +1541,7 @@ E|--------------------------------------------------|
     tip:"La répétition de la cellule doit sonner identique les deux fois. Aucune différence d\'attaque entre la 1ère et la 2ème passe.",
   },
   {
-    id:"A6P1aD", cat:"A6", dir:"D", num:'1a', notes:6, etape:1, etapeOrder:2, difficulty:"Débutant", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + maj + maj (glis.)', 'ind + ind (glis.) + maj'],
+    id:"A6P1aD", cat:"A6", dir:"D", num:'1a', notes:6, etape:1, etapeOrder:2, difficulty:"Basique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + maj + maj (glis.)', 'ind + ind (glis.) + maj'],
     name:"Triade doublée 1-2-4", bpm:65, bpmTarget:130,
     tab:`e|--------------------------------------8-6-5-8-6-5-|
 B|--------------------------8-6-5-8-6-5-------------|
@@ -1560,7 +1560,7 @@ E|--------------------------------------------------|
     tip:"Garde le même poids de médiator sur chaque note. La répétition met en évidence les irrégularités — c\'est son rôle.",
   },
   {
-    id:"A6P1aM", cat:"A6", dir:"M", num:'1a', notes:6, etape:1, etapeOrder:2, difficulty:"Débutant", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + maj + maj (glis.)', 'ind + ind (glis.) + maj'],
+    id:"A6P1aM", cat:"A6", dir:"M", num:'1a', notes:6, etape:1, etapeOrder:2, difficulty:"Basique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + maj + maj (glis.)', 'ind + ind (glis.) + maj'],
     name:"Triade doublée 1-2-4", bpm:60, bpmTarget:120,
     tab:`e|--------------------------------------5-6-8-5-6-8-|
 B|--------------------------5-6-8-5-6-8-------------|
@@ -1579,7 +1579,7 @@ E|--------------------------------------------------|
     tip:"Travaille U et D séparément d\'abord. Le changement de sens au sommet doit rester fluide malgré la cellule plus longue.",
   },
   {
-    id:"A6P1bU", cat:"A6", dir:"U", num:'1b', notes:6, etape:2, etapeOrder:2, difficulty:"Débutant", fingerings:['ind + ann + aur', 'ind + maj (ext.) + ann', 'ind + ann + ann (glis.)', 'ind + ind (glis.) + ann'],
+    id:"A6P1bU", cat:"A6", dir:"U", num:'1b', notes:6, etape:2, etapeOrder:2, difficulty:"Basique", fingerings:['ind + ann + aur', 'ind + maj (ext.) + ann', 'ind + ann + ann (glis.)', 'ind + ind (glis.) + ann'],
     name:"Triade doublée 1-3-4", bpm:65, bpmTarget:130,
     tab:`e|--------------------------------------5-7-8-5-7-8-|
 B|--------------------------5-7-8-5-7-8-------------|
@@ -1598,7 +1598,7 @@ E|--------------------------------------------------|
     tip:"L\'index doit rester ancré pendant le saut initial. La répétition révèle si l\'extension est maîtrisée ou forcée.",
   },
   {
-    id:"A6P1bD", cat:"A6", dir:"D", num:'1b', notes:6, etape:2, etapeOrder:2, difficulty:"Débutant", fingerings:['ind + ann + aur', 'ind + maj (ext.) + ann', 'ind + ann + ann (glis.)', 'ind + ind (glis.) + ann'],
+    id:"A6P1bD", cat:"A6", dir:"D", num:'1b', notes:6, etape:2, etapeOrder:2, difficulty:"Basique", fingerings:['ind + ann + aur', 'ind + maj (ext.) + ann', 'ind + ann + ann (glis.)', 'ind + ind (glis.) + ann'],
     name:"Triade doublée 1-3-4", bpm:65, bpmTarget:130,
     tab:`e|--------------------------------------8-7-5-8-7-5-|
 B|--------------------------8-7-5-8-7-5-------------|
@@ -1617,7 +1617,7 @@ E|--------------------------------------------------|
     tip:"Le saut 4→3 en début de cellule est l\'écueil principal en descente. Répété deux fois, il doit devenir automatique.",
   },
   {
-    id:"A6P1bM", cat:"A6", dir:"M", num:'1b', notes:6, etape:2, etapeOrder:2, difficulty:"Débutant", fingerings:['ind + ann + aur', 'ind + maj (ext.) + ann', 'ind + ann + ann (glis.)', 'ind + ind (glis.) + ann'],
+    id:"A6P1bM", cat:"A6", dir:"M", num:'1b', notes:6, etape:2, etapeOrder:2, difficulty:"Basique", fingerings:['ind + ann + aur', 'ind + maj (ext.) + ann', 'ind + ann + ann (glis.)', 'ind + ind (glis.) + ann'],
     name:"Triade doublée 1-3-4", bpm:60, bpmTarget:120,
     tab:`e|--------------------------------------5-7-8-5-7-8-|
 B|--------------------------5-7-8-5-7-8-------------|
@@ -1636,7 +1636,7 @@ E|--------------------------------------------------|
     tip:"La combinaison montée/descente avec cellule de 6 notes demande une concentration soutenue. Reste détendu.",
   },
   {
-    id:"A6P1cU", cat:"A6", dir:"U", num:'1c', notes:6, etape:3, etapeOrder:2, difficulty:"Intermédiaire", fingerings:['ind (ext.) + maj + aur', 'ind (ext.) + ann + aur', 'ind (ext.) + maj + ann (ext.)', 'ind (ext.) + ann + ann (glis.)'], fretOffset:-1,
+    id:"A6P1cU", cat:"A6", dir:"U", num:'1c', notes:6, etape:3, etapeOrder:2, difficulty:"Technique", fingerings:['ind (ext.) + maj + aur', 'ind (ext.) + ann + aur', 'ind (ext.) + maj + ann (ext.)', 'ind (ext.) + ann + ann (glis.)'], fretOffset:-1,
     name:"Triade doublée 1-3-5", bpm:55, bpmTarget:110,
     tab:`e|--------------------------------------5-7-9-5-7-9-|
 B|--------------------------5-7-9-5-7-9-------------|
@@ -1655,7 +1655,7 @@ E|--------------------------------------------------|
     tip:"Legato ↑ à chaque changement de corde. L'index en extension doit rester ancré et stable pendant toute la montée. Commence très lentement.",
   },
   {
-    id:"A6P1cD", cat:"A6", dir:"D", num:'1c', notes:6, etape:3, etapeOrder:2, difficulty:"Intermédiaire", fingerings:['ind (ext.) + maj + aur', 'ind (ext.) + ann + aur', 'ind (ext.) + maj + ann (ext.)', 'ind (ext.) + ann + ann (glis.)'], fretOffset:-1,
+    id:"A6P1cD", cat:"A6", dir:"D", num:'1c', notes:6, etape:3, etapeOrder:2, difficulty:"Technique", fingerings:['ind (ext.) + maj + aur', 'ind (ext.) + ann + aur', 'ind (ext.) + maj + ann (ext.)', 'ind (ext.) + ann + ann (glis.)'], fretOffset:-1,
     name:"Triade doublée 1-3-5", bpm:55, bpmTarget:110,
     tab:`e|--------------------------------------9-7-5-9-7-5-|
 B|--------------------------9-7-5-9-7-5-------------|
@@ -1674,7 +1674,7 @@ E|--------------------------------------------------|
     tip:"Legato ↑ à chaque changement de corde. Travaille la descente séparément avant de combiner avec la montée.",
   },
   {
-    id:"A6P1cM", cat:"A6", dir:"M", num:'1c', notes:6, etape:3, etapeOrder:2, difficulty:"Intermédiaire", fingerings:['ind (ext.) + maj + aur', 'ind (ext.) + ann + aur', 'ind (ext.) + maj + ann (ext.)', 'ind (ext.) + ann + ann (glis.)'], fretOffset:-1,
+    id:"A6P1cM", cat:"A6", dir:"M", num:'1c', notes:6, etape:3, etapeOrder:2, difficulty:"Technique", fingerings:['ind (ext.) + maj + aur', 'ind (ext.) + ann + aur', 'ind (ext.) + maj + ann (ext.)', 'ind (ext.) + ann + ann (glis.)'], fretOffset:-1,
     name:"Triade doublée 1-3-5", bpm:50, bpmTarget:100,
     tab:`e|--------------------------------------5-7-9-5-7-9-|
 B|--------------------------5-7-9-5-7-9-------------|
@@ -1694,7 +1694,7 @@ E|--------------------------------------------------|
   },
 
   {
-    id:"A6P2aU", cat:"A6", dir:"U", num:'2a', notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + ann + aur + ann + maj'],
+    id:"A6P2aU", cat:"A6", dir:"U", num:'2a', notes:6, difficulty:"Technique", fingerings:['ind + maj + ann + aur + ann + maj'],
     name:"Chromatique 1-2-3-4-3-2", bpm:60, bpmTarget:0,
     tab:`e|--------------------------------------5-6-7-8-7-6-|
 B|--------------------------5-6-7-8-7-6-------------|
@@ -1714,7 +1714,7 @@ E|--------------------------------------------------|
   },
 
   {
-    id:"A6P2aD", cat:"A6", dir:"D", num:'2a', notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + ann + aur + ann + maj'],
+    id:"A6P2aD", cat:"A6", dir:"D", num:'2a', notes:6, difficulty:"Technique", fingerings:['ind + maj + ann + aur + ann + maj'],
     name:"Chromatique 1-2-3-4-3-2", bpm:60, bpmTarget:0,
     tab:`e|--------------------------------------8-7-6-5-6-7-|
 B|--------------------------8-7-6-5-6-7-------------|
@@ -1734,7 +1734,7 @@ E|--------------------------------------------------|
   },
 
   {
-    id:"A6P2aM", cat:"A6", dir:"M", num:'2a', notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + ann + aur + ann + maj'],
+    id:"A6P2aM", cat:"A6", dir:"M", num:'2a', notes:6, difficulty:"Technique", fingerings:['ind + maj + ann + aur + ann + maj'],
     name:"Chromatique 1-2-3-4-3-2", bpm:60, bpmTarget:0,
     tab:`e|--------------------------------------5-6-7-8-7-6-|
 B|--------------------------5-6-7-8-7-6-------------|
@@ -1754,7 +1754,7 @@ E|--------------------------------------------------|
   },
 
   {
-    id:"A6P3bU", cat:"A6", dir:"U", num:'3b', notes:6, difficulty:"Débutant", fingerings:['vide + ind + ann + vide + ind + ann'],
+    id:"A6P3bU", cat:"A6", dir:"U", num:'3b', notes:6, difficulty:"Basique", fingerings:['vide + ind + ann + vide + ind + ann'],
     name:"Groupe 0-5-7", bpm:70, bpmTarget:0,
     tab:`e|--------------------------------------0-5-7-0-5-7-|
 B|--------------------------0-5-7-0-5-7-------------|
@@ -1774,7 +1774,7 @@ E|--------------------------------------------------|
   },
 
   {
-    id:"A6P3bD", cat:"A6", dir:"D", num:'3b', notes:6, difficulty:"Débutant", fingerings:['vide + ind + ann + vide + ind + ann'],
+    id:"A6P3bD", cat:"A6", dir:"D", num:'3b', notes:6, difficulty:"Basique", fingerings:['vide + ind + ann + vide + ind + ann'],
     name:"Groupe 0-5-7", bpm:70, bpmTarget:0,
     tab:`e|--------------------------------------0-7-5-0-7-5-|
 B|--------------------------0-7-5-0-7-5-------------|
@@ -1794,7 +1794,7 @@ E|--------------------------------------------------|
   },
 
   {
-    id:"A6P3bM", cat:"A6", dir:"M", num:'3b', notes:6, difficulty:"Débutant", fingerings:['vide + ind + ann + vide + ind + ann'],
+    id:"A6P3bM", cat:"A6", dir:"M", num:'3b', notes:6, difficulty:"Basique", fingerings:['vide + ind + ann + vide + ind + ann'],
     name:"Groupe 0-5-7", bpm:70, bpmTarget:0,
     tab:`e|--------------------------------------0-5-7-0-5-7-|
 B|--------------------------0-5-7-0-5-7-------------|
@@ -1816,7 +1816,7 @@ E|--------------------------------------------------|
   // ── A5 — 5 NOTES ────────────────────────────────────────────────────────────
 
   {
-    id:"A5P1aU", cat:"A5", dir:"U", num:'1a', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P1aU", cat:"A5", dir:"U", num:'1a', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-2-4-2-4)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------5-6-8-6-8-|
 B|----------------------5-6-8-6-8-----------|
@@ -1836,7 +1836,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1aD", cat:"A5", dir:"D", num:'1a', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P1aD", cat:"A5", dir:"D", num:'1a', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-2-4-2-1)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------8-6-5-6-5-|
 B|----------------------8-6-5-6-5-----------|
@@ -1856,7 +1856,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1aM", cat:"A5", dir:"M", num:'1a', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P1aM", cat:"A5", dir:"M", num:'1a', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-2-4-2-4)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------5-6-8-6-8-|
 B|----------------------5-6-8-6-8-----------|
@@ -1876,7 +1876,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1bU", cat:"A5", dir:"U", num:'1b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P1bU", cat:"A5", dir:"U", num:'1b', notes:5, difficulty:"Technique", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-3-4-3-4)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------5-7-8-7-8-|
 B|----------------------5-7-8-7-8-----------|
@@ -1896,7 +1896,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1bD", cat:"A5", dir:"D", num:'1b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P1bD", cat:"A5", dir:"D", num:'1b', notes:5, difficulty:"Technique", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-3-4-3-4)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------8-7-5-7-5-|
 B|----------------------8-7-5-7-5-----------|
@@ -1916,7 +1916,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1bM", cat:"A5", dir:"M", num:'1b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P1bM", cat:"A5", dir:"M", num:'1b', notes:5, difficulty:"Technique", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-3-4-3-4)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------5-7-8-7-8-|
 B|----------------------5-7-8-7-8-----------|
@@ -1936,7 +1936,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1cU", cat:"A5", dir:"U", num:'1c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P1cU", cat:"A5", dir:"U", num:'1c', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-3-5-3-5)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------4-6-8-6-8-|
 B|----------------------4-6-8-6-8-----------|
@@ -1956,7 +1956,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1cD", cat:"A5", dir:"D", num:'1c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P1cD", cat:"A5", dir:"D", num:'1c', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-3-5-3-5)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------8-6-4-6-4-|
 B|----------------------8-6-4-6-4-----------|
@@ -1976,7 +1976,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1cM", cat:"A5", dir:"M", num:'1c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P1cM", cat:"A5", dir:"M", num:'1c', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-3-5-3-5)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------4-6-8-6-8-|
 B|----------------------4-6-8-6-8-----------|
@@ -1996,7 +1996,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1dU", cat:"A5", dir:"U", num:'1d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P1dU", cat:"A5", dir:"U", num:'1d', notes:5, difficulty:"Complexe", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-4-5-4-5)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------4-7-8-7-8-|
 B|----------------------4-7-8-7-8-----------|
@@ -2016,7 +2016,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1dD", cat:"A5", dir:"D", num:'1d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P1dD", cat:"A5", dir:"D", num:'1d', notes:5, difficulty:"Complexe", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-4-5-4-5)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------8-7-4-7-4-|
 B|----------------------8-7-4-7-4-----------|
@@ -2036,7 +2036,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1dM", cat:"A5", dir:"M", num:'1d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P1dM", cat:"A5", dir:"M", num:'1d', notes:5, difficulty:"Complexe", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-4-5-4-5)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------4-7-8-7-8-|
 B|----------------------4-7-8-7-8-----------|
@@ -2056,7 +2056,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1eU", cat:"A5", dir:"U", num:'1e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    id:"A5P1eU", cat:"A5", dir:"U", num:'1e', notes:5, difficulty:"Basique", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-2-3-2-3)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------5-6-7-6-7-|
 B|----------------------5-6-7-6-7-----------|
@@ -2076,7 +2076,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1eD", cat:"A5", dir:"D", num:'1e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    id:"A5P1eD", cat:"A5", dir:"D", num:'1e', notes:5, difficulty:"Basique", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-4-5-4-5)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------7-6-5-6-5-|
 B|----------------------7-6-5-6-5-----------|
@@ -2096,7 +2096,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P1eM", cat:"A5", dir:"M", num:'1e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    id:"A5P1eM", cat:"A5", dir:"M", num:'1e', notes:5, difficulty:"Basique", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-2-3-2-3)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------5-6-7-6-7-|
 B|----------------------5-6-7-6-7-----------|
@@ -2118,7 +2118,7 @@ E|------------------------------------------|
   // ── A5P2 — GROUPE DE 5 (MOTIF ALLER-RETOUR) ──────────────────────────────
 
   {
-    id:"A5P2aU", cat:"A5", dir:"U", num:'2a', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P2aU", cat:"A5", dir:"U", num:'2a', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-2-4-2-1)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------5-6-8-6-5-|
 B|----------------------5-6-8-6-5-----------|
@@ -2138,7 +2138,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2aD", cat:"A5", dir:"D", num:'2a', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P2aD", cat:"A5", dir:"D", num:'2a', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-2-4-2-1)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------8-6-5-6-8-|
 B|----------------------8-6-5-6-8-----------|
@@ -2158,7 +2158,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2aM", cat:"A5", dir:"M", num:'2a', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P2aM", cat:"A5", dir:"M", num:'2a', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-2-4-2-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------5-6-8-6-5-|
 B|----------------------5-6-8-6-5-----------|
@@ -2178,7 +2178,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2bU", cat:"A5", dir:"U", num:'2b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P2bU", cat:"A5", dir:"U", num:'2b', notes:5, difficulty:"Technique", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-3-4-3-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------5-7-8-7-5-|
 B|----------------------5-7-8-7-5-----------|
@@ -2198,7 +2198,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2bD", cat:"A5", dir:"D", num:'2b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P2bD", cat:"A5", dir:"D", num:'2b', notes:5, difficulty:"Technique", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-3-4-3-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------8-7-5-7-8-|
 B|----------------------8-7-5-7-8-----------|
@@ -2218,7 +2218,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2bM", cat:"A5", dir:"M", num:'2b', notes:5, difficulty:"Intermédiaire", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P2bM", cat:"A5", dir:"M", num:'2b', notes:5, difficulty:"Technique", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-3-4-3-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------5-7-8-7-5-|
 B|----------------------5-7-8-7-5-----------|
@@ -2238,7 +2238,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2cU", cat:"A5", dir:"U", num:'2c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P2cU", cat:"A5", dir:"U", num:'2c', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-3-5-3-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------4-6-8-6-4-|
 B|----------------------4-6-8-6-4-----------|
@@ -2258,7 +2258,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2cD", cat:"A5", dir:"D", num:'2c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P2cD", cat:"A5", dir:"D", num:'2c', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-3-5-3-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------8-6-4-6-8-|
 B|----------------------8-6-4-6-8-----------|
@@ -2278,7 +2278,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2cM", cat:"A5", dir:"M", num:'2c', notes:5, difficulty:"Intermédiaire", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
+    id:"A5P2cM", cat:"A5", dir:"M", num:'2c', notes:5, difficulty:"Technique", fingerings:['ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann', 'ind + maj + maj (glis.) + maj + maj (glis.)', 'ind + ind (glis.) + maj + ind (glis.) + maj'],
     name:"Groupe de 5 (1-3-5-3-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------4-6-8-6-4-|
 B|----------------------4-6-8-6-4-----------|
@@ -2298,7 +2298,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2dU", cat:"A5", dir:"U", num:'2d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P2dU", cat:"A5", dir:"U", num:'2d', notes:5, difficulty:"Complexe", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-4-5-4-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------4-7-8-7-4-|
 B|----------------------4-7-8-7-4-----------|
@@ -2318,7 +2318,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2dD", cat:"A5", dir:"D", num:'2d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P2dD", cat:"A5", dir:"D", num:'2d', notes:5, difficulty:"Complexe", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-4-5-4-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------8-7-4-7-8-|
 B|----------------------8-7-4-7-8-----------|
@@ -2338,7 +2338,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2dM", cat:"A5", dir:"M", num:'2d', notes:5, difficulty:"Avancé", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
+    id:"A5P2dM", cat:"A5", dir:"M", num:'2d', notes:5, difficulty:"Complexe", fingerings:['ind + ann + aur + ann + aur', 'ind + ann + maj + ann + maj', 'ind + maj + aur + maj + aur', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-4-5-4-1)", bpm:50, bpmTarget:90,
     tab:`e|--------------------------------4-7-8-7-4-|
 B|----------------------4-7-8-7-4-----------|
@@ -2358,7 +2358,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2eU", cat:"A5", dir:"U", num:'2e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    id:"A5P2eU", cat:"A5", dir:"U", num:'2e', notes:5, difficulty:"Basique", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-2-3-2-1)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------5-6-7-6-5-|
 B|----------------------5-6-7-6-5-----------|
@@ -2378,7 +2378,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2eD", cat:"A5", dir:"D", num:'2e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    id:"A5P2eD", cat:"A5", dir:"D", num:'2e', notes:5, difficulty:"Basique", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-2-3-2-1)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------7-6-5-6-7-|
 B|----------------------7-6-5-6-7-----------|
@@ -2398,7 +2398,7 @@ E|------------------------------------------|
   },
 
   {
-    id:"A5P2eM", cat:"A5", dir:"M", num:'2e', notes:5, difficulty:"Débutant", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
+    id:"A5P2eM", cat:"A5", dir:"M", num:'2e', notes:5, difficulty:"Basique", fingerings:['ind + ann + maj + ann + maj', 'ind + ann + maj + maj + ann', 'ind + maj + maj + maj + maj', 'ind + maj + ann + maj + ann'],
     name:"Groupe de 5 (1-2-3-2-1)", bpm:55, bpmTarget:100,
     tab:`e|--------------------------------5-6-7-6-5-|
 B|----------------------5-6-7-6-5-----------|
@@ -2420,7 +2420,7 @@ E|------------------------------------------|
   // ── B6 — MULTI-CORDES ───────────────────────────────────────────────────────
 
   {
-    id:"B6P1aU", cat:"B6", dir:"U", num:"1a", notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"B6P1aU", cat:"B6", dir:"U", num:"1a", notes:6, difficulty:"Technique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Run de gamme 1-2-4", bpm:60, bpmTarget:110,
     tabMid:`e|----------------------------------------------5----------|
 B|----------------------------5--------5--6--8-----8--6----|
@@ -2453,7 +2453,7 @@ E|----------------------------------------------------------|
   },
 
   {
-    id:"B6P1aD", cat:"B6", dir:"D", num:"1a", notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"B6P1aD", cat:"B6", dir:"D", num:"1a", notes:6, difficulty:"Technique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Run de gamme 1-2-4", bpm:60, bpmTarget:110,
     tabMid:`e|-------------------------------------5-------------------|
 B|-------------------5-------------------8--6--5--6--8-----|
@@ -2486,7 +2486,7 @@ E|----------------------------------------------------------|
   },
 
   {
-    id:"B6P1aM", cat:"B6", dir:"M", num:"1a", notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"B6P1aM", cat:"B6", dir:"M", num:"1a", notes:6, difficulty:"Technique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Run de gamme 1-2-4", bpm:60, bpmTarget:100,
     tabMid:`e|----------------------------------------------5----------|
 B|----------------------------5--------5--6--8-----8--6----|
@@ -2519,7 +2519,7 @@ E|----------------------------------------------------------|
   },
 
   {
-    id:"B6P1bU", cat:"B6", dir:"U", num:"1b", notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"B6P1bU", cat:"B6", dir:"U", num:"1b", notes:6, difficulty:"Technique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Run de gamme 1-3-4", bpm:60, bpmTarget:110,
     tabMid:`e|-----------------------------------------------5----------|
 B|-----------------------------5--------5--7--8-----8--7----|
@@ -2552,7 +2552,7 @@ E|----------------------------------------------------------|
   },
 
   {
-    id:"B6P1bD", cat:"B6", dir:"D", num:"1b", notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"B6P1bD", cat:"B6", dir:"D", num:"1b", notes:6, difficulty:"Technique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Run de gamme 1-3-4", bpm:60, bpmTarget:110,
     tabMid:`e|--------------------------------------5-------------------|
 B|--------------------5-------------------8--7--5--7--8-----|
@@ -2585,7 +2585,7 @@ E|----------------------------------------------------------|
   },
 
   {
-    id:"B6P1bM", cat:"B6", dir:"M", num:"1b", notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"B6P1bM", cat:"B6", dir:"M", num:"1b", notes:6, difficulty:"Technique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Run de gamme 1-3-4", bpm:60, bpmTarget:100,
     tabMid:`e|-----------------------------------------------5----------|
 B|-----------------------------5--------5--7--8-----8--7----|
@@ -2618,7 +2618,7 @@ E|----------------------------------------------------------|
   },
 
   {
-    id:"B6P1cU", cat:"B6", dir:"U", num:"1c", notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"B6P1cU", cat:"B6", dir:"U", num:"1c", notes:6, difficulty:"Technique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Run de gamme 1-3-5", bpm:60, bpmTarget:110,
     tabMid:`e|-----------------------------------------------4----------|
 B|-----------------------------4--------4--6--8-----8--6----|
@@ -2651,7 +2651,7 @@ E|----------------------------------------------------------|
   },
 
   {
-    id:"B6P1cD", cat:"B6", dir:"D", num:"1c", notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"B6P1cD", cat:"B6", dir:"D", num:"1c", notes:6, difficulty:"Technique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Run de gamme 1-3-5", bpm:60, bpmTarget:110,
     tabMid:`e|--------------------------------------4-------------------|
 B|--------------------4--------------------8--6--4--6--8-----|
@@ -2684,7 +2684,7 @@ E|----------------------------------------------------------|
   },
 
   {
-    id:"B6P1cM", cat:"B6", dir:"M", num:"1c", notes:6, difficulty:"Intermédiaire", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
+    id:"B6P1cM", cat:"B6", dir:"M", num:"1c", notes:6, difficulty:"Technique", fingerings:['ind + maj + aur', 'ind + maj + ann', 'ind + ann + aur', 'maj + ann + aur'],
     name:"Run de gamme 1-3-5", bpm:60, bpmTarget:100,
     tabMid:`e|-----------------------------------------------4----------|
 B|-----------------------------4--------4--6--8-----8--6----|
@@ -2719,7 +2719,7 @@ E|----------------------------------------------------------|
   // ── B8 — 2 CORDES × 8 NOTES ─────────────────────────────────────────────────
 
   {
-    id:"B8P2aU", cat:"B8", dir:"U", num:'2a', notes:8, difficulty:"Intermédiaire", fingerings:['ind + maj (inf.) + ind (sup.)', 'maj + ann (inf.) + maj (sup.)'],
+    id:"B8P2aU", cat:"B8", dir:"U", num:'2a', notes:8, difficulty:"Technique", fingerings:['ind + maj (inf.) + ind (sup.)', 'maj + ann (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — montée corde inf. (ind+maj)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------------5-----5--6--5-------|
 B|--------------------------------5-----5--6--5-----5--6-----6-----------6----|
@@ -2752,7 +2752,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2aD", cat:"B8", dir:"D", num:'2a', notes:8, difficulty:"Intermédiaire", fingerings:['ind + maj (sup.) + ind (inf.)', 'maj + ann (sup.) + maj (inf.)'],
+    id:"B8P2aD", cat:"B8", dir:"D", num:'2a', notes:8, difficulty:"Technique", fingerings:['ind + maj (sup.) + ind (inf.)', 'maj + ann (sup.) + maj (inf.)'],
     name:"Alternance 2 cordes — montée corde sup. (ind+maj)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------5--6--5-----5-------------|
 B|--------------------------5--6--5-----5--------------------6-----6--5--6----|
@@ -2785,7 +2785,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2aM", cat:"B8", dir:"M", num:'2a', notes:8, difficulty:"Intermédiaire", fingerings:['ind + maj (inf.) + ind (sup.)', 'maj + ann (inf.) + maj (sup.)'],
+    id:"B8P2aM", cat:"B8", dir:"M", num:'2a', notes:8, difficulty:"Technique", fingerings:['ind + maj (inf.) + ind (sup.)', 'maj + ann (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — montée inf. / retour sup. (ind+maj)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------------5-----5--6--5-------|
 B|--------------------------------5-----5--6--5-----5--6-----6-----------6----|
@@ -2818,7 +2818,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2bU", cat:"B8", dir:"U", num:'2b', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)', 'ind + ann (inf.) + ind (sup.)'],
+    id:"B8P2bU", cat:"B8", dir:"U", num:'2b', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)', 'ind + ann (inf.) + ind (sup.)'],
     name:"Alternance 2 cordes — montée corde inf.", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------------5-----5--7--5-------|
 B|--------------------------------5-----5--7--5-----5--7-----7-----------7----|
@@ -2851,7 +2851,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2bD", cat:"B8", dir:"D", num:'2b', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)', 'ind + ann (sup.) + ind (inf.)'],
+    id:"B8P2bD", cat:"B8", dir:"D", num:'2b', notes:8, difficulty:"Technique", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)', 'ind + ann (sup.) + ind (inf.)'],
     name:"Alternance 2 cordes — montée corde sup.", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------5--7--5-----5-------------|
 B|--------------------------5--7--5-----5--------------------7-----7--5--7----|
@@ -2884,7 +2884,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2bM", cat:"B8", dir:"M", num:'2b', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)', 'ind + ann (inf.) + ind (sup.)'],
+    id:"B8P2bM", cat:"B8", dir:"M", num:'2b', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)', 'ind + ann (inf.) + ind (sup.)'],
     name:"Alternance 2 cordes — montée inf. / retour sup.", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------------5-----5--7--5-------|
 B|--------------------------------5-----5--7--5-----5--7-----7-----------7----|
@@ -2917,7 +2917,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2cU", cat:"B8", dir:"U", num:'2c', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
+    id:"B8P2cU", cat:"B8", dir:"U", num:'2c', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — montée corde inf. (ind+aur)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------------5-----5--8--5-------|
 B|--------------------------------5-----5--8--5-----5--8-----8-----------8----|
@@ -2950,7 +2950,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2cD", cat:"B8", dir:"D", num:'2c', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)'],
+    id:"B8P2cD", cat:"B8", dir:"D", num:'2c', notes:8, difficulty:"Technique", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)'],
     name:"Alternance 2 cordes — montée corde sup. (ind+aur)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------5--8--5-----5-------------|
 B|--------------------------5--8--5-----5--------------------8-----8--5--8----|
@@ -2983,7 +2983,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2cM", cat:"B8", dir:"M", num:'2c', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
+    id:"B8P2cM", cat:"B8", dir:"M", num:'2c', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — montée inf. / retour sup. (ind+aur)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------------5-----5--8--5-------|
 B|--------------------------------5-----5--8--5-----5--8-----8-----------8----|
@@ -3016,7 +3016,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2dU", cat:"B8", dir:"U", num:'2d', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
+    id:"B8P2dU", cat:"B8", dir:"U", num:'2d', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — montée corde inf. (ind+aur, ext. index)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------------4-----4--8--4-------|
 B|--------------------------------4-----4--8--4-----4--8-----8-----------8----|
@@ -3049,7 +3049,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2dD", cat:"B8", dir:"D", num:'2d', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)'],
+    id:"B8P2dD", cat:"B8", dir:"D", num:'2d', notes:8, difficulty:"Technique", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)'],
     name:"Alternance 2 cordes — montée corde sup. (ind+aur, ext. index)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------4--8--4-----4-------------|
 B|--------------------------4--8--4-----4--------------------8-----8--4--8----|
@@ -3082,7 +3082,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P2dM", cat:"B8", dir:"M", num:'2d', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
+    id:"B8P2dM", cat:"B8", dir:"M", num:'2d', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — montée inf. / retour sup. (ind+aur, ext. index)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------------------------------4-----4--8--4-------|
 B|--------------------------------4-----4--8--4-----4--8-----8-----------8----|
@@ -3115,7 +3115,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1aU", cat:"B8", dir:"U", num:'1a', notes:8, difficulty:"Intermédiaire", fingerings:['ind + maj (inf.) + ind (sup.)', 'maj + ann (inf.) + maj (sup.)'],
+    id:"B8P1aU", cat:"B8", dir:"U", num:'1a', notes:8, difficulty:"Technique", fingerings:['ind + maj (inf.) + ind (sup.)', 'maj + ann (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — corde inf. en tête (ind+maj)", bpm:55, bpmTarget:120,
     tabMid:`e|------------------------------------5-------5---|
 B|--------------------5-------5---5-6---6-5-6---6-|
@@ -3148,7 +3148,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1aD", cat:"B8", dir:"D", num:'1a', notes:8, difficulty:"Intermédiaire", fingerings:['ind + maj (sup.) + ind (inf.)', 'maj + ann (sup.) + maj (inf.)'],
+    id:"B8P1aD", cat:"B8", dir:"D", num:'1a', notes:8, difficulty:"Technique", fingerings:['ind + maj (sup.) + ind (inf.)', 'maj + ann (sup.) + maj (inf.)'],
     name:"Alternance 2 cordes — corde sup. en tête (ind+maj)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------5-------5-------|
 B|----------------5-------5---------6-5-6---6-5-6-|
@@ -3181,7 +3181,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1aM", cat:"B8", dir:"M", num:'1a', notes:8, difficulty:"Intermédiaire", fingerings:['ind + maj (inf.) + ind (sup.)', 'maj + ann (inf.) + maj (sup.)'],
+    id:"B8P1aM", cat:"B8", dir:"M", num:'1a', notes:8, difficulty:"Technique", fingerings:['ind + maj (inf.) + ind (sup.)', 'maj + ann (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — montée inf. / retour sup. (ind+maj)", bpm:55, bpmTarget:120,
     tabMid:`e|------------------------------------5-------5---|
 B|--------------------5-------5---5-6---6-5-6---6-|
@@ -3214,7 +3214,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1bU", cat:"B8", dir:"U", num:'1b', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)', 'ind + ann (inf.) + ind (sup.)'],
+    id:"B8P1bU", cat:"B8", dir:"U", num:'1b', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)', 'ind + ann (inf.) + ind (sup.)'],
     name:"Alternance 2 cordes — corde inf. en tête", bpm:55, bpmTarget:120,
     tabMid:`e|------------------------------------5-------5---|
 B|--------------------5-------5---5-7---7-5-7---7-|
@@ -3247,7 +3247,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1bD", cat:"B8", dir:"D", num:'1b', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)', 'ind + ann (sup.) + ind (inf.)'],
+    id:"B8P1bD", cat:"B8", dir:"D", num:'1b', notes:8, difficulty:"Technique", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)', 'ind + ann (sup.) + ind (inf.)'],
     name:"Alternance 2 cordes — corde sup. en tête", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------5-------5-------|
 B|----------------5-------5---------7-5-7---7-5-7-|
@@ -3280,7 +3280,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1bM", cat:"B8", dir:"M", num:'1b', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)', 'ind + ann (inf.) + ind (sup.)'],
+    id:"B8P1bM", cat:"B8", dir:"M", num:'1b', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)', 'ind + ann (inf.) + ind (sup.)'],
     name:"Alternance 2 cordes — montée inf. / retour sup.", bpm:55, bpmTarget:120,
     tabMid:`e|------------------------------------5-------5---|
 B|--------------------5-------5---5-7---7-5-7---7-|
@@ -3313,7 +3313,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1cU", cat:"B8", dir:"U", num:'1c', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
+    id:"B8P1cU", cat:"B8", dir:"U", num:'1c', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — corde inf. en tête (ind+aur)", bpm:55, bpmTarget:120,
     tabMid:`e|------------------------------------5-------5---|
 B|--------------------5-------5---5-8---8-5-8---8-|
@@ -3346,7 +3346,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1cD", cat:"B8", dir:"D", num:'1c', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)'],
+    id:"B8P1cD", cat:"B8", dir:"D", num:'1c', notes:8, difficulty:"Technique", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)'],
     name:"Alternance 2 cordes — corde sup. en tête (ind+aur)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------5-------5-------|
 B|----------------5-------5---------8-5-8---8-5-8-|
@@ -3379,7 +3379,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1cM", cat:"B8", dir:"M", num:'1c', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
+    id:"B8P1cM", cat:"B8", dir:"M", num:'1c', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — montée inf. / retour sup. (ind+aur)", bpm:55, bpmTarget:120,
     tabMid:`e|------------------------------------5-------5---|
 B|--------------------5-------5---5-8---8-5-8---8-|
@@ -3412,7 +3412,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1dU", cat:"B8", dir:"U", num:'1d', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
+    id:"B8P1dU", cat:"B8", dir:"U", num:'1d', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — corde inf. en tête (ind+aur, ext. index)", bpm:55, bpmTarget:120,
     tabMid:`e|------------------------------------4-------4---|
 B|--------------------4-------4---4-8---8-4-8---8-|
@@ -3445,7 +3445,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1dD", cat:"B8", dir:"D", num:'1d', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)'],
+    id:"B8P1dD", cat:"B8", dir:"D", num:'1d', notes:8, difficulty:"Technique", fingerings:['ind + aur (sup.) + ind (inf.)', 'maj + aur (sup.) + maj (inf.)'],
     name:"Alternance 2 cordes — corde sup. en tête (ind+aur, ext. index)", bpm:55, bpmTarget:120,
     tabMid:`e|--------------------------------4-------4-------|
 B|----------------4-------4---------8-4-8---8-4-8-|
@@ -3478,7 +3478,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P1dM", cat:"B8", dir:"M", num:'1d', notes:8, difficulty:"Intermédiaire", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
+    id:"B8P1dM", cat:"B8", dir:"M", num:'1d', notes:8, difficulty:"Technique", fingerings:['ind + aur (inf.) + ind (sup.)', 'maj + aur (inf.) + maj (sup.)'],
     name:"Alternance 2 cordes — montée inf. / retour sup. (ind+aur, ext. index)", bpm:55, bpmTarget:120,
     tabMid:`e|------------------------------------4-------4---|
 B|--------------------4-------4---4-8---8-4-8---8-|
@@ -3511,7 +3511,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P3aU", cat:"B8", dir:"U", num:'3a', notes:8, difficulty:"Avancé", fingerings:['ind + maj + ann + aur'],
+    id:"B8P3aU", cat:"B8", dir:"U", num:'3a', notes:8, difficulty:"Complexe", fingerings:['ind + maj + ann + aur'],
     name:"Bumblebee", bpm:60,
     tabMid:`e|--------------------------------------------------------5--6--7--6--5-------|
 B|--------------------------------5--6--7--6--5-----7--8-----------------8----|
@@ -3544,7 +3544,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P3aD", cat:"B8", dir:"D", num:'3a', notes:8, difficulty:"Avancé", fingerings:['ind + maj + ann + aur'],
+    id:"B8P3aD", cat:"B8", dir:"D", num:'3a', notes:8, difficulty:"Complexe", fingerings:['ind + maj + ann + aur'],
     name:"Bumblebee", bpm:60,
     tabMid:`e|--------------------------------------------------7--6--5-----------5--6----|
 B|--------------------------7--6--5-----------5--6-----------8--7--8----------|
@@ -3577,7 +3577,7 @@ E|----------------------------------------------------------------------------|
   },
 
   {
-    id:"B8P3aM", cat:"B8", dir:"M", num:'3a', notes:8, difficulty:"Avancé", fingerings:['ind + maj + ann + aur'],
+    id:"B8P3aM", cat:"B8", dir:"M", num:'3a', notes:8, difficulty:"Complexe", fingerings:['ind + maj + ann + aur'],
     name:"Bumblebee", bpm:60,
     tabMid:`e|--------------------------------------------------------5--6--7--6--5-------|
 B|--------------------------------5--6--7--6--5-----7--8-----------------8----|
@@ -3612,7 +3612,7 @@ E|----------------------------------------------------------------------------|
   // ── A4P?b — TRITON ASCENDANT-DESCENDANT ──────────────────────────────────────
 
   {
-    id:"A4P?bU", cat:"A4", dir:"U", num:'?b', notes:4, difficulty:"Intermédiaire", fingerings:[],
+    id:"A4P?bU", cat:"A4", dir:"U", num:'?b', notes:4, difficulty:"Technique", fingerings:[],
     name:"Triton 7-8-7-5", bpm:70, bpmTarget:140,
     tab:`e|--------------------------7-8-7-5-|
 B|------------------7-8-7-5---------|
@@ -3632,7 +3632,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P?bD", cat:"A4", dir:"D", num:'?b', notes:4, difficulty:"Intermédiaire", fingerings:[],
+    id:"A4P?bD", cat:"A4", dir:"D", num:'?b', notes:4, difficulty:"Technique", fingerings:[],
     name:"Triton 7-8-7-5", bpm:70, bpmTarget:140,
     tab:`e|--------------------------7-5-7-8-|
 B|------------------7-5-7-8---------|
@@ -3652,7 +3652,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P?bM", cat:"A4", dir:"M", num:'?b', notes:4, difficulty:"Intermédiaire", fingerings:[],
+    id:"A4P?bM", cat:"A4", dir:"M", num:'?b', notes:4, difficulty:"Technique", fingerings:[],
     name:"Triton 7-8-7-5", bpm:60, bpmTarget:130,
     tab:`e|--------------------------7-8-7-5-|
 B|------------------7-8-7-5---------|
@@ -3674,7 +3674,7 @@ E|----------------------------------|
   // ── A4P?ba — TRITON INDEX-MAJEUR-AURICULAIRE ──────────────────────────────
 
   {
-    id:"A4P?baU", cat:"A4", dir:"U", num:'?ba', notes:4, difficulty:"Intermédiaire", fingerings:[],
+    id:"A4P?baU", cat:"A4", dir:"U", num:'?ba', notes:4, difficulty:"Technique", fingerings:[],
     name:"Triton 6-8-6-5", bpm:70, bpmTarget:140,
     tab:`e|--------------------------6-8-6-5-|
 B|------------------6-8-6-5---------|
@@ -3694,7 +3694,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P?baD", cat:"A4", dir:"D", num:'?ba', notes:4, difficulty:"Intermédiaire", fingerings:[],
+    id:"A4P?baD", cat:"A4", dir:"D", num:'?ba', notes:4, difficulty:"Technique", fingerings:[],
     name:"Triton 6-8-6-5", bpm:70, bpmTarget:140,
     tab:`e|--------------------------6-5-6-8-|
 B|------------------6-5-6-8---------|
@@ -3714,7 +3714,7 @@ E|----------------------------------|
   },
 
   {
-    id:"A4P?baM", cat:"A4", dir:"M", num:'?ba', notes:4, difficulty:"Intermédiaire", fingerings:[],
+    id:"A4P?baM", cat:"A4", dir:"M", num:'?ba', notes:4, difficulty:"Technique", fingerings:[],
     name:"Triton 6-8-6-5", bpm:60, bpmTarget:130,
     tab:`e|--------------------------6-8-6-5-|
 B|------------------6-8-6-5---------|
@@ -3736,7 +3736,7 @@ E|----------------------------------|
   // ── A6P?a — SEXTUPLE STRATOS ──────────────────────────────────────────────
 
   {
-    id:"A6P?aU", cat:"A6", dir:"U", num:'?a', notes:6, difficulty:"Intermédiaire", fingerings:[],
+    id:"A6P?aU", cat:"A6", dir:"U", num:'?a', notes:6, difficulty:"Technique", fingerings:[],
     name:"Sextuple Stratos", bpm:60, bpmTarget:120,
     tab:`e|--------------------------------------5-4-5-7-8-7-|
 B|--------------------------5-4-5-7-8-7-------------|
@@ -3756,7 +3756,7 @@ E|--------------------------------------------------|
   },
 
   {
-    id:"A6P?aD", cat:"A6", dir:"D", num:'?a', notes:6, difficulty:"Intermédiaire", fingerings:[],
+    id:"A6P?aD", cat:"A6", dir:"D", num:'?a', notes:6, difficulty:"Technique", fingerings:[],
     name:"Sextuple Stratos", bpm:60, bpmTarget:120,
     tab:`e|--------------------------------------8-7-5-4-5-7-|
 B|--------------------------8-7-5-4-5-7-------------|
@@ -3776,7 +3776,7 @@ E|--------------------------------------------------|
   },
 
   {
-    id:"A6P?aM", cat:"A6", dir:"M", num:'?a', notes:6, difficulty:"Intermédiaire", fingerings:[],
+    id:"A6P?aM", cat:"A6", dir:"M", num:'?a', notes:6, difficulty:"Technique", fingerings:[],
     name:"Sextuple Stratos", bpm:55, bpmTarget:110,
     tab:`e|--------------------------------------5-4-5-7-8-7-|
 B|--------------------------5-4-5-7-8-7-------------|
@@ -3798,7 +3798,7 @@ E|--------------------------------------------------|
   // ── A8P?b — OCTONAIRE ALTERNÉ ──────────────────────────────────────────────────
 
   {
-    id:"A8P?bU", cat:"A8", dir:"U", num:'?b', notes:8, difficulty:"Intermédiaire", fingerings:[],
+    id:"A8P?bU", cat:"A8", dir:"U", num:'?b', notes:8, difficulty:"Technique", fingerings:[],
     name:"Octo 0-5-0-7", bpm:60, bpmTarget:130,
     tab:`e|--------------------------------------------------0-5-0-7-0-5-0-7-|
 B|----------------------------------0-5-0-7-0-5-0-7-----------------|
@@ -3818,7 +3818,7 @@ E|------------------------------------------------------------------|
   },
 
   {
-    id:"A8P?bD", cat:"A8", dir:"D", num:'?b', notes:8, difficulty:"Intermédiaire", fingerings:[],
+    id:"A8P?bD", cat:"A8", dir:"D", num:'?b', notes:8, difficulty:"Technique", fingerings:[],
     name:"Octo 0-5-0-7", bpm:60, bpmTarget:130,
     tab:`e|--------------------------------------------------0-7-0-5-0-7-0-5-|
 B|----------------------------------0-7-0-5-0-7-0-5-----------------|
@@ -3838,7 +3838,7 @@ E|------------------------------------------------------------------|
   },
 
   {
-    id:"A8P?bM", cat:"A8", dir:"M", num:'?b', notes:8, difficulty:"Intermédiaire", fingerings:[],
+    id:"A8P?bM", cat:"A8", dir:"M", num:'?b', notes:8, difficulty:"Technique", fingerings:[],
     name:"Octo 0-5-0-7", bpm:55, bpmTarget:120,
     tab:`e|--------------------------------------------------0-5-0-7-0-5-0-7-|
 B|----------------------------------0-5-0-7-0-5-0-7-----------------|
@@ -3860,7 +3860,7 @@ E|------------------------------------------------------------------|
   // ── GAMME PENTATONIC SPÉCIALE (lecture directe XML) ──
 
   {
-    id:"pentaC1", cat:"gamme", num:"1", notes:12, difficulty:"Débutant", special:true,
+    id:"pentaC1", cat:"gamme", num:"1", notes:12, difficulty:"Basique", special:true,
     name:"Pentatonic #1", bpm:120, bpmTarget:120,
     tab:`e |--------------------------------5--8----|
 B |--------------------------5--8----------|
@@ -3880,7 +3880,7 @@ E |--5--8----------------------------------|
   },
 
   {
-    id:"pentaBb2", cat:"gamme", num:"2", notes:12, difficulty:"Débutant", special:true,
+    id:"pentaBb2", cat:"gamme", num:"2", notes:12, difficulty:"Basique", special:true,
     name:"Pentatonic #2", bpm:120, bpmTarget:120,
     tab:`e |--------------------------------6--8----|
 B |--------------------------6--8----------|
@@ -3900,7 +3900,7 @@ E |--6--8----------------------------------|
   },
 
   {
-    id:"pentaC3", cat:"gamme", num:"3", notes:12, difficulty:"Débutant", special:true,
+    id:"pentaC3", cat:"gamme", num:"3", notes:12, difficulty:"Basique", special:true,
     name:"Pentatonic #3", bpm:120, bpmTarget:120,
     tab:`e |--------------------------------5--7----|
 B |--------------------------5--8----------|
@@ -3921,7 +3921,7 @@ E |--5--7----------------------------------|
   },
 
   {
-    id:"pentaC4", cat:"gamme", num:"4", notes:12, difficulty:"Débutant", special:true,
+    id:"pentaC4", cat:"gamme", num:"4", notes:12, difficulty:"Basique", special:true,
     name:"Pentatonic #4", bpm:120, bpmTarget:120,
     tab:`e |--------------------------------5--8----|
 B |--------------------------6--8----------|
@@ -3942,7 +3942,7 @@ E |--5--8----------------------------------|
   },
 
   {
-    id:"pentaC5", cat:"gamme", num:"5", notes:12, difficulty:"Débutant", special:true,
+    id:"pentaC5", cat:"gamme", num:"5", notes:12, difficulty:"Basique", special:true,
     name:"Pentatonic #5", bpm:120, bpmTarget:120,
     tab:`e |--------------------------------5--7----|
 B |--------------------------5--7----------|
@@ -3963,7 +3963,7 @@ E |--5--7----------------------------------|
   },
 
   {
-    id:"pentaTrans1", cat:"gamme", num:"6", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans1", cat:"gamme", num:"6", notes:12, difficulty:"Technique", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 1↔2", bpm:90, bpmTarget:120,
     directions: {
@@ -4001,7 +4001,7 @@ E |--8--10---------------------------------|
   },
 
   {
-    id:"pentaTrans2", cat:"gamme", num:"7", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans2", cat:"gamme", num:"7", notes:12, difficulty:"Technique", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 2↔3", bpm:90, bpmTarget:120,
     directions: {
@@ -4039,7 +4039,7 @@ E |--7--9----------------------------------|
   },
 
   {
-    id:"pentaTrans3", cat:"gamme", num:"8", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans3", cat:"gamme", num:"8", notes:12, difficulty:"Technique", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 3↔4", bpm:90, bpmTarget:120,
     directions: {
@@ -4077,7 +4077,7 @@ E |--7--10---------------------------------|
   },
 
   {
-    id:"pentaTrans4", cat:"gamme", num:"9", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans4", cat:"gamme", num:"9", notes:12, difficulty:"Technique", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 4↔5", bpm:90, bpmTarget:120,
     directions: {
@@ -4115,7 +4115,7 @@ E |--8--10---------------------------------|
   },
 
   {
-    id:"pentaTrans5", cat:"gamme", num:"10", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"pentaTrans5", cat:"gamme", num:"10", notes:12, difficulty:"Technique", special:true,
     hasDirectionTabs: true,
     name:"Pentatonic Transition 5↔1", bpm:90, bpmTarget:120,
     directions: {
@@ -4153,7 +4153,7 @@ E |--7--10---------------------------------|
   },
 
   {
-    id:"aIonien6", cat:"gamme", num:"11", notes:12, difficulty:"Intermédiaire", special:true,
+    id:"aIonien6", cat:"gamme", num:"11", notes:12, difficulty:"Technique", special:true,
     name:"A Ionien", bpm:120, bpmTarget:120,
     tab:`e |--------------------------------------------5--7----|
 B |--------------------------------------7--9----------|
@@ -4174,7 +4174,160 @@ E |--5--7--9-------------------------------------------|
   },
 
   {
-    id:"triadeDim1", cat:"gamme", num:"13", notes:12, difficulty:"Avancé", special:true,
+    id:"gammeC1", cat:"gamme", num:"0", notes:16, difficulty:"Basique", special:true,
+    disableHighNeck: true,
+    hasDirectionTabs: true,
+    versionTabs: ["Base", "Full"],
+    versionLabels: { Full: "Étendue" },
+    formeTabs: ["C", "A", "G", "G 8va", "E", "E 8va", "D"],
+    name:"Do Majeur", bpm:80, bpmTarget:120,
+    tab:`e |----------------------------------------------------|
+B |--------------------0--1--1--0----------------------|
+G |--------------0--2--------------2--0----------------|
+D |-----0--2--3--------------------------3--2--0-------|
+A |--3--------------------------------------------3----|
+E |----------------------------------------------------|`,
+    directions: {
+      "Base|C": `e |----------------------------------------------------|
+B |--------------------0--1--1--0----------------------|
+G |--------------0--2--------------2--0----------------|
+D |-----0--2--3--------------------------3--2--0-------|
+A |--3--------------------------------------------3----|
+E |----------------------------------------------------|`,
+      "Full|C": `e |-----------------------------0--1--3--1--0----------|
+B |--------------------0--1--3-----------------3--1----|
+G |--------------0--2----------------------------------|
+D |-----0--2--3----------------------------------------|
+A |--3-------------------------------------------------|
+E |----------------------------------------------------|
+↩
+----------------------------------------------------|
+--0-------------------------------------------------|
+-----2--0-------------------------------------------|
+-----------3--2--0----------------------------------|
+--------------------3--2--0-----------------0--2----|
+-----------------------------3--1--0--1--3----------|`,
+      "Base|A": `E |----------------------------------------------------|
+B |----------------------------------------------------|
+G |-----------------2--4--5--5--4--2-------------------|
+D |--------2--3--5--------------------5--3--2----------|
+A |--3--5--------------------------------------5--3----|
+E |----------------------------------------------------|`,
+      "Full|A": `e |-----------------------------------3--5--3----------|
+B |--------------------------3--5--6-----------6--5----|
+G |-----------------2--4--5----------------------------|
+D |--------2--3--5-------------------------------------|
+A |--3--5----------------------------------------------|
+E |----------------------------------------------------|
+↩
+----------------------------------------------------|
+--3-------------------------------------------------|
+-----5--4--2----------------------------------------|
+--------------5--3--2-------------------------------|
+-----------------------5--3--2-----------------2----|
+--------------------------------5--3--1--3--5-------|`,
+      "Base|G": `e |----------------------------------------------------|
+B |----------------------------------------------------|
+G |--------------------4--5--5--4----------------------|
+D |--------------5--7--------------7--5----------------|
+A |-----5--7--8--------------------------8--7--5-------|
+E |--8--------------------------------------------8----|`,
+      "Full|G": `e |--------------------------------------5--7--8--7----|
+B |-----------------------------5--6--8----------------|
+G |--------------------4--5--7-------------------------|
+D |--------------5--7----------------------------------|
+A |-----5--7--8----------------------------------------|
+E |--8-------------------------------------------------|
+↩
+--5-------------------------------------------------|
+-----8--6--5----------------------------------------|
+--------------7--5--4-------------------------------|
+-----------------------7--5-------------------------|
+-----------------------------8--7--5----------------|
+--------------------------------------8--7--5--7----|`,
+      "Base|G 8va": `e |-----------------5--7--8--8--7--5-------------------|
+B |--------5--6--8--------------------8--6--5----------|
+G |--5--7--------------------------------------7--5----|
+D |----------------------------------------------------|
+A |----------------------------------------------------|
+E |----------------------------------------------------|`,
+      "Full|G 8va": `e |-----------------5--7--8--7--5----------------------|
+B |--------5--6--8-----------------8--6--5-------------|
+G |--5--7-----------------------------------7--5--4----|
+D |----------------------------------------------------|
+A |----------------------------------------------------|
+E |----------------------------------------------------|
+↩
+----------------------------------------------------|
+----------------------------------------------------|
+-----------------------------------------------4----|
+--7--5-----------------------------------5--7-------|
+--------8--7--5-----------------5--7--8-------------|
+-----------------8--7--5--7--8----------------------|`,
+      "Base|E": `e |----------------------------------------------------|
+B |----------------------------------------------------|
+G |----------------------------------------------------|
+D |-----------------7--9--10-10-9--7-------------------|
+A |--------7--8--10-------------------10-8--7----------|
+E |--8--10-------------------------------------10-8----|`,
+      "Full|E": `e |-----------------------------------------7--8--10---|
+B |-----------------------------------8--10------------|
+G |--------------------------7--9--10------------------|
+D |-----------------7--9--10---------------------------|
+A |--------7--8--10------------------------------------|
+E |--8--10---------------------------------------------|
+↩
+e |--8--7----------------------------------------------|
+B |--------10-8----------------------------------------|
+G |--------------10-9--7-------------------------------|
+D |-----------------------10-9--7----------------------|
+A |--------------------------------10-8--7-------------|
+E |-----------------------------------------10-8--7----|`,
+      "Base|E 8va": `e |--------------------7--8--8--7----------------------|
+B |--------------8--10-------------10-8----------------|
+G |-----7--9--10-------------------------10-9--7-------|
+D |--10-------------------------------------------10---|
+A |----------------------------------------------------|
+E |----------------------------------------------------|`,
+      "Full|E 8va": `e |--------------------7--8--10-8--7-------------------|
+B |--------------8--10----------------10-8-------------|
+G |-----7--9--10----------------------------10-9--7----|
+D |--10------------------------------------------------|
+A |----------------------------------------------------|
+E |----------------------------------------------------|
+↩
+e |----------------------------------------------------|
+B |----------------------------------------------------|
+G |----------------------------------------------------|
+D |--10-9--7-----------------------------------7--9----|
+A |-----------10-8--7-----------------7--8--10---------|
+E |--------------------10-8--7--8--10------------------|`,
+      "Base|D": `e |----------------------------------------------------|
+B |-----------------10-12-13-13-12-10-8----------------|
+G |--------9--10-12----------------------10-9----------|
+D |--10-12-------------------------------------12-10---|
+A |----------------------------------------------------|
+E |----------------------------------------------------|`,
+      "Full|D": `e |--------------------------10-12-13-12-10------------|
+B |-----------------10-12-13----------------13-12-10---|
+G |--------9--10-12------------------------------------|
+D |--10-12---------------------------------------------|
+A |----------------------------------------------------|
+E |----------------------------------------------------|
+↩
+e |----------------------------------------------------|
+B |----------------------------------------------------|
+G |--12-10-9-------------------------------------------|
+D |-----------12-10-9-----------------------------9----|
+A |--------------------12-10----------------10-12------|
+E |--------------------------13-12-10-12-13------------|`,
+    },
+    desc:"Gamme de Do majeur — version Base ou Étendue, en Forme C (cordes du milieu) ou Forme A (cordes graves + aiguës). Chaque combinaison a sa grille de progression.",
+    tip:"Commencer par Base · Forme C, puis explorer les autres combinaisons une fois la position bien ancrée.",
+  },
+
+  {
+    id:"triadeDim1", cat:"gamme", num:"13", notes:12, difficulty:"Complexe", special:true,
     disableHighNeck: true,
     customInterps: ["Down", "Up", "Sweep"],
     name:"Triades Diminuées", bpm:120,
@@ -4260,7 +4413,7 @@ E |--4--7-----------------7--7--10----------------10---|
   },
 
   {
-    id:"arpegeEm1", cat:"gamme", num:"14", notes:16, difficulty:"Intermédiaire", special:true,
+    id:"arpegeEm1", cat:"gamme", num:"14", notes:16, difficulty:"Technique", special:true,
     disableHighNeck: true,
     customInterps: ["Down", "Up", "Sweep"],
     name:"Arpège Em #1", bpm:80, bpmTarget:120,

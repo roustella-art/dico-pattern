@@ -288,6 +288,49 @@ Couleurs distinctes synchronisées entre header et réglages via `SUBDIV_LABELS`
 
 ---
 
+## Session du 16 juin 2026
+
+### Do Majeur — Gamme CAGED complète, 7 formes × 2 versions
+
+**Fichiers :** `data.js`, `render.js`, `index.html`
+
+**Contexte :**
+Premier exercice de gamme à couvrir l'intégralité du système CAGED. Contrairement aux gammes pentatoniques (un seul pattern), Do Majeur expose 7 formes distinctes (`C`, `A`, `G`, `G 8va`, `E`, `E 8va`, `D`) chacune en deux versions, soit **14 entrées de tablature** dans un seul pattern.
+
+**Structure des données (`gammeC1`) :**
+- `special: true` — lecture note par note (pas de grouping)
+- `hasDirectionTabs: true` — active le sélecteur de version/forme
+- `disableHighNeck: true` — la gamme en position Bas du manche suffit, le preset High Neck n'a pas de sens ici
+- `versionTabs: ["Base", "Full"]` — clés internes des deux versions
+- `versionLabels: { Full: "Étendue" }` — "Full" en base de données, "Étendue" dans les boutons
+- `formeTabs: ["C", "A", "G", "G 8va", "E", "E 8va", "D"]` — les 7 formes CAGED
+- Les 14 directions composées suivent le schéma `"Version|Forme"` : `"Base|C"`, `"Full|C"`, `"Base|A"`, `"Full|A"`, etc.
+- Position `num:"0"` — premier exercice dans la section Gammes (avant Pentatonic #1)
+
+**Versions Base / Étendue :**
+- **Base** — la gamme sur une seule octave, notes consécutives sur 2 cordes adjacentes. 6 notes montée, 6 notes descente.
+- **Étendue (Full)** — gamme sur toute la plage du manche pour la forme donnée. La tablature comporte une section aller et une section retour séparées par `↩` (séparateur reconnu par `parseSectionSpecial`).
+
+**Particularité G et E — deux octaves disponibles :**
+Les formes G et E permettent deux positions octave : la forme standard et la forme `8va` (une octave plus haut). Chaque variante possède ses propres Base et Full, soit 4 entrées pour chacune des deux formes.
+
+**Nouvelle UI — segment + dropdown :**
+Avec 7 formes, une rangée de 7 boutons devenait trop dense sur smartphone. La solution adoptée (Option 1) :
+- **Segment `Base / Étendue`** en haut — deux boutons pleine largeur, style bleu actif / transparent inactif
+- **Dropdown `Forme`** en dessous — `<select>` natif iOS pour les 7 formes CAGED
+
+Implémentation dans `render.js` : la condition `if (p.versionTabs && p.formeTabs)` rend ce layout ; la branche `else` continue d'afficher les boutons simples pour les autres gammes (Pentatonic, A Ionien, etc.).
+
+**Pastilles de progression :**
+Le badge dans le tableau de progression affiche `Version · Forme` (ex. `Full · G`). Le suffixe `8va` est retiré de l'affichage badge (`.replace(' 8va', '')`) pour éviter un texte trop long — la clé de progression en base de données reste intacte (`gammeC1__Full_G 8va`).
+
+**Corrections techniques notables :**
+- Bug critique : après le refactoring segment+dropdown, la branche `else` de `renderPatternGroupBody` appelait encore `btnStyleVersion` (fonction supprimée) → `ReferenceError` qui crashait tout l'onglet Gammes. Fix : définition d'un `btnStyle` local au bloc `if (p.hasDirectionTabs)`, partagé par les deux branches.
+- Variables CSS : la première implémentation utilisait `var(--color-background-primary)` etc. (système du mockup tool) au lieu des variables de l'app (`var(--blue)`, `var(--card)`, `var(--border)`, `var(--text2)`).
+- Alignement des tabs ASCII : 52 caractères de contenu entre les pipes. GuitarPro exporte `EADGBE` (E majuscule pour la corde aiguë) mais l'app utilise `EADGBe` — différence à surveiller lors de futurs imports.
+
+---
+
 ## Session du 13 juin 2026
 
 ### Arpège Em #1 et famille B8P1/B8P2 complète (a → d)

@@ -333,10 +333,19 @@ function buildGammeProgGrid(p) {
 
   // Créer un progressId distinct pour chaque direction/groupe
   let progressId = p.id;
+  let badgeText = '';
   if (p.hasDirectionTabs && selectedDir) {
-    progressId = p.id + '__' + selectedDir.replace(/[→↔]/g, '-');
+    if (p.formeTabs) {
+      const forme = getGammeSelectedForme(p.id);
+      progressId = p.id + '__' + selectedDir + '_' + (forme || p.formeTabs[0]);
+      badgeText = selectedDir + ' · ' + (forme || p.formeTabs[0]).replace(' 8va', '');
+    } else {
+      progressId = p.id + '__' + selectedDir.replace(/[→↔]/g, '-');
+      badgeText = selectedDir;
+    }
   } else if (p.stringGroups && selectedGroup) {
     progressId = p.id + '__' + selectedGroup;
+    badgeText = selectedGroup;
   }
 
   const dirColor = '#56864A';
@@ -352,10 +361,8 @@ function buildGammeProgGrid(p) {
 
   // Badge de direction OU badge de groupe
   let badgeLabel = '';
-  if (p.hasDirectionTabs && selectedDir) {
-    badgeLabel = `<span style="font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px">${selectedDir}</span>`;
-  } else if (p.stringGroups && selectedGroup) {
-    badgeLabel = `<span style="font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px">${selectedGroup}</span>`;
+  if (badgeText) {
+    badgeLabel = `<span style="font-size:10px;font-weight:700;color:var(--blue);background:var(--blue-light);border-radius:6px;padding:1px 7px">${badgeText}</span>`;
   }
 
   const html = `<div class="prog-grid" style="margin-bottom:10px">
@@ -383,22 +390,42 @@ function renderPatternGroupBody(pats, key) {
     let dirTabsHtml = '';
     if (p.hasDirectionTabs && p.directions) {
       const selectedDir = getGammeSelectedDir(p.id);
-      const dirKeys = Object.keys(p.directions);
-      dirTabsHtml = `
-        <div style="display:flex;gap:6px;margin-bottom:10px">
-          ${dirKeys.map(dk => {
-            const isActive = dk === selectedDir;
-            const btnId = 'gamme-dir-btn-' + p.id + '-' + dk.replace(/[→↔]/g, '_');
-            return `<button id="${btnId}"
-              onclick="setGammeDirection('${p.id}', '${dk}')"
-              style="flex:1;font-size:13px;font-weight:${isActive?'700':'600'};padding:7px 8px;border-radius:8px;border:2px solid;cursor:pointer;transition:all .15s;text-align:center;
-                background:${isActive ? 'var(--blue)' : 'transparent'};
-                color:${isActive ? '#fff' : 'var(--text2)'};
-                border-color:${isActive ? 'var(--blue)' : 'var(--border)'}">
-              ${dk}
-            </button>`;
-          }).join('')}
-        </div>`;
+      const btnStyle = (isActive) =>
+        `flex:1;font-size:13px;font-weight:${isActive?'700':'600'};padding:6px 10px;border-radius:8px;border:1px solid ${isActive?'var(--blue)':'var(--border)'};cursor:pointer;background:${isActive?'var(--blue)':'transparent'};color:${isActive?'#fff':'var(--text2)'};transition:all .15s`;
+
+      if (p.versionTabs && p.formeTabs) {
+        // Segment pour version + dropdown pour formes
+        const selectedForme = getGammeSelectedForme(p.id);
+        const versionRow = p.versionTabs.map(vk => {
+          const btnId = 'gamme-dir-btn-' + p.id + '-' + vk;
+          const label = (p.versionLabels && p.versionLabels[vk]) || vk;
+          return `<button id="${btnId}" onclick="setGammeDirection('${p.id}','${vk}')" style="${btnStyle(vk===selectedDir)}">${label}</button>`;
+        }).join('');
+        const formeOptions = p.formeTabs.map(fk => {
+          return `<option value="${fk}" ${fk===selectedForme?'selected':''}>Forme ${fk}</option>`;
+        }).join('');
+        dirTabsHtml = `
+          <div style="margin-bottom:8px">
+            <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block">Version</label>
+            <div style="display:flex;gap:6px">${versionRow}</div>
+          </div>
+          <div style="margin-bottom:10px">
+            <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block">Forme</label>
+            <select id="gamme-forme-select-${p.id}" onchange="setGammeForme('${p.id}',this.value)" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border);font-size:13px;background:var(--card);color:var(--text)">
+              ${formeOptions}
+            </select>
+          </div>`;
+      } else {
+        // Sélecteur simple (patterns existants)
+        const dirKeys = Object.keys(p.directions);
+        dirTabsHtml = `
+          <div style="display:flex;gap:6px;margin-bottom:10px">
+            ${dirKeys.map(dk => {
+              const btnId = 'gamme-dir-btn-' + p.id + '-' + dk.replace(/[→↔]/g, '_');
+              return `<button id="${btnId}" onclick="setGammeDirection('${p.id}','${dk}')" style="${btnStyle(dk===selectedDir)}">${dk}</button>`;
+            }).join('')}
+          </div>`;
+      }
     }
 
     // ── Sélecteur de groupes de cordes (triades avec stringGroups) ───────────
@@ -687,8 +714,8 @@ function setCardDir(key, dir) {
 
 // ── PATTERNS TAB ──
 function diffTag(d) {
-  if (d === 'Débutant') return `<span class="tag diff-deb">${d}</span>`;
-  if (d === 'Intermédiaire') return `<span class="tag diff-int">${d}</span>`;
+  if (d === 'Basique') return `<span class="tag diff-deb">${d}</span>`;
+  if (d === 'Technique') return `<span class="tag diff-int">${d}</span>`;
   return `<span class="tag diff-adv">${d}</span>`;
 }
 
@@ -709,8 +736,8 @@ function renderPatterns() {
   });
   html += `</div>`;
 
-  const diffs = ['all','Débutant','Intermédiaire','Avancé'];
-  const diffColors = {all:'',Débutant:'diff-deb',Intermédiaire:'diff-int',Avancé:'diff-adv'};
+  const diffs = ['all','Basique','Technique','Complexe'];
+  const diffColors = {all:'',Basique:'diff-deb',Technique:'diff-int',Complexe:'diff-adv'};
   html += `<div class="filter-seg">`;
   diffs.forEach(d => {
     const active = state.diffFilter === d ? 'active' : '';
@@ -741,7 +768,7 @@ function renderPatterns() {
     const pct = getGroupPct(key); // toutes directions confondues
     const allIds = pats.map(p=>p.id).join(',');
 
-    const diffDot = {Débutant:'#4a9e6b',Intermédiaire:'#c07830',Avancé:'#a03030'}[base.difficulty]||'#999';
+    const diffDot = {Basique:'#4a9e6b',Technique:'#c07830',Complexe:'#a03030'}[base.difficulty]||'#999';
 
     html += `
     <div class="card" id="card-${key}">
@@ -794,8 +821,8 @@ function renderGammes() {
   }
 
   // Filtre difficulté
-  const diffs = ['all','Débutant','Intermédiaire','Avancé'];
-  const diffColors = {all:'',Débutant:'diff-deb',Intermédiaire:'diff-int',Avancé:'diff-adv'};
+  const diffs = ['all','Basique','Technique','Complexe'];
+  const diffColors = {all:'',Basique:'diff-deb',Technique:'diff-int',Complexe:'diff-adv'};
   let html = `<div class="filter-seg" style="margin-bottom:14px">`;
   diffs.forEach(d => {
     const active = state.diffFilter === d ? 'active' : '';
@@ -813,10 +840,11 @@ function renderGammes() {
     if (state.diffFilter !== 'all' && base.difficulty !== state.diffFilter) return;
     const isOpen = state.openCards[key];
     const pct = getGroupPct(key);
-    const diffDot = {Débutant:'#4a9e6b',Intermédiaire:'#c07830',Avancé:'#a03030'}[base.difficulty]||'#999';
+    const diffDot = {Basique:'#4a9e6b',Technique:'#c07830',Complexe:'#a03030'}[base.difficulty]||'#999';
+    const isPenta = base.id.startsWith('penta');
 
     html += `
-    <div class="card" id="card-${key}">
+    <div class="card ${isPenta ? 'card-penta' : ''}" id="card-${key}">
       <div class="card-head" onclick="toggleCard('${key}')">
         <div style="flex:1;min-width:0">
           <div style="display:flex;align-items:center;gap:7px">
