@@ -1281,8 +1281,16 @@ E|--------------------------|
   // ── A2 — 2 NOTES ────────────────────────────────────────────────────────────
 
   {
-    id:"A2P1aU", cat:"A2", dir:"U", num:'1a', notes:2, difficulty:"Technique", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
-    name:"Demi-ton", bpm:80, bpmTarget:160,
+    id:"A2P1", cat:"A2", num:'1', notes:2, difficulty:"Technique",
+    etape:3, etapeOrder:3,
+    hasDirectionTabs: true,
+    versionTabs: ["U", "D", "M"],
+    versionLabels: { U:"Ascendant", D:"Descendant", M:"Mix" },
+    versionSelectorLabel: "Direction",
+    disableStringSelector: true,
+    formeTabs: ["1-2", "1-3", "1-4", "1-5"],
+    formeSelectorLabel: "Intervalle",
+    name:"A2P1", bpm:80, bpmTarget:160,
     tab:`e|--------------5-6-|
 B|----------5-6-----|
 G|------5-6---------|
@@ -1296,14 +1304,21 @@ E|------------------|
 --------------6-7o|||
 ------------------|||
 ------------------|||`,
-    desc:"Deux notes adjacentes. Le plus simple — mais essentiel pour la fluidité.",
-    tip:"Focus sur la synchronisation main gauche / main droite. Zéro tension.",
-  },
-
-  {
-    id:"A2P1aD", cat:"A2", dir:"D", num:'1a', notes:2, difficulty:"Technique", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
-    name:"Demi-ton", bpm:80, bpmTarget:160,
-    tab:`e|--------------6-5-|
+    directions: {
+      "U|1-2": `e|--------------5-6-|
+B|----------5-6-----|
+G|------5-6---------|
+D|--5-6-------------|
+A|------------------|
+E|------------------|
+↩ retour décalé +1
+--6-7-------------|||
+------6-7---------|||
+----------6-7----o|||
+--------------6-7o|||
+------------------|||
+------------------|||`,
+      "D|1-2": `e|--------------6-5-|
 B|----------6-5-----|
 G|------6-5---------|
 D|--6-5-------------|
@@ -1316,14 +1331,7 @@ E|------------------|
 --------------7-6o|||
 ------------------|||
 ------------------|||`,
-    desc:"Deux notes adjacentes. Le plus simple — mais essentiel pour la fluidité. Version descendante.",
-    tip:"Focus sur la synchronisation main gauche / main droite. Zéro tension. Le doigté inversé est souvent plus difficile.",
-  },
-
-  {
-    id:"A2P1aM", cat:"A2", dir:"M", num:'1a', notes:2, difficulty:"Technique", fingerings:['ind + maj', 'maj + ann', 'ann + aur', 'ind + ind (glis.)'],
-    name:"Demi-ton", bpm:80, bpmTarget:147,
-    tab:`e|--------------5-6-|
+      "M|1-2": `e|--------------5-6-|
 B|----------5-6-----|
 G|------5-6---------|
 D|--5-6-------------|
@@ -1336,14 +1344,7 @@ E|------------------|
 --------------7-6o|||
 ------------------|||
 ------------------|||`,
-    desc:"Deux notes adjacentes. Le plus simple — mais essentiel pour la fluidité. Montée puis retour décalé d\'une case.",
-    tip:"Focus sur la synchronisation main gauche / main droite. Zéro tension. Le changement de sens au sommet doit être fluide, sans pause.",
-  },
-
-  {
-    id:"A2P1bU", cat:"A2", dir:"U", num:'1b', notes:2, etape:3, etapeOrder:3, difficulty:"Technique", related:"A4P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
-    name:"Ton entier", bpm:80, bpmTarget:160,
-    tab:`e|--------------5-7-|
+      "U|1-3": `e|--------------5-7-|
 B|----------5-7-----|
 G|------5-7---------|
 D|--5-7-------------|
@@ -1356,14 +1357,7 @@ E|------------------|
 --------------6-8o|||
 ------------------|||
 ------------------|||`,
-    desc:"Deux notes séparées d\'un ton entier : 1-3.",
-    tip:"Extension index-majeur ou index-annulaire. Garde la main décontractée.",
-  },
-
-  {
-    id:"A2P1bD", cat:"A2", dir:"D", num:'1b', notes:2, etape:3, etapeOrder:3, difficulty:"Technique", related:"A4P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
-    name:"Ton entier", bpm:80, bpmTarget:160,
-    tab:`e|--------------7-5-|
+      "D|1-3": `e|--------------7-5-|
 B|----------7-5-----|
 G|------7-5---------|
 D|--7-5-------------|
@@ -1376,14 +1370,7 @@ E|------------------|
 --------------8-6o|||
 ------------------|||
 ------------------|||`,
-    desc:"Deux notes séparées d\'un ton entier : 1-3. Version descendante.",
-    tip:"Extension index-majeur ou index-annulaire. Garde la main décontractée. Le doigté inversé est souvent plus difficile.",
-  },
-
-  {
-    id:"A2P1bM", cat:"A2", dir:"M", num:'1b', notes:2, etape:3, etapeOrder:3, difficulty:"Technique", related:"A4P1b", fingerings:['ind + ann', 'ind + maj (ext.)', 'maj + aur', 'ann + aur (ext.)'],
-    name:"Ton entier", bpm:80, bpmTarget:147,
-    tab:`e|--------------5-7-|
+      "M|1-3": `e|--------------5-7-|
 B|----------5-7-----|
 G|------5-7---------|
 D|--5-7-------------|
@@ -1396,14 +1383,7 @@ E|------------------|
 --------------8-6o|||
 ------------------|||
 ------------------|||`,
-    desc:"Deux notes séparées d\'un ton entier : 1-3. Montée puis retour décalé d\'une case.",
-    tip:"Extension index-majeur ou index-annulaire. Garde la main décontractée. Le changement de sens au sommet doit être fluide, sans pause.",
-  },
-
-  {
-    id:"A2P1cU", cat:"A2", dir:"U", num:'1c', notes:2, difficulty:"Technique", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ind + ind (glis.)'],
-    name:"Tierce mineure", bpm:70, bpmTarget:140,
-    tab:`e|--------------5-8-|
+      "U|1-4": `e|--------------5-8-|
 B|----------5-8-----|
 G|------5-8---------|
 D|--5-8-------------|
@@ -1416,14 +1396,7 @@ E|------------------|
 --------------6-9o|||
 ------------------|||
 ------------------|||`,
-    desc:"Extension sur 3 cases : 1-4. Préparation aux grands écarts.",
-    tip:"Extension index-auriculaire sur 3 cases. Prudence et pauses fréquentes.",
-  },
-
-  {
-    id:"A2P1cD", cat:"A2", dir:"D", num:'1c', notes:2, difficulty:"Technique", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ind + ind (glis.)'],
-    name:"Tierce mineure", bpm:70, bpmTarget:140,
-    tab:`e|--------------8-5-|
+      "D|1-4": `e|--------------8-5-|
 B|----------8-5-----|
 G|------8-5---------|
 D|--8-5-------------|
@@ -1436,14 +1409,7 @@ E|------------------|
 --------------9-6o|||
 ------------------|||
 ------------------|||`,
-    desc:"Extension sur 3 cases : 1-4. Préparation aux grands écarts. Version descendante.",
-    tip:"Extension index-auriculaire sur 3 cases. Prudence et pauses fréquentes. Le doigté inversé est souvent plus difficile.",
-  },
-
-  {
-    id:"A2P1cM", cat:"A2", dir:"M", num:'1c', notes:2, difficulty:"Technique", fingerings:['ind + aur', 'ind + ann (ext.)', 'maj + aur (ext.)', 'ind + ind (glis.)'],
-    name:"Tierce mineure", bpm:70, bpmTarget:128,
-    tab:`e|--------------5-8-|
+      "M|1-4": `e|--------------5-8-|
 B|----------5-8-----|
 G|------5-8---------|
 D|--5-8-------------|
@@ -1456,14 +1422,7 @@ E|------------------|
 --------------9-6o|||
 ------------------|||
 ------------------|||`,
-    desc:"Extension sur 3 cases : 1-4. Préparation aux grands écarts. Montée puis retour décalé d\'une case.",
-    tip:"Extension index-auriculaire sur 3 cases. Prudence et pauses fréquentes. Le changement de sens au sommet doit être fluide, sans pause.",
-  },
-
-  {
-    id:"A2P1dU", cat:"A2", dir:"U", num:'1d', notes:2, difficulty:"Technique", fingerings:['ind + aur (ext.)', 'ind + ann (surext.)', 'ind + ann (glis.)', 'ind + maj (glis.)'], fretOffset:-1,
-    name:"Tierce majeure", bpm:65, bpmTarget:130,
-    tab:`e|--------------5-9-|
+      "U|1-5": `e|--------------5-9-|
 B|----------5-9-----|
 G|------5-9---------|
 D|--5-9-------------|
@@ -1476,14 +1435,7 @@ E|------------------|
 --------------6-10o|||
 -------------------|||
 -------------------|||`,
-    desc:"Extension sur 4 cases : 1-4. Intervalle de tierce majeure — le plus grand écart de la famille A2.",
-    tip:"Legato ↑ à chaque changement de corde. DT1 : l'auriculaire (ext.) doit tomber ferme. Fais des pauses si tu sens une tension.",
-  },
-
-  {
-    id:"A2P1dD", cat:"A2", dir:"D", num:'1d', notes:2, difficulty:"Technique", fingerings:['ind + aur (ext.)', 'ind + ann (surext.)', 'ind + ann (glis.)', 'ind + maj (glis.)'], fretOffset:-1,
-    name:"Tierce majeure", bpm:65, bpmTarget:130,
-    tab:`e|--------------9-5-|
+      "D|1-5": `e|--------------9-5-|
 B|----------9-5-----|
 G|------9-5---------|
 D|--9-5-------------|
@@ -1496,14 +1448,7 @@ E|------------------|
 --------------10-6o|||
 -------------------|||
 -------------------|||`,
-    desc:"Tierce majeure descendante : 4-1. L'auriculaire frappe en premier — sens moins naturel, à travailler séparément.",
-    tip:"Legato ↑ à chaque changement de corde. Compare ta précision avec la version U — l'écart 4→1 est souvent moins sûr.",
-  },
-
-  {
-    id:"A2P1dM", cat:"A2", dir:"M", num:'1d', notes:2, difficulty:"Technique", fingerings:['ind + aur (ext.)', 'ind + ann (surext.)', 'ind + ann (glis.)', 'ind + maj (glis.)'], fretOffset:-1,
-    name:"Tierce majeure", bpm:60, bpmTarget:120,
-    tab:`e|--------------5-9-|
+      "M|1-5": `e|--------------5-9-|
 B|----------5-9-----|
 G|------5-9---------|
 D|--5-9-------------|
@@ -1516,8 +1461,9 @@ E|------------------|
 --------------10-6o|||
 -------------------|||
 -------------------|||`,
-    desc:"Tierce majeure aller-retour : montée index-auriculaire, retour auriculaire-index décalé d'un demi-ton.",
-    tip:"Le changement de sens en haut doit être transparent. Legato ↑ à chaque changement de corde.",
+    },
+    desc:"Deux notes par corde sur 4 cordes. Sélectionner l'intervalle : 1-2 demi-ton, 1-3 ton, 1-4 tierce mineure, 1-5 tierce majeure.",
+    tip:"Maîtriser le 1-2 avant de progresser vers les écarts plus grands. Zéro tension dans la main.",
   },
 
   // ── A6 — 6 NOTES (triade doublée) ──────────────────────────────────────────

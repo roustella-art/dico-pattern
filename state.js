@@ -320,8 +320,20 @@ function getGroupPct(groupKey) {
   const pats = PATTERNS.filter(p => p.cat + 'P' + p.num === groupKey);
   let total = 0, done = 0;
   pats.forEach(p => {
-    if (p.special && p.hasDirectionTabs && p.directions) {
-      // Gamme avec onglets de direction : une progression par direction
+    if (p.hasDirectionTabs && p.versionTabs && p.formeTabs) {
+      // Pattern unifié avec versionTabs × formeTabs (ex: A2P1 — special ou non)
+      p.versionTabs.forEach(vk => {
+        p.formeTabs.forEach(fk => {
+          const progressId = p.id + '__' + vk + '_' + fk;
+          const interpsToUse = p.customInterps || INTERPS;
+          interpsToUse.forEach(i => TEMPOS.forEach(t => {
+            total++;
+            if (state.progress[getProgressKey(progressId, 1, 'U', i, t)]) done++;
+          }));
+        });
+      });
+    } else if (p.special && p.hasDirectionTabs && p.directions) {
+      // Gamme avec onglets de direction simples : une progression par direction
       Object.keys(p.directions).forEach(dirKey => {
         const progressId = p.id + '__' + dirKey.replace(/[→↔]/g, '-');
         const interpsToUse = p.customInterps || INTERPS;

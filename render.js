@@ -378,8 +378,8 @@ function buildGammeProgGrid(p) {
 
 // ── PATTERN GROUP BODY (direction unifiée ou pattern spécial) ────────────────
 function renderPatternGroupBody(pats, key) {
-  // Détecter les patterns spéciaux
-  const isSpecial = pats[0].special;
+  // Détecter les patterns spéciaux ou ceux avec sélecteur version+forme
+  const isSpecial = pats[0].special || !!(pats[0].hasDirectionTabs && pats[0].versionTabs);
 
   if (isSpecial) {
     // Pour les patterns spéciaux, utiliser directement le premier pattern
@@ -405,19 +405,25 @@ function renderPatternGroupBody(pats, key) {
           const label = (p.versionLabels && p.versionLabels[vk]) || vk;
           return `<button id="${btnId}" onclick="setGammeDirection('${p.id}','${vk}')" style="${btnStyle(vk===selectedDir)}">${label}</button>`;
         }).join('');
-        const formeOptions = p.formeTabs.map(fk => {
-          return `<option value="${fk}" ${fk===selectedForme?'selected':''}>Forme ${fk}</option>`;
+        const useScrollForme = p.formeTabs.length > 5;
+        const chipStyle = (isActive) =>
+          `flex-shrink:0;font-size:13px;font-weight:${isActive?'700':'600'};padding:7px 14px;border-radius:20px;border:1.5px solid ${isActive?'var(--blue)':'var(--border)'};cursor:pointer;background:${isActive?'var(--blue)':'transparent'};color:${isActive?'#fff':'var(--text2)'};transition:all .15s;white-space:nowrap`;
+        const formeRow = p.formeTabs.map(fk => {
+          const btnId = 'gamme-forme-btn-' + p.id + '-' + fk.replace(/[↔→\s]/g, '_');
+          const st = useScrollForme ? chipStyle(fk===selectedForme) : btnStyle(fk===selectedForme);
+          return `<button id="${btnId}" onclick="setGammeForme('${p.id}','${fk}')" style="${st}">${fk}</button>`;
         }).join('');
+        const formeContainer = useScrollForme
+          ? `<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none">${formeRow}</div>`
+          : `<div style="display:flex;gap:6px">${formeRow}</div>`;
         dirTabsHtml = `
           <div style="margin-bottom:8px">
-            <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block">Version</label>
-            <div style="display:flex;gap:6px">${versionRow}${pentaBtn}</div>
+            <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block">${p.formeSelectorLabel||'Forme'}</label>
+            ${formeContainer}
           </div>
           <div style="margin-bottom:10px">
-            <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block">Forme</label>
-            <select id="gamme-forme-select-${p.id}" onchange="setGammeForme('${p.id}',this.value)" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--border);font-size:13px;background:var(--card);color:var(--text)">
-              ${formeOptions}
-            </select>
+            <label style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block">${p.versionSelectorLabel||'Version'}</label>
+            <div style="display:flex;gap:6px">${versionRow}${pentaBtn}</div>
           </div>`;
       } else {
         // Sélecteur simple (patterns existants)
@@ -457,7 +463,7 @@ function renderPatternGroupBody(pats, key) {
     // ── Sélecteur de cordes (gammes uniquement) ──────────────────────────────
     // Affichage : E A D G B e (du grave à l'aigu = ordre guitare)
     // activeStrings = [e=0, B=1, G=2, D=3, A=4, E=5]
-    const activeStrings = getGammeActiveStrings(p.id);
+    const activeStrings = p.disableStringSelector ? [true,true,true,true,true,true] : getGammeActiveStrings(p.id);
     const allActive = activeStrings.every(v => v);
     const STRING_SELECTOR_DEF = [
       { label:'E', idx:5 },
@@ -467,7 +473,7 @@ function renderPatternGroupBody(pats, key) {
       { label:'B', idx:1 },
       { label:'e', idx:0 },
     ];
-    const stringSelector = `
+    const stringSelector = p.disableStringSelector ? '' : `
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);flex-shrink:0">Cordes</span>
         <div style="display:flex;gap:4px">
@@ -499,11 +505,12 @@ function renderPatternGroupBody(pats, key) {
 
     let neckTabForDisplay = rawTabForDisplay;
     if (!p.disableHighNeck) {
-      neckTabForDisplay = transformTab(rawTabForDisplay, p.id, true); // neck offset (mid/high), sans string shift
+      // gammes (special:true) → skipStringShift ; patterns non-special (A2P1…) → groupe de cordes actif
+      neckTabForDisplay = transformTab(rawTabForDisplay, p.id, !!p.special);
     }
 
     // Filtrer les cordes uniquement pour les gammes sans stringGroups
-    const filteredTabForDisplay = p.stringGroups
+    const filteredTabForDisplay = (p.stringGroups || p.disableStringSelector)
       ? neckTabForDisplay
       : applyGammeStringFilter(neckTabForDisplay, activeStrings);
     const tabIsPlaying = PREVIEW.patId === p.id;

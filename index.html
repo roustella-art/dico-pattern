@@ -855,7 +855,7 @@ function toggleGammeString(patId, stringIdx) {
     const pat = PATTERNS.find(p => p.id === patId);
     if (pat) {
       const rawTab = getGammeActiveTab(pat);
-      const neckTab = pat.disableHighNeck ? rawTab : transformTab(rawTab, pat.id, true);
+      const neckTab = pat.disableHighNeck ? rawTab : transformTab(rawTab, pat.id, !!pat.special);
       const filtered = applyGammeStringFilter(neckTab, current);
       pre.innerHTML = tabWithSymbols(cleanTabDisplay(filtered), PREVIEW.interp);
     }
@@ -888,7 +888,7 @@ function resetGammeStrings(patId) {
     const pat = PATTERNS.find(p => p.id === patId);
     if (pat) {
       const rawTab = getGammeActiveTab(pat);
-      const neckTab = pat.disableHighNeck ? rawTab : transformTab(rawTab, pat.id, true);
+      const neckTab = pat.disableHighNeck ? rawTab : transformTab(rawTab, pat.id, !!pat.special);
       pre.innerHTML = tabWithSymbols(cleanTabDisplay(neckTab), PREVIEW.interp);
     }
   }
@@ -963,7 +963,7 @@ function _refreshGammeTabAndProg(patId) {
   const pre = document.getElementById('tab-pre-' + patId);
   if (pre) {
     const rawTab = getGammeActiveTab(pat);
-    const neckTab = pat.disableHighNeck ? rawTab : transformTab(rawTab, pat.id, true);
+    const neckTab = pat.disableHighNeck ? rawTab : transformTab(rawTab, pat.id, !!pat.special);
     const filtered = applyGammeStringFilter(neckTab, getGammeActiveStrings(patId));
     pre.innerHTML = tabWithSymbols(cleanTabDisplay(filtered), PREVIEW.interp);
   }
@@ -1016,13 +1016,24 @@ function setGammeDirection(patId, dirKey) {
 // Changer la forme (C / A / …) — mise à jour DOM ciblée
 function setGammeForme(patId, forme) {
   if (!state.gammeSelectedForme) state.gammeSelectedForme = {};
+  const pat = PATTERNS.find(p => p.id === patId);
+  const prev = getGammeSelectedForme(patId);
   state.gammeSelectedForme[patId] = forme;
   saveState();
   if (PREVIEW.patId === patId) previewStop();
   _refreshGammeTabAndProg(patId);
-  const select = document.getElementById('gamme-forme-select-' + patId);
-  if (select) {
-    select.value = forme;
+  if (pat && pat.formeTabs) {
+    [prev, forme].forEach(fk => {
+      if (!fk) return;
+      const btn = document.getElementById('gamme-forme-btn-' + patId + '-' + fk.replace(/[↔→\s]/g, '_'));
+      if (btn) {
+        const isActive = fk === forme;
+        btn.style.background  = isActive ? 'var(--blue)' : 'transparent';
+        btn.style.color       = isActive ? '#fff'        : 'var(--text2)';
+        btn.style.borderColor = isActive ? 'var(--blue)' : 'var(--border)';
+        btn.style.fontWeight  = isActive ? '700'         : '600';
+      }
+    });
   }
 }
 
@@ -2114,7 +2125,7 @@ function openSettings(tab) {
           <button class="sf-btn" onclick="doImportJSON()">↑ Importer JSON</button>
         </div>
         <button class="sf-reset" onclick="resetApp()">Réinitialiser l'app</button>
-        <div class="sf-version">v3.1</div>
+        <div class="sf-version">v3.2</div>
       </div>
     </div>
   </div>`;
